@@ -1,0 +1,203 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var logout={
+                url: 'api/v1/logout',
+                type: 'LOGIN',
+                dataType: 'json',
+                data: JSON.stringify({
+                    login:{password: "0046788285",
+                    email: "nick@nickthesick.com"}
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    //
+                    /**/window.location.href = JSON.parse(data.message).location;
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            var login={
+                url: 'api/v1/login',
+                type: 'LOGIN',
+                dataType: 'json',
+                data: JSON.stringify({
+                    password: "0046788285",
+                    email: "nick@nickthesick.com"
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    //
+                    /**/window.location.href = JSON.parse(data.message).location;
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            var getAll={
+                url: 'api/v1/users',
+                type: 'GET',
+                dataType: 'json',
+                data: JSON.stringify({
+                    password: "0046788285",
+                    email: "nick@nickthesick.com"
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            var getOne={
+                url: 'api/v1/users/search/fname/nick',
+                type: 'GET',
+                dataType: 'json',
+                data: JSON.stringify({
+                    password: "0046788285",
+                    email: "nick@nickthesick.com"
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            var PUT={
+                url: 'api/v1/users',
+                type: 'PUT',
+                dataType: 'json',
+                data: JSON.stringify({
+                    password: "0046788285",
+                    email: "nick@nickthesick.co",
+                    fname:"yo",
+                    lname:"maybe"
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            var POST={
+                url: 'api/v1/users/fname/nick@nickthesick.c0',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    password: "0046788285",
+                    email: "nick@nickthesick.c0",
+                    fname:"macaroni"
+                }),
+                //*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
+            
+            $.ajax({
+                url: 'api/v1/users/fname/nick@nickthesick.c0',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    login:{password: "0046788285",email: "nick@nickthesick.c0"},
+                    fname:"macaroni"
+                }),
+                /*
+                headers: {
+                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                },//*/
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log(no);
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
