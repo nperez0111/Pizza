@@ -1,9 +1,9 @@
 <?php
-// curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"email\":\"rf@gh.co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X PUT http://localhost/pizza/api/v1/users/
-//curl -i -u nick@nickthesick.com:0046788285 -X GET http://localhost/pizza/api/v1/users/sortBy/email/DESC
+// curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"Email\":\"rf@gh.co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X PUT http://localhost/pizza/api/v1/users/
+//curl -i -u nick@nickthesick.com:0046788285 -X GET http://localhost/pizza/api/v1/users/sortBy/Email/DESC
 //curl -i -u nick@nickthesick.com:0046788285 -X DELETE http://localhost/pizza/api/v1/users/rf@gh.com
-// curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"email\":\"rf@gh.com\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X POST http://localhost/pizza/api/v1/users/email/rf@gh.o
-// curl -i --data {\"email\":\"nick@nickthesick.com\",\"password\":\"0046788285\"} -X LOGIN http://localhost/pizza/api/v1/logout
+// curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"Email\":\"rf@gh.com\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X POST http://localhost/pizza/api/v1/users/Email/rf@gh.o
+// curl -i --data {\"Email\":\"nick@nickthesick.com\",\"password\":\"0046788285\"} -X LOGIN http://localhost/pizza/api/v1/logout
 session_start();
 header('Content-Type: application/json');
 define("PBKDF2_HASH_ALGORITHM", "sha256");
@@ -19,9 +19,9 @@ define("HASH_PBKDF2_INDEX", 3);
 $routes=[
     'users'=>[
         'methods'=>[1,1,1,1],
-        'props'=>['fname','lname','email','password'],
-        'identifier'=>'email',
-        'identifiers'=>['fname','lname','email']
+        'props'=>['FName','LName','Email','password'],
+        'identifier'=>'Email',
+        'identifiers'=>['FName','LName','Email']
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -177,7 +177,10 @@ function rest_put($req){
        rest_error("Insufficient Priveleges OR incorrect JSON Requirements",401); 
        return;
     }
-
+    if(reqRouter($req,"PUT")==0){
+        rest_error("Item Exists",409);
+        return;
+    }
    include '../../includes/database.php';
 
    $stmt=$db->prepare(sql_PUT($table));
@@ -399,6 +402,14 @@ function reqRouter($req,$http){
                     return 1;
         }
     }
+    if($http=="PUT"){
+        global $routes;
+        global $JSON;
+        $table=$req[0];
+        if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$JSON[$routes[$table]['identifier']]]))==0){
+            return 1;
+        }
+    }
     return 0;
 }
 
@@ -560,7 +571,7 @@ function buildJSONInput($table,$JSON){
 function loginWJson(){
     global $JSON;
     $json=$JSON;
-    return (!checkUser(@$json['login']['email'],@$json['login']['password'])?true:false);
+    return (!checkUser(@$json['login']['Email'],@$json['login']['password'])?true:false);
 }
 
 function checkUser($userName,$password){
@@ -571,19 +582,19 @@ function checkUser($userName,$password){
     
     include '../../includes/database.php';
     // Retrieve username and password from database according to user's input
-    $stmt = $db->prepare("SELECT * FROM ".$table." WHERE (`email` = :email)");
+    $stmt = $db->prepare("SELECT * FROM ".$table." WHERE (`Email` = :Email)");
 
-    $resul = $stmt->execute(array(':email'=>$userName));
+    $resul = $stmt->execute(array(':Email'=>$userName));
     $result = $stmt->fetch();
     $num_rows = $stmt->rowCount();
     // Check username and password match
     
     if ( $num_rows > 0 && validate_password($password,$result['password'])) {
     // Set username session variable
-        $_SESSION['email'] = $userName;
+        $_SESSION['Email'] = $userName;
         $_SESSION['loggedin'] = true;
-        $_SESSION['fname'] = $result['fname'];
-        $_SESSION['lname'] = $result['lname'];
+        $_SESSION['FName'] = $result['FName'];
+        $_SESSION['LName'] = $result['LName'];
         $_SESSION['Index'] = $result['Index'];
         return true;
     }
@@ -593,13 +604,13 @@ function checkUser($userName,$password){
 }
 
 function isAdmin(){
-    if(!isset($_SESSION['email'])||!isset($_SESSION['loggedin'])||$_SESSION['loggedin']==false){
+    if(!isset($_SESSION['Email'])||!isset($_SESSION['loggedin'])||$_SESSION['loggedin']==false){
         return false;
     }
     global $db;
-    $stmt = $db->prepare("SELECT * FROM users WHERE (`email` = :email)");
+    $stmt = $db->prepare("SELECT * FROM users WHERE (`Email` = :Email)");
 
-    $resul = $stmt->execute(array(':email'=>$_SESSION['email']));
+    $resul = $stmt->execute(array(':Email'=>$_SESSION['Email']));
     $result = $stmt->fetch();
     $num_rows = $stmt->rowCount();
     if($num_rows > 0&&$result['verified']=="1"){
