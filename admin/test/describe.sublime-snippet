@@ -1,7 +1,9 @@
 <snippet>
 	<content><![CDATA[
 describe('.${1}(${2:Obj})',function(){
-	${3}
+	it('Should ${3:return}',function(){
+	    ${4:var table}
+	});
 });
 ]]></content>
 <tabTrigger>describe</tabTrigger>

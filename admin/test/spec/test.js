@@ -332,5 +332,19 @@
                             
                         });
                 });
+                describe('.Delete(Obj)',function(){
+                    it('Should exist',function(){
+                        var table = new Table();
+                        expect(table.delete).to.exist;
+                    });
+                    it('Should accept an object',function(){
+                        var table = new Table({data:{data:[["hello"],["jk"]]}});
+                        expect(table.delete({index:{r:0}})).to.exist;
+                    });
+                    it('Should return the deleted array',function(){
+                        var table = new Table({data:{data:[["hello"],["jk"]]}});
+                        expect(table.delete({index:{r:0}})).to.deep.equal(["hello"])
+                    });
+                });
         });
 })();

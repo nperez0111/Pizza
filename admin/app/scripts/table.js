@@ -86,7 +86,7 @@ var Table = Ractive.extend({
     },
     delete: function(obj) {
         var rowOfDeletion = obj.index.r;
-        this.get("data").splice(rowOfDeletion, 1);
+        return this.get("data").splice(rowOfDeletion, 1)[0];
     },
     save: function(obj) {
         this.set("editing.cur", -1);
@@ -106,7 +106,7 @@ var Table = Ractive.extend({
                 }
             }
         });
-        
+
         if (!flag) {
             //send to database to update val
             console.log("changes observed");
