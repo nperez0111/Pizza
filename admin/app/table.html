@@ -1,0 +1,53 @@
+<div class="page-header">
+    <h1 class="text-capitalize">"{{table}}" Table</h1>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover table-fixed">
+      <thead>
+        <tr>
+          {{#each rows:i}}
+            <th class="text-center text-capitalize">{{rows[i]}}</th>
+           {{/each}}
+          <th class="text-center">Delete?</th>          
+        </tr>
+      </thead>
+    <tbody class="text-center">
+        {{#each data:r}}
+          <tr>
+        {{#each data[r]:c}}
+            <td on-click="edit" {{editing.notAllowed[c]==false?'contentEditable="true" class="text-capitalize"':'class="noEdit text-capitalize"'}}>{{data[r][c]}}</td>
+           {{/each}}
+            {{#if (editing.cur!==r)}}
+                <td on-click="delete">
+                    <span class="glyphicon glyphicon-remove table-remove center"></span>
+                </td>
+            {{else}}
+                <td on-click="save">
+                    <div class="btn-group">
+                        <button class="btn btn-default table-save center"><span class="glyphicon glyphicon-floppy-saved"></span> Save</button><button on-click="revert" class=" btn btn-default table-revert center"><span class="glyphicon glyphicon-repeat"></span> Revert</button>
+                    </div>
+                </td>
+            {{/if}}
+            
+      </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          {{#each rows:i}}
+            <th class="text-center"><input type="text" value="{{add[i]}}" class="text-capitalize" placeholder="{{rows[i]}}" /></th>
+           {{/each}}
+          <th class="text-center"><button class="btn btn-default table-save center" on-click="add"><span class="glyphicon glyphicon-ok"></span> Add</button></th>
+        </tr>
+      </tfoot>
+  </table>
+  </div>
+<div class="form-group">
+   <label for="tableSelect">Select a Table to View: </label>
+    <select class="text-capitalize form-control" id="tableSelect" value="{{table}}">
+        <option selected disabled>Select a Table:</option>
+        {{#each tables:i}}
+        <option class="text-capitalize" value="{{tables[i]}}">{{tables[i]}}</option>
+        {{/each}}
+    </select>
+</div> 

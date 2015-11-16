@@ -248,25 +248,24 @@
                                         notAllowed: [],
                                         cur: -1
                                     },
-                                    data: ["hello"]
+                                    data: [["hello"]]
                                 }
                             }),
-                            $el = $.el('tr', {}).append($($.el('td', {}).text("other"))).append($($.el('td', {}).text("other")));
+                            $el = $.el('tr', {}).append($($.el('td', {}).text("other")));
                         table.set("editing.cur", 0);
                         expect(table.get("editing.cur")).to.equal(0);
                         table.set("editing.past", {
                             0: "hello"
                         });
                         expect(table.get("editing.past.0")).to.equal("hello");
-                        table.set("data", ["hello"]);
-                        console.log($($($el).get(0)).find('td').text());
+                        table.set("data", [["hello"]]);
+                        console.log($($([$el]).get(0)).find('td').text());
                         table.revert({
                             index: {
                                 r: 0
                             },
-                            el: [$el, $el]
+                            el: $el
                         });
-                        console.log($($($el).get(0)).find('td').text());
                         expect(table.get("editing.cur")).to.equal(-1);
                         expect(table.get("editing.past.0")).to.be.undefined;
                         expect($($($el).get(0)).find('td').text()).to.equal("hello");
@@ -300,15 +299,19 @@
                                             editing: {
                                                 past: {},
                                                 cur: 0
-                                            }
+                                            },
+                                            data:[["hello"]]
                                         }
                                     }),
-                                    $el;
-                                table.save(index: {
+                                    $el=$.el('tr',{}).append($.el('td',{}).text("hello"));
+                                    table.set("editing.past",{0:["nothello"]});
+                                table.save({index: {
                                         r: 0,
                                         el: $el
                                     }
                                 });
+                                expect(table.get('editing.past.0')).to.not.exist;
+                                expect(table.get('data[0][0]')).to.equal("hello");
                         });
                 });
         });

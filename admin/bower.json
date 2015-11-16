@@ -4,7 +4,8 @@
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
     "ractive": "~0.7.3",
-    "jquery-mockjax": "~2.0.1"
+    "jquery-mockjax": "~2.0.1",
+    "normalize-css": "normalize.css#~3.0.3"
   },
   "overrides": {
     "bootstrap-sass": {

@@ -74,9 +74,7 @@ var Table = Ractive.extend({
             row = obj.index.r,
             cur = $($($(obj.el || "tbody tr").get(row)).find("td")),
             to = this.get("data[" + row + "]");
-        console.log(cur);
-        console.log($(obj.el));
-        console.log($($(obj.el).get(row)));
+
         delete prev[row];
         this.set("editing.past", prev);
         cur.each(function(i) {
@@ -108,11 +106,12 @@ var Table = Ractive.extend({
                 }
             }
         });
-        if (flag) {
+        if (!flag) {
             //are the same do nothing
             console.log("no changes");
             console.log(arr);
             console.log(previous[row]);
+            return false;
         } else {
             //send to database to update val
             console.log("changes observed");
@@ -120,7 +119,7 @@ var Table = Ractive.extend({
             console.log(previous[row]);
         }
         delete previous[row];
-        this.set("editing.past." + row, previous);
+        this.set("editing.past", previous);
         return true;
         //find a way of tracking what has even been edited
     },
