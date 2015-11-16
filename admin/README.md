@@ -1,3 +1,2 @@
-# NickTheSick
-Nick The Sick.com personal site
-This will become my portfolio site once I actually finish it :P
+# Pizza Admin Page
+This is the admin dashboard of the pizza Api in order to control every aspect to the site.

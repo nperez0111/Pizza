@@ -74,6 +74,9 @@ var Table = Ractive.extend({
             row = obj.index.r,
             cur = $($($(obj.el || "tbody tr").get(row)).find("td")),
             to = this.get("data[" + row + "]");
+        console.log(cur);
+        console.log($(obj.el));
+        console.log($($(obj.el).get(row)));
         delete prev[row];
         this.set("editing.past", prev);
         cur.each(function(i) {
@@ -92,7 +95,7 @@ var Table = Ractive.extend({
         var row = obj.index.r,
             previous = this.get("editing.past"),
             data = this.get("data"),
-            cur = $($($("tbody tr").get(row)).find("td")),
+            cur = $($($(obj.el || "tbody tr").get(row)).find("td")),
             arr = [],
             flag = true; //assume they are the same
         cur.each(function(i) {
@@ -118,6 +121,7 @@ var Table = Ractive.extend({
         }
         delete previous[row];
         this.set("editing.past." + row, previous);
+        return true;
         //find a way of tracking what has even been edited
     },
     alert: function(str) {
@@ -155,7 +159,7 @@ var Table = Ractive.extend({
             var ret = arr.slice(0).unshift(arry);
             return ret;
         }).then(function(data) {
-            switch (table.get("table")) {
+            switch (that.get("table")) {
                 case "users":
                     that.set("editing.notAllowed", [false, false, true]);
                     break;
