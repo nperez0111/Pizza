@@ -291,7 +291,7 @@
                                 index: {
                                     r: 0
                                 }
-                            })).to.be.true;
+                            })).to.be.false;
                         });
                         it('Should save the current rows data', function() {
                                 var table = new Table({
@@ -306,12 +306,30 @@
                                     $el=$.el('tr',{}).append($.el('td',{}).text("hello"));
                                     table.set("editing.past",{0:["nothello"]});
                                 table.save({index: {
-                                        r: 0,
-                                        el: $el
-                                    }
+                                        r: 0
+                                    },el: $el
                                 });
                                 expect(table.get('editing.past.0')).to.not.exist;
                                 expect(table.get('data[0][0]')).to.equal("hello");
+                        });
+                        it('Should return false if no changes occured',function(){
+                            var table = new Table({
+                                        data: {
+                                            editing: {
+                                                past: {},
+                                                cur: 0
+                                            },
+                                            data:[["hello"]]
+                                        }
+                                    }),
+                                    $el=$.el('tr',{}).append($.el('td',{}).text("hello"));
+                                    table.set("editing.past",{0:["hello"]});
+                                    expect(table.save({index: {
+                                        r: 0,
+                                        el: $el
+                                    }
+                                })).to.be.false;
+                            
                         });
                 });
         });

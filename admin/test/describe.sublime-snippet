@@ -1,7 +1,7 @@
 <snippet>
 	<content><![CDATA[
 describe('.${1}(${2:Obj})',function(){
-	
+	${3}
 });
 ]]></content>
 <tabTrigger>describe</tabTrigger>

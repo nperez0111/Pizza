@@ -96,8 +96,8 @@ var Table = Ractive.extend({
             cur = $($($(obj.el || "tbody tr").get(row)).find("td")),
             arr = [],
             flag = true; //assume they are the same
-        cur.each(function(i) {
 
+        cur.each(function(i) {
             if (i < previous[row].length) {
                 arr.push($(this).text());
                 if ($(this).text() !== (previous[row][i]) + "") {
@@ -106,17 +106,20 @@ var Table = Ractive.extend({
                 }
             }
         });
+        
         if (!flag) {
-            //are the same do nothing
-            console.log("no changes");
-            console.log(arr);
-            console.log(previous[row]);
-            return false;
-        } else {
             //send to database to update val
             console.log("changes observed");
             console.log(arr);
             console.log(previous[row]);
+
+        } else {
+            //are the same do nothing
+            
+            console.log("no changes");
+            console.log(arr);
+            console.log(previous[row]);
+            return false;
         }
         delete previous[row];
         this.set("editing.past", previous);
