@@ -115,7 +115,7 @@ var Table = Ractive.extend({
 
         } else {
             //are the same do nothing
-            
+
             console.log("no changes");
             console.log(arr);
             console.log(previous[row]);
@@ -128,6 +128,7 @@ var Table = Ractive.extend({
     },
     alert: function(str) {
         $('#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + str + "</h3><p>Check internet connection Or Contact Support.</p>")
+        return true;
     },
     switchTable: function(obj) {
         var that = this;
