@@ -393,6 +393,15 @@
                 var table = new Table();
                 expect(table.alert("")).to.be.true;
             });
+            it('Should alert user', function() {
+                var table = new Table(),
+                    $el = $.el('div', {});
+                table.alert({
+                    el: $el,
+                    str: "wkj"
+                })
+                expect($el.text()).to.contain("wkj");
+            });
         });
     });
 })();

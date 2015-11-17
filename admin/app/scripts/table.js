@@ -127,7 +127,7 @@ var Table = Ractive.extend({
         //find a way of tracking what has even been edited
     },
     alert: function(str) {
-        $('#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + str + "</h3><p>Check internet connection Or Contact Support.</p>")
+        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + str.str || str + "</h3><p>Check internet connection Or Contact Support.</p>")
         return true;
     },
     switchTable: function(obj) {
