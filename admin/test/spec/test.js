@@ -347,6 +347,29 @@
                 })).to.be.false;
 
             });
+            it('Should return false if the text is empty', function() {
+                var table = new Table({
+                        data: {
+                            editing: {
+                                past: {},
+                                cur: 0
+                            },
+                            data: [
+                                ["hello"]
+                            ]
+                        }
+                    }),
+                    $el = $.el('tr', {}).append($.el('td', {}).text(""));
+                table.set("editing.past", {
+                    0: ["hello"]
+                });
+                expect(table.save({
+                    index: {
+                        r: 0,
+                        el: $el
+                    }
+                })).to.be.false;
+            });
         });
         describe('.Delete(Obj)', function() {
             it('Should exist', function() {
