@@ -1,3 +1,3 @@
 # Pizza
 Pizza Web App Point of Sale and API
-[![Travis CI Badge](https://travis-ci.org/nperez0111/Pizza.svg?branch=master)](https://travis-ci.org/jakerella/jquery-mockjax)
+[![Build Status](https://magnum.travis-ci.com/nperez0111/Pizza.svg?token=FShSV6j2VC5qSNKU1zXv)](https://magnum.travis-ci.com/nperez0111/Pizza)
