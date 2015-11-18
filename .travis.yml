@@ -5,3 +5,4 @@ node_js:
 before_script: 
 - cd admin
 - npm install
+- npm install grunt-cli
