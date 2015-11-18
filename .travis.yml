@@ -5,5 +5,6 @@ node_js:
 before_script: 
 - cd admin
 - npm install
-- npm install grunt-cli bower
+- npm install grunt-cli
+- npm install bower
 - bower install
