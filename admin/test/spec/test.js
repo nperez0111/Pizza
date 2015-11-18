@@ -264,7 +264,6 @@
                 table.set("data", [
                     ["hello"]
                 ]);
-                console.log($($([$el]).get(0)).find('td').text());
                 table.revert({
                     index: {
                         r: 0
@@ -424,6 +423,43 @@
                     str: "wkj"
                 })
                 expect($el.text()).to.contain("wkj");
+            });
+        });
+        describe('.SwitchTable(Obj)', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.switchTable).to.exist;
+            });
+            it('Should accept an object', function() {
+                var table = new Table({
+                    data: {
+                        data: [],
+                        rows: []
+                    }
+                });
+                expect(table.switchTable({
+                    url: 'http://localhost:80/pizza/api/v1/undefined',
+                    dataType: 'json'
+                })).to.exist;
+            });
+            it('Should switch the current table data', function() {
+                var dta, table = new Table({
+                    data: {
+                        data: [],
+                        rows: []
+                    },
+                    oninit: function() {
+                        dta = this.get("data");
+                    }
+                });
+                expect(dta).to.exist;
+                table.switchTable({
+                    url: 'http://localhost:80/pizza/api/v1/undefined',
+                    dataType: 'json'
+                });
+                expect(table.get('data')).to.not.deep.equal(dta);
+                expect(table.get('row')).to.not.deep.equal([]);
+
             });
         });
     });
