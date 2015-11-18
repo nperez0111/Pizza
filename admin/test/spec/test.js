@@ -454,8 +454,9 @@
                 });
                 expect(dta).to.exist;
                 table.switchTable({
-                    url: 'http://localhost:80/pizza/api/v1/undefined',
-                    dataType: 'json'
+                    url: 'http:///pizza/api/v1/undefined',
+                    dataType: 'json',
+                    type: 'GET'
                 });
                 expect(table.get('data')).to.not.deep.equal(dta);
                 expect(table.get('row')).to.not.deep.equal([]);

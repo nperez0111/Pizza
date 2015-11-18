@@ -139,6 +139,7 @@ var Table = Ractive.extend({
     },
     switchTable: function(obj) {
         var that = this;
+        console.log($.ajax(obj));
         return $.ajax(obj).then(function(r) {
 
             return (JSON.parse(r.message));
