@@ -6,3 +6,4 @@ before_script:
 - cd admin
 - npm install
 - npm install grunt-cli
+- bower install
