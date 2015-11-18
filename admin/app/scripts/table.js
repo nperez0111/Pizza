@@ -102,7 +102,14 @@ var Table = Ractive.extend({
                 arr.push($(this).text());
                 if ($(this).text() !== (previous[row][i]) + "") {
                     flag = false;
+                    $(this).removeClass("missing");
                     //they are different
+                    if ($(this).text() == "") {
+                        $(this).addClass("missing");
+                        flag = true;
+                        return false;
+                        //not getting away with nothing mister
+                    }
                 }
             }
         });
