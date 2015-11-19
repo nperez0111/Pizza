@@ -50,7 +50,7 @@
                 expect(table).to.not.be.null;
             });
         });
-        describe('.Add(obj)', function() {
+        describe('.Add(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.add).to.exist;
@@ -135,7 +135,7 @@
                 expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
             });
         });
-        describe('.Edit(obj)', function() {
+        describe('.Edit(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.edit).to.exist;
@@ -219,7 +219,7 @@
                 expect(table.get('editing.past.0')).to.be.true;
             });
         });
-        describe('.Revert(obj)', function() {
+        describe('.Revert(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.revert).to.exist;
@@ -264,7 +264,6 @@
                 table.set("data", [
                     ["hello"]
                 ]);
-                console.log($($([$el]).get(0)).find('td').text());
                 table.revert({
                     index: {
                         r: 0
@@ -347,6 +346,29 @@
                 })).to.be.false;
 
             });
+            it('Should return false if the text is empty', function() {
+                var table = new Table({
+                        data: {
+                            editing: {
+                                past: {},
+                                cur: 0
+                            },
+                            data: [
+                                ["hello"]
+                            ]
+                        }
+                    }),
+                    $el = $.el('tr', {}).append($.el('td', {}).text(""));
+                table.set("editing.past", {
+                    0: ["hello"]
+                });
+                expect(table.save({
+                    index: {
+                        r: 0,
+                        el: $el
+                    }
+                })).to.be.false;
+            });
         });
         describe('.Delete(Obj)', function() {
             it('Should exist', function() {
@@ -401,6 +423,115 @@
                     str: "wkj"
                 })
                 expect($el.text()).to.contain("wkj");
+            });
+        });
+        describe('.SwitchTable(Obj)', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.switchTable).to.exist;
+            });
+            it('Should accept an object', function() {
+                var table = new Table({
+                    data: {
+                        data: [
+                            []
+                        ],
+                        rows: []
+                    }
+                });
+                expect(table.switchTable({
+                    url: 'http://localhost:80/pizza/api/v1/undefined',
+                    dataType: 'json'
+                })).to.exist;
+            });
+            it('Should switch the current table data', function() {
+                var dta, table = new Table({
+                    data: {
+                        data: [],
+                        rows: []
+                    }
+                });
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/undefined',
+                    dataType: 'json',
+                    type: 'GET'
+                });
+                console.log(table.get('data'));
+                expect(table.get('data')).to.not.deep.equal(dta);
+                expect(table.get('row')).to.not.deep.equal([]);
+
+            });
+            it('Should return an error if url is not requestable', function() {
+                var table = new Table({
+                    data: {
+                        data: [],
+                        rows: []
+                    }
+                });
+                table.switchTable().then(function(a) {
+                    expect(a).to.deep.equal([]);
+                });
+
+            });
+            it('Should set the editing status per table', function() {
+                var table = new Table({
+                    data: {
+                        data: [],
+                        rows: [],
+                        editing: {
+                            notAllowed: []
+                        }
+                    }
+                });
+                table.set("table", "users");
+
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/undefined',
+                    dataType: 'json',
+                    type: 'GET'
+                }).then(function() {
+                    expect(table.get("editing.notAllowed")).to.deep.equal([false, false, true]);
+                });
+
+
+            });
+        });
+        describe('.MoveTo( From , To )', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.moveTo).to.exist;
+            });
+            it('Should accept (from , to)', function() {
+                var table = new Table({
+                    data: {
+                        data: [
+                            ["First Row"],
+                            ["Second Row"]
+                        ]
+                    }
+                });
+                expect(table.moveTo(0, 1)).to.be.true;
+            });
+            it('Should move the row from \'from\' to \'to\'', function() {
+                var table = new Table({
+                    data: {
+                        data: [
+                            ["First Row"],
+                            ["Second Row"]
+                        ]
+                    }
+                });
+                table.moveTo(0, 1);
+                expect(table.get("data")[0]).to.deep.equal(["Second Row"]);
+                expect(table.get("data")[1]).to.deep.equal(["First Row"]);
+                table.moveTo(1, 0);
+                expect(table.get("data")[1]).to.deep.equal(["Second Row"]);
+                expect(table.get("data")[0]).to.deep.equal(["First Row"]);
+            });
+            it('Should return false if from or to aren\'t numbers', function() {
+                var table = new Table();
+                expect(table.moveTo("not a num", {})).to.be.false;
+                expect(table.moveTo("1", "2")).to.be.false;
             });
         });
     });

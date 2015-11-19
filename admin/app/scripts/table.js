@@ -102,7 +102,14 @@ var Table = Ractive.extend({
                 arr.push($(this).text());
                 if ($(this).text() !== (previous[row][i]) + "") {
                     flag = false;
+                    $(this).removeClass("missing");
                     //they are different
+                    if ($(this).text() == "") {
+                        $(this).addClass("missing");
+                        flag = true;
+                        return false;
+                        //not getting away with nothing mister
+                    }
                 }
             }
         });
@@ -127,7 +134,24 @@ var Table = Ractive.extend({
         //find a way of tracking what has even been edited
     },
     alert: function(str) {
-        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + str.str || str + "</h3><p>Check internet connection Or Contact Support.</p>")
+        var other = (str.str || str) + "";
+        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>")
+        return true;
+    },
+    moveTo: function(from, to) {
+        if (from !== parseInt(from, 10) || to !== parseInt(to, 10)) {
+            return false;
+        }
+        if (from > to) {
+            from = from + to;
+            to = from - to;
+            from = from - to;
+        }
+        var data = this.get("data"),
+            x = data.splice(from, 1),
+            y = data.splice(to - 1, 1);
+        data.splice(from, 0, y[0]);
+        data.splice(to, 0, x[0]);
         return true;
     },
     switchTable: function(obj) {
@@ -137,7 +161,10 @@ var Table = Ractive.extend({
             return (JSON.parse(r.message));
 
         }, function(err) {
-            that.alert("Sorry, Issues loading Table Data from API..");
+            if (obj) {
+                that.alert("Sorry, Issues loading Table Data from API..");
+                throw Error("Sorry, Issues loading Table Data from API..");
+            }
             return Error(err);
         }).then(function(objs) {
 
@@ -159,10 +186,10 @@ var Table = Ractive.extend({
             }
             that.set("data", arr);
             that.set("rows", arry);
-            var ret = arr.slice(0).unshift(arry);
-            return ret;
+            return arr;
         }).then(function(data) {
-            switch (that.get("table")) {
+            var tabler = that.get("table");
+            switch (tabler) {
                 case "users":
                     that.set("editing.notAllowed", [false, false, true]);
                     break;
