@@ -50,7 +50,7 @@
                 expect(table).to.not.be.null;
             });
         });
-        describe('.Add(obj)', function() {
+        describe('.Add(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.add).to.exist;
@@ -135,7 +135,7 @@
                 expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
             });
         });
-        describe('.Edit(obj)', function() {
+        describe('.Edit(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.edit).to.exist;
@@ -219,7 +219,7 @@
                 expect(table.get('editing.past.0')).to.be.true;
             });
         });
-        describe('.Revert(obj)', function() {
+        describe('.Revert(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.revert).to.exist;
@@ -494,6 +494,44 @@
                 });
 
 
+            });
+        });
+        describe('.MoveTo( From , To )', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.moveTo).to.exist;
+            });
+            it('Should accept (from , to)', function() {
+                var table = new Table({
+                    data: {
+                        data: [
+                            ["First Row"],
+                            ["Second Row"]
+                        ]
+                    }
+                });
+                expect(table.moveTo(0, 1)).to.be.true;
+            });
+            it('Should move the row from \'from\' to \'to\'', function() {
+                var table = new Table({
+                    data: {
+                        data: [
+                            ["First Row"],
+                            ["Second Row"]
+                        ]
+                    }
+                });
+                table.moveTo(0, 1);
+                expect(table.get("data")[0]).to.deep.equal(["Second Row"]);
+                expect(table.get("data")[1]).to.deep.equal(["First Row"]);
+                table.moveTo(1, 0);
+                expect(table.get("data")[1]).to.deep.equal(["Second Row"]);
+                expect(table.get("data")[0]).to.deep.equal(["First Row"]);
+            });
+            it('Should return false if from or to aren\'t numbers', function() {
+                var table = new Table();
+                expect(table.moveTo("not a num", {})).to.be.false;
+                expect(table.moveTo("1", "2")).to.be.false;
             });
         });
     });
