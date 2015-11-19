@@ -433,7 +433,9 @@
             it('Should accept an object', function() {
                 var table = new Table({
                     data: {
-                        data: [],
+                        data: [
+                            []
+                        ],
                         rows: []
                     }
                 });
@@ -447,19 +449,50 @@
                     data: {
                         data: [],
                         rows: []
-                    },
-                    oninit: function() {
-                        dta = this.get("data");
                     }
                 });
-                expect(dta).to.exist;
                 table.switchTable({
                     url: 'http:///pizza/api/v1/undefined',
                     dataType: 'json',
                     type: 'GET'
                 });
+                console.log(table.get('data'));
                 expect(table.get('data')).to.not.deep.equal(dta);
                 expect(table.get('row')).to.not.deep.equal([]);
+
+            });
+            it('Should return an error if url is not requestable', function() {
+                var table = new Table({
+                    data: {
+                        data: [],
+                        rows: []
+                    }
+                });
+                table.switchTable().then(function(a) {
+                    expect(a).to.deep.equal([]);
+                });
+
+            });
+            it('Should set the editing status per table', function() {
+                var table = new Table({
+                    data: {
+                        data: [],
+                        rows: [],
+                        editing: {
+                            notAllowed: []
+                        }
+                    }
+                });
+                table.set("table", "users");
+
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/undefined',
+                    dataType: 'json',
+                    type: 'GET'
+                }).then(function() {
+                    expect(table.get("editing.notAllowed")).to.deep.equal([false, false, true]);
+                });
+
 
             });
         });
