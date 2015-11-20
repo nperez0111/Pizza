@@ -26,10 +26,7 @@ $.ajax({
     });
 
 }, function (err) {
-    $('#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>Sorry, Issues loading template file..</h3></div><p>Check internet connection Or Contact Support.</p>");
+    table=new Table();
+    table.alert("Sorry, Issues loading template file...");
     return Error(err);
 });
-
-String.prototype.capitalize = function () {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
