@@ -15,7 +15,7 @@
         {{#each data:r}}
           <tr>
         {{#each data[r]:c}}
-            <td on-click="edit" {{editing.notAllowed[c]==false?'contentEditable="true" class="text-capitalize"':'class="noEdit text-capitalize"'}}>{{data[r][c]}}</td>
+            <td on-click="edit" tabindex="{{(r*data[r].length)+c+1}}" {{editing.notAllowed[c]==false?'contentEditable="true" class="text-capitalize"':'class="noEdit text-capitalize"'}}>{{data[r][c]}}</td>
            {{/each}}
             {{#if (editing.cur!==r)}}
                 <td on-click="delete">
@@ -24,7 +24,7 @@
             {{else}}
                 <td on-click="save">
                     <div class="btn-group">
-                        <button class="btn btn-default table-save center"><span class="glyphicon glyphicon-floppy-saved"></span> Save</button><button on-click="revert" class=" btn btn-default table-revert center"><span class="glyphicon glyphicon-repeat"></span> Revert</button>
+                        <button class="btn btn-default table-save center" role="button"><span class="glyphicon glyphicon-floppy-saved"></span> Save</button><button on-click="revert" class=" btn btn-default table-revert center" role="button"><span class="glyphicon glyphicon-repeat"></span> Revert</button>
                     </div>
                 </td>
             {{/if}}
@@ -35,9 +35,9 @@
       <tfoot>
         <tr>
           {{#each rows:i}}
-            <th class="text-center"><input type="text" value="{{add[i]}}" class="text-capitalize" placeholder="{{rows[i]}}" /></th>
+            <th class="text-center"><input type="text" value="{{add[i]}}" tabindex="{{(data[0].length*data.length)+i+1}}" class="text-capitalize" placeholder="{{rows[i]}}" /></th>
            {{/each}}
-          <th class="text-center"><button class="btn btn-default table-save center" on-click="add"><span class="glyphicon glyphicon-ok"></span> Add</button></th>
+          <th class="text-center"><button class="btn btn-default table-save center" role="button" on-click="add" tabindex="{{data[0].length*(data.length+1)+1}}"><span class="glyphicon glyphicon-ok"></span> Add</button></th>
         </tr>
       </tfoot>
   </table>
@@ -47,7 +47,7 @@
     <select class="text-capitalize form-control" id="tableSelect" value="{{table}}">
         <option selected disabled>Select a Table:</option>
         {{#each tables:i}}
-        <option class="text-capitalize" value="{{tables[i]}}">{{tables[i]}}</option>
+        <option class="text-capitalize" value="{{tables[i]}}" tabindex="{{data[0].length*(data.length+1)+2}}">{{tables[i]}}</option>
         {{/each}}
     </select>
 </div> 

@@ -138,6 +138,22 @@ var Table = Ractive.extend({
         $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>")
         return true;
     },
+    moveTo: function(from, to) {
+        if (from !== parseInt(from, 10) || to !== parseInt(to, 10)) {
+            return false;
+        }
+        if (from > to) {
+            from = from + to;
+            to = from - to;
+            from = from - to;
+        }
+        var data = this.get("data"),
+            x = data.splice(from, 1),
+            y = data.splice(to - 1, 1);
+        data.splice(from, 0, y[0]);
+        data.splice(to, 0, x[0]);
+        return true;
+    },
     switchTable: function(obj) {
         var that = this;
         return $.ajax(obj).then(function(r) {
