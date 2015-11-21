@@ -35,8 +35,9 @@ var Table = Ractive.extend({
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
+
         $(obj.node).html("<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Loading...");
-        //$(obj.node);
+
         $(obj.el || 'th .input-group').each(function(i) {
             if (itemToAdd.length < i || !itemToAdd[i]) {
                 $(this).addClass("has-error");
