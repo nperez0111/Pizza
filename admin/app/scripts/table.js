@@ -67,7 +67,7 @@ var Table = Ractive.extend({
             this.set("editing.past." + row, this.get("data[" + row + "]"));
         }
         this.set("editing.cur", row);
-        return true
+        return true;
     },
     revert: function(obj) {
         this.set("editing.cur", -1);
@@ -105,7 +105,7 @@ var Table = Ractive.extend({
                     flag = false;
                     $(this).removeClass("missing");
                     //they are different
-                    if ($(this).text() == "") {
+                    if ($(this).text() === "") {
                         $(this).addClass("missing");
                         flag = true;
                         return false;
@@ -136,7 +136,7 @@ var Table = Ractive.extend({
     },
     alert: function(str) {
         var other = (str.str || str) + "";
-        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>")
+        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>");
         return true;
     },
     moveTo: function(from, to) {
@@ -170,11 +170,12 @@ var Table = Ractive.extend({
         }).then(function(objs) {
 
             var arr = [],
-                arry = [];
+                arry = [],
+                key;
 
             for (var i in objs) {
 
-                for (var key in objs[i]) {
+                for (key in objs[i]) {
                     arry.push(objs[i][key]);
                 }
 
@@ -182,7 +183,7 @@ var Table = Ractive.extend({
                 arry = [];
 
             }
-            for (var key in objs[0]) {
+            for (key in objs[0]) {
                 arry.push(key);
             }
             that.set("data", arr);

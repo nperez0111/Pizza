@@ -408,7 +408,7 @@
                     index: {
                         r: 0
                     }
-                })).to.deep.equal(["hello"])
+                })).to.deep.equal(["hello"]);
             });
         });
         describe('.Alert(String)', function() {
@@ -426,7 +426,7 @@
                 table.alert({
                     el: $el,
                     str: "wkj"
-                })
+                });
                 expect($el.text()).to.contain("wkj");
             });
         });
