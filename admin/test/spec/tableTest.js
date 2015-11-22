@@ -92,20 +92,25 @@
                     $el = $.el('div', {
                         'class': 'wrapper'
                     }).append(
-                        $.el('input', {
+                        $.el('div', {
+                            'class': 'input-group'
+                        }).append($.el('input', {
                             'value': 'ok'
-                        })
-                    ).append($.el('input', {
-                        'value': ''
-                    }));
+                        }))
+                    ).append(
+                        $.el('div', {
+                            'class': 'input-group'
+                        }).append($.el('input', {
+                            'value': ''
+                        })));
 
                 expect(table.add({
                     node: ".k",
-                    el: $el.find('input')
+                    el: $el.find('.input-group')
                 })).to.be.false;
 
-                expect($($el.find('input')[0]).hasClass("missing")).to.not.be.true;
-                expect($($el.find('input')[1]).hasClass("missing")).to.be.true;
+                expect($($el.find('.input-group')[0]).hasClass("has-error")).to.not.be.true;
+                expect($($el.find('.input-group')[1]).hasClass("has-error")).to.be.true;
             });
             it('Should set the node back to add', function() {
                 var table = new Table({

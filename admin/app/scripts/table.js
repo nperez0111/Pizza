@@ -35,14 +35,15 @@ var Table = Ractive.extend({
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
+
         $(obj.node).html("<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Loading...");
-        //$(obj.node);
-        $(obj.el || 'tfoot tr th input').each(function(i) {
+
+        $(obj.el || 'th .input-group').each(function(i) {
             if (itemToAdd.length < i || !itemToAdd[i]) {
-                $(this).addClass("missing");
+                $(this).addClass("has-error");
                 missing = true;
             } else {
-                $(this).removeClass("missing");
+                $(this).removeClass("has-error");
             }
         });
         if (missing) {
