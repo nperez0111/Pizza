@@ -9,7 +9,16 @@ $.ajax({
         template: template,
         // Here, we're passing in some initial data
         data: {
-            title: "Current Question at hand"
+            title: "Current Question at hand",
+            possibleInps: [{
+                label: "How did you do it?",
+                type: "text",
+                answer: "I didn't..."
+            }, {
+                label: "How did you do it?",
+                type: "text",
+                answer: "I didn't..."
+            }]
         }
     });
 
