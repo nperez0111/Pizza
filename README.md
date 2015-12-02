@@ -10,12 +10,24 @@ This is the admin dashboard of the pizza Api in order to control every aspect to
 Currently the API is built out using a REST API made by yours truly,
 
 Methods Available to the API
- - GET
-   - VIA
-     - /tableName
-     - /tableName/identifier
-     - /tableName/identifier/value
-     - /tableName/sortBy/identifier
- - POST
-   - VIA
-     - /tableName/identifier 
+ - GET -GETTER
+  - VIA
+   - /tableName
+    - /search
+     - /identifierRow
+     - /identifierRow/value
+    - /sortBy
+     - /identifierRow
+     - /identifierRow/SORT[DESC OR ASC]
+ - POST -SETTER
+  - VIA
+   - /tableName/identifierRow/value
+ - PUT -ADD
+  - VIA
+   - /tableName
+ - LOGIN
+  - VIA
+   - /login
+ - LOGOUT
+  - VIA
+   - /logout
