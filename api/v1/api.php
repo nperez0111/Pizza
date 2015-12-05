@@ -368,14 +368,14 @@ function reqRouter($req,$http){
         }
     }
     if($http=="POST"){
-        if(count($req)==3){
+        if(count($req)==3||count($req)==2){
             global $routes;
             global $JSON;
             $table=$req[0];
             $col=$req[1];
             $id=$req[2];//count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
             if(isset($routes[$table])&&isIdentifier($table,$col)&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$id]))==1&&$col==$routes[$table]['identifier']?count(sql_GET([$table,"search",$col,$JSON[$col]]))==0:true){
-                return 1;
+                return count($req)-2==0?2:1;
             }
         }
     }
