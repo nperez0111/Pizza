@@ -123,7 +123,7 @@ var Table = Ractive.extend({
             this.sendToDataBase({
                 type: "POST",
                 data: arr,
-                url:
+                url: "http://localhost:80/pizza/api/v1/"
             });
         } else {
             //are the same do nothing
