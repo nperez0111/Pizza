@@ -22,6 +22,7 @@ Methods Available to the API
  - POST -SETTER
   - VIA
    - /tableName/identifierRow/value
+   - /tableName/identifier
  - PUT -ADD
   - VIA
    - /tableName
