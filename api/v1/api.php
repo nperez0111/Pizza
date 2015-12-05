@@ -4,6 +4,7 @@
 //curl -i -u nick@nickthesick.com:0046788285 -X DELETE http://localhost/pizza/api/v1/users/rf@gh.com
 // curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"Email\":\"rf@gh.com\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X POST http://localhost/pizza/api/v1/users/Email/rf@gh.o
 // curl -i --data {\"Email\":\"nick@nickthesick.com\",\"password\":\"0046788285\"} -X LOGIN http://localhost/pizza/api/v1/logout
+//curl -i --data {\"FName\":\"NICK\",\"LName\":\"POSTER\",\"Email\":\"Rf@Gh.Co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X POST http://localhost/pizza/api/v1/users/Rf@Gh.Co
 session_start();
 header('Content-Type: application/json');
 define("PBKDF2_HASH_ALGORITHM", "sha256");
@@ -149,10 +150,13 @@ function rest_post($req){
         rest_error("Check URL Request, The value you are attempting to set to may already be taken, You may not be fetching the correct value or column",400);
         return;
     }
-    $response=sql_POST($req);
+
+    //$resp==2 user is accessing /tableName/identifier and is updating to values that are available
+
+    $response=$resp==1?sql_POST($req):sql_POST_ALL($req);
     if(isset($response)){
         global $JSON;
-        rest_success($req[0]." was updated in Col: ".$req[1]." successfully!");
+        rest_success($req[0]." was updated: ".$req[1]." successfully!");
     }
     else{rest_error("POST ERROR",500);}
     return 0;
@@ -368,14 +372,35 @@ function reqRouter($req,$http){
         }
     }
     if($http=="POST"){
-        if(count($req)==3||count($req)==2){
+        if(count($req)==3){
             global $routes;
             global $JSON;
             $table=$req[0];
             $col=$req[1];
-            $id=$req[2];//count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
-            if(isset($routes[$table])&&isIdentifier($table,$col)&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$id]))==1&&$col==$routes[$table]['identifier']?count(sql_GET([$table,"search",$col,$JSON[$col]]))==0:true){
-                return count($req)-2==0?2:1;
+            $id=$req[2];
+            $keys=$routes[$table]['identifiers'];
+            for($i=0;$i<count($keys);$i++){
+                if(!isset($JSON[$keys[$i]])){
+                    return 0;
+                }
+            }//count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
+            if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$id]))==1&&$col==$routes[$table]['identifier']?count(sql_GET([$table,"search",$col,$JSON[$col]]))==0:true){
+                return 1;
+            }
+        }
+        if(count($req)==2){
+            global $routes;
+            global $JSON;
+            $table=$req[0];
+            $col=$req[1];
+            $keys=$routes[$table]['identifiers'];
+            for($i=0;$i<count($keys);$i++){
+                if(!isset($JSON[$keys[$i]])){
+                    return 0;
+                }
+            }
+            if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$JSON[$routes[$table]['identifier']]]))==1){
+                return 2;
             }
         }
     }
@@ -406,6 +431,12 @@ function reqRouter($req,$http){
         global $routes;
         global $JSON;
         $table=$req[0];
+        $keys=$routes[$table]['identifiers'];
+        for($i=0;$i<count($keys);$i++){
+            if(!isset($JSON[$keys[$i]])){
+                return 0;
+            }
+        }
         if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$JSON[$routes[$table]['identifier']]]))==0){
             return 1;
         }
@@ -495,6 +526,28 @@ function sql_POST($req){
     $STR="UPDATE ".$table." SET ".$col."=:val WHERE ".$routes[$table]['identifier']."='".$id."'";
     $stmt = $db->prepare($STR);
     $resul = $stmt->execute([":val"=>$JSON[$col]]);
+    return true;
+}
+function sql_POST_ALL($req){
+    $table=$req[0];
+    $col=$req[1];
+    global $routes;
+    global $JSON;    
+    include '../../includes/database.php';
+
+    $STR="UPDATE ".$table." SET ";
+
+    $keys=$routes[$table]['identifiers'];
+    $arr=[];
+    for($i=0;$i<count($keys);$i++){
+        $STR.=$keys[$i]."=:".$keys[$i].($i+1<count($keys)?",":"");
+        $arr[":".$keys[$i]]=$JSON[$keys[$i]];
+    }
+    $STR.=" WHERE ".$routes[$table]['identifier']."=:val";
+    $stmt = $db->prepare($STR);
+    $resul = $stmt->execute(array_merge([":val"=>$col],$arr));
+    echo $STR;
+    print_r($arr);
     return true;
 }
 
