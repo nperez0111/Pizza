@@ -31,6 +31,13 @@
             }]),
         }
     });
+    $.mockjax({
+        url: "*/pizza/api/v1/FAKE",
+        responseText: {
+            status: "success",
+            message: JSON.stringify(true),
+        }
+    });
     describe('Ractive Table', function() {
         describe('Constructor', function() {
             it('Should exist', function() {
@@ -461,7 +468,6 @@
                     dataType: 'json',
                     type: 'GET'
                 });
-                console.log(table.get('data'));
                 expect(table.get('data')).to.not.deep.equal(dta);
                 expect(table.get('row')).to.not.deep.equal([]);
 
@@ -537,6 +543,28 @@
                 var table = new Table();
                 expect(table.moveTo("not a num", {})).to.be.false;
                 expect(table.moveTo("1", "2")).to.be.false;
+            });
+        });
+        describe('.sendToDataBase(Obj)', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.sendToDataBase).to.exist;
+            });
+            it('Should accept an Obj', function() {
+                var table = new Table();
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/FAKE',
+                    type: 'FAKE'
+                });
+                table.sendToDataBase({
+                    type: "FAKE"
+                }).then(function(r) {
+                    expect(r).to.be.true;
+                });
+            });
+            it('Should return a promise', function() {
+                var table = new Table();
+                expect(table.sendToDataBase().then).to.exist;
             });
         });
     });

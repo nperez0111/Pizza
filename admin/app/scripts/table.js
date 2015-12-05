@@ -120,7 +120,11 @@ var Table = Ractive.extend({
             console.log("changes observed");
             console.log(arr);
             console.log(previous[row]);
-
+            this.sendToDataBase({
+                type: "POST",
+                data: arr,
+                url:
+            });
         } else {
             //are the same do nothing
 
@@ -155,8 +159,23 @@ var Table = Ractive.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
+    sendToDataBase: function(obj) {
+        $.extend({
+            type: "GET",
+            dataType: "json",
+            url: "/IDK",
+            data: []
+        }, obj);
+        return $.ajax(obj).then(function(r) {
+            return (JSON.parse(r.message));
+        });
+    },
     switchTable: function(obj) {
         var that = this;
+        $.extend({
+            dataType: "json",
+            url: "http://localhost:80/pizza/api/v1/"
+        }, obj);
         return $.ajax(obj).then(function(r) {
 
             return (JSON.parse(r.message));

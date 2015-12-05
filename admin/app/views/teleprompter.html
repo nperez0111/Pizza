@@ -3,8 +3,8 @@
     <form class="form-horizontal">
         {{#each possibleInps:i}}
         <div class="form-group">
-            <label for="inp{{i}}" id="label{{i}}" class="col-sm-2 col-lg-4 control-label">Question {{i+1}}: {{possibleInps[i].label}}</label>
-            <div class="col-sm-10 col-lg-8">
+            <label for="inp{{i}}" id="label{{i}}" class="col-sm-6 col-lg-4 control-label">Question {{i+1}}: {{possibleInps[i].label}}</label>
+            <div class="col-sm-6 col-lg-8">
                 <input type="{{possibleInps[i].type}}" placeholder="Answer" value="{{possibleInps[i].answer}}" id="inp{{i}}" class="form-control" aria-describedby="label{{i}}" autofocus="{{i==0}}">
             </div>
         </div>
