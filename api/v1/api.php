@@ -30,6 +30,7 @@ $routes=[
 //identifier is default identifier
 //identifiers are all possible identifiers
 $JSON=(json_decode(file_get_contents("php://input"),true));
+$JSON=!isset($JSON['login'])?$_POST:$JSON;
 /*
    _____ ____  _____   _____ 
   / ____/ __ \|  __ \ / ____|
@@ -51,7 +52,7 @@ $JSON=(json_decode(file_get_contents("php://input"),true));
     if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD");         
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, LOGOUT");         
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
             header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
@@ -59,10 +60,12 @@ $JSON=(json_decode(file_get_contents("php://input"),true));
         exit(0);
     }
 include '../../includes/database.php';
+if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)){
 
-if((!isset($_SESSION['loggedin'])||!$_SESSION['loggedin']==true)&&(!checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"])&&loginWJson())){
+}
+else if(!loginWJson()&&(!checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]))){
    
-   rest_error("You must be logged in to use this API.",401);
+   rest_error("You must be logged in to use this API.".(loginWJson()?"true":"FALSE"),401);
     exit;
     die;
 }
@@ -72,7 +75,6 @@ if(@$_SERVER['PATH_INFO']==null){
     exit;
     die;
 }
-
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
 //echo json_encode($response);
@@ -156,7 +158,7 @@ function rest_post($req){
     $response=$resp==1?sql_POST($req):sql_POST_ALL($req);
     if(isset($response)){
         global $JSON;
-        rest_success($req[0]." was updated: ".$req[1]." successfully!");
+        rest_success("'".$req[0]." was updated: ".$req[1]." updated successfully!'");
     }
     else{rest_error("POST ERROR",500);}
     return 0;
@@ -546,8 +548,8 @@ function sql_POST_ALL($req){
     $STR.=" WHERE ".$routes[$table]['identifier']."=:val";
     $stmt = $db->prepare($STR);
     $resul = $stmt->execute(array_merge([":val"=>$col],$arr));
-    echo $STR;
-    print_r($arr);
+    //echo $STR;
+    //print_r($arr);
     return true;
 }
 
@@ -624,7 +626,10 @@ function buildJSONInput($table,$JSON){
 function loginWJson(){
     global $JSON;
     $json=$JSON;
-    return (!checkUser(@$json['login']['Email'],@$json['login']['password'])?true:false);
+    //echo "json is";
+    //echo json_encode($JSON);
+    //echo (checkUser(@$json['login']['Email'],@$json['login']['password']))?"TRUE":"FALSE";
+    return (checkUser(@$_POST['login']['Email'],@$_POST['login']['password']));
 }
 
 function checkUser($userName,$password){
@@ -641,7 +646,7 @@ function checkUser($userName,$password){
     $result = $stmt->fetch();
     $num_rows = $stmt->rowCount();
     // Check username and password match
-    
+    //echo $num_rows > 0 &&validate_password($password,$result['password'])?"pasword is real...\n":"not the right pass?\n";
     if ( $num_rows > 0 && validate_password($password,$result['password'])) {
     // Set username session variable
         $_SESSION['Email'] = $userName;
