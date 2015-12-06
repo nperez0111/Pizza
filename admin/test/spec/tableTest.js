@@ -314,11 +314,14 @@
                         data: {
                             editing: {
                                 past: {},
-                                cur: 0
+                                cur: 0,
+                                notAllowed: [true]
                             },
                             data: [
                                 ["hello"]
-                            ]
+                            ],
+                            table: "",
+                            rows: [""]
                         }
                     }),
                     $el = $.el('tr', {}).append($.el('td', {}).text("hello"));
