@@ -32,22 +32,15 @@
                 }
             };
             var login={
-                url: 'api/v1/login',
+                url: 'http://localhost:80/pizza/api/v1/login',
                 type: 'LOGIN',
                 dataType: 'json',
-                data: JSON.stringify({
+                data: JSON.stringify({login:{
                     password: "0046788285",
                     email: "nick@nickthesick.com"
-                }),
-                //*
-                headers: {
-                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                },//*/
+                }}),
                 success: function (data) {
-                    document.write(JSON.stringify(data));
                     console.log(data);
-                    //
-                    /**/window.location.href = JSON.parse(data.message).location;
                 },
                 error: function (no) {
                     console.log(no);
@@ -116,14 +109,13 @@
                 dataType: 'json',
                 data: JSON.stringify({
                     password: "0046788285",
-                    email: "nick@nickthesick.co",
-                    fname:"yo",
-                    lname:"maybe"
+                    Email: "nick@nickthesick.co",
+                    FName:"yo",
+                    LName:"maybe"
                 }),
-                //*
                 headers: {
                     Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                },//*/
+                },
                 success: function (data) {
                     document.write(JSON.stringify(data));
                     console.log(data);
@@ -166,32 +158,7 @@
                 }
             };
             
-            $.ajax({
-                url: 'api/v1/users/fname/nick@nickthesick.c0',
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify({
-                    login:{password: "0046788285",email: "nick@nickthesick.c0"},
-                    fname:"macaroni"
-                }),
-                /*
-                headers: {
-                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                },//*/
-                success: function (data) {
-                    document.write(JSON.stringify(data));
-                    console.log(data);
-                    
-                },
-                error: function (no) {
-                    console.log(no);
-                },
-                complete: function (j) {
-                    if (j.readyState == 4) {
-                        console.log(j);
-                    }
-                }
-            });
+            $.ajax(PUT);
         });
     </script>
 </head>
