@@ -67,7 +67,7 @@ var Table = Ractive.extend({
             this.set("editing.past." + row, this.get("data[" + row + "]"));
         }
         this.set("editing.cur", row);
-        return true
+        return true;
     },
     revert: function(obj) {
         this.set("editing.cur", -1);
@@ -105,7 +105,7 @@ var Table = Ractive.extend({
                     flag = false;
                     $(this).removeClass("missing");
                     //they are different
-                    if ($(this).text() == "") {
+                    if ($(this).text() === "") {
                         $(this).addClass("missing");
                         flag = true;
                         return false;
@@ -120,7 +120,11 @@ var Table = Ractive.extend({
             console.log("changes observed");
             console.log(arr);
             console.log(previous[row]);
-
+            this.sendToDataBase({
+                type: "POST",
+                data: this.makeObj(arr),
+                url: "http://localhost:80/pizza/api/v1/" + this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]
+            });
         } else {
             //are the same do nothing
 
@@ -134,9 +138,17 @@ var Table = Ractive.extend({
         return true;
         //find a way of tracking what has even been edited
     },
+    makeObj: function(arr) {
+        var rows = this.get('rows'),
+            obj = {};
+        for (var i = 0, l = arr.length; i < l; i++) {
+            obj[rows[i]] = arr[i];
+        }
+        return obj;
+    },
     alert: function(str) {
         var other = (str.str || str) + "";
-        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>")
+        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>");
         return true;
     },
     moveTo: function(from, to) {
@@ -155,8 +167,46 @@ var Table = Ractive.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
+    sendToDataBase: function(obj) {
+        obj = $.extend({
+            type: "POST",
+            dataType: "json",
+            url: "/IDK"
+                /*,
+                            headers: {
+                                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                            }*/
+        }, obj);
+        obj.data = $.extend({
+            login: {
+                Email: "nick@nickthesick.com",
+                password: "0046788285"
+            }
+        }, obj.data);
+        console.log(obj);
+        var that = this;
+        return $.ajax(obj).then(function(r) {
+            return ((r.message));
+        }, function(err) {
+            if (obj) {
+                that.alert("Sorry, Issues sending Table Data to API..");
+                throw Error(JSON.stringify(err));
+            }
+            return Error(err);
+        });
+    },
     switchTable: function(obj) {
         var that = this;
+        obj = $.extend({
+            dataType: "json",
+            url: "http://localhost:80/pizza/api/v1/"
+        }, obj);
+        /*obj.data = $.extend({
+            login: {
+                Email: "nick@nickthesick.com",
+                password: "0046788285"
+            }
+        }, obj.data);*/
         return $.ajax(obj).then(function(r) {
 
             return (JSON.parse(r.message));
@@ -164,17 +214,18 @@ var Table = Ractive.extend({
         }, function(err) {
             if (obj) {
                 that.alert("Sorry, Issues loading Table Data from API..");
-                throw Error("Sorry, Issues loading Table Data from API..");
+                throw Error(JSON.stringify(err));
             }
             return Error(err);
         }).then(function(objs) {
 
             var arr = [],
-                arry = [];
+                arry = [],
+                key;
 
             for (var i in objs) {
 
-                for (var key in objs[i]) {
+                for (key in objs[i]) {
                     arry.push(objs[i][key]);
                 }
 
@@ -182,7 +233,7 @@ var Table = Ractive.extend({
                 arry = [];
 
             }
-            for (var key in objs[0]) {
+            for (key in objs[0]) {
                 arry.push(key);
             }
             that.set("data", arr);
