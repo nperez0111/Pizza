@@ -32,22 +32,15 @@
                 }
             };
             var login={
-                url: 'api/v1/login',
+                url: 'http://localhost:80/pizza/api/v1/login',
                 type: 'LOGIN',
                 dataType: 'json',
-                data: JSON.stringify({
+                data: JSON.stringify({login:{
                     password: "0046788285",
                     email: "nick@nickthesick.com"
-                }),
-                //*
-                headers: {
-                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                },//*/
+                }}),
                 success: function (data) {
-                    document.write(JSON.stringify(data));
                     console.log(data);
-                    //
-                    /**/window.location.href = JSON.parse(data.message).location;
                 },
                 error: function (no) {
                     console.log(no);
