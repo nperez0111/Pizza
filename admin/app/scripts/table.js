@@ -183,14 +183,14 @@ var Table = Ractive.extend({
                 password: "0046788285"
             }
         }, obj.data);
-        console.log(obj);
+        //console.log(obj);
         var that = this;
         return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
             that.alerter("Sorry, Issues sending Table Data to API..");
             throw Error(JSON.stringify(err));
-            return Error(err);
+            //return Error(err);
         });
     },
     switchTable: function(obj) {

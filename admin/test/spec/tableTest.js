@@ -482,6 +482,11 @@
                         rows: []
                     }
                 });
+                try {
+                    table.switchTable();
+                } catch (err) {
+                    expect(err).to.be.instanceOf(Error);
+                }
                 table.switchTable().then(function(a) {
                     expect(a).to.deep.equal([]);
                 });
@@ -573,9 +578,26 @@
                     url: 'http:///pizza/api/v1/undefined'
                 }).then).to.exist;
             });
+            it('Should return the resultant data within a promise', function() {
+                var table = new Table();
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/undefined',
+                    type: 'GET'
+                });
+                table.sendToDataBase({
+                    type: "GET",
+                    url: 'http:///pizza/api/v1/undefined'
+                }).then(function(r) {
+                    expect(JSON.parse(r)[0].fname).to.equal("FAKE");
+                });
+            });
             it('Should throw an error if no parameters given', function() {
                 var table = new Table();
-                expect(table.sendToDataBase).to.throw(Error);
+                try {
+                    table.sendToDataBase();
+                } catch (err) {
+                    expect(err).to.be.instanceOf(Error);
+                }
             });
         });
     });
