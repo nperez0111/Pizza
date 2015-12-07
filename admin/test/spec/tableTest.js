@@ -421,19 +421,19 @@
                 })).to.deep.equal(["hello"]);
             });
         });
-        describe('.Alert(String)', function() {
+        describe('.Alerter(String)', function() {
             it('Should exist', function() {
                 var table = new Table();
-                expect(table.alert).to.exist;
+                expect(table.alerter).to.exist;
             });
             it('Should accept a string', function() {
                 var table = new Table();
-                expect(table.alert("")).to.be.true;
+                expect(table.alerter("")).to.be.true;
             });
             it('Should alert user', function() {
                 var table = new Table(),
                     $el = $.el('div', {});
-                table.alert({
+                table.alerter({
                     el: $el,
                     str: "wkj"
                 });
@@ -556,18 +556,26 @@
             it('Should accept an Obj', function() {
                 var table = new Table();
                 table.switchTable({
-                    url: 'http:///pizza/api/v1/FAKE',
-                    type: 'FAKE'
+                    url: 'http:///pizza/api/v1/undefined',
+                    type: 'GET'
                 });
                 table.sendToDataBase({
-                    type: "FAKE"
+                    type: "GET",
+                    url: 'http:///pizza/api/v1/undefined'
                 }).then(function(r) {
                     expect(r).to.be.true;
                 });
             });
             it('Should return a promise', function() {
                 var table = new Table();
-                expect(table.sendToDataBase().then).to.exist;
+                expect(table.sendToDataBase({
+                    type: "GET",
+                    url: 'http:///pizza/api/v1/undefined'
+                }).then).to.exist;
+            });
+            it('Should throw an error if no parameters given', function() {
+                var table = new Table();
+                expect(table.sendToDataBase).to.throw(Error);
             });
         });
     });

@@ -146,7 +146,7 @@ var Table = Ractive.extend({
         }
         return obj;
     },
-    alert: function(str) {
+    alerter: function(str) {
         var other = (str.str || str) + "";
         $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>");
         return true;
@@ -188,10 +188,8 @@ var Table = Ractive.extend({
         return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
-            if (obj) {
-                that.alert("Sorry, Issues sending Table Data to API..");
-                throw Error(JSON.stringify(err));
-            }
+            that.alerter("Sorry, Issues sending Table Data to API..");
+            throw Error(JSON.stringify(err));
             return Error(err);
         });
     },
@@ -212,10 +210,8 @@ var Table = Ractive.extend({
             return (JSON.parse(r.message));
 
         }, function(err) {
-            if (obj) {
-                that.alert("Sorry, Issues loading Table Data from API..");
-                throw Error(JSON.stringify(err));
-            }
+            that.alerter("Sorry, Issues loading Table Data from API..");
+            throw Error(JSON.stringify(err));
             return Error(err);
         }).then(function(objs) {
 
