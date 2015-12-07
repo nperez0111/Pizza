@@ -635,5 +635,11 @@
                 expect(table.makeObj(["0"]).prop).to.equal("0");
             });
         });
+        describe('.Url', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.url).to.exist;
+            });
+        });
     });
 })();
