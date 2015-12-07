@@ -79,7 +79,11 @@
                     table = new Table({
                         data: {
                             data: dat,
-                            add: adder
+                            add: adder,
+                            editing: {
+                                notAllowed: [true]
+                            },
+                            rows: []
                         }
                     });
                 table.add({
@@ -93,7 +97,10 @@
                 var table = new Table({
                         data: {
                             data: [],
-                            add: ['ok', '']
+                            add: ['ok', ''],
+                            editing: {
+                                notAllowed: [true]
+                            }
                         }
                     }),
                     $el = $.el('div', {
@@ -123,7 +130,11 @@
                 var table = new Table({
                         data: {
                             data: [],
-                            add: ['ok', '']
+                            add: ['ok', ''],
+                            editing: {
+                                notAllowed: [true]
+                            },
+                            rows: []
                         }
                     }),
                     $node = $.el('div', {}),
@@ -396,7 +407,10 @@
                         data: [
                             ["hello"],
                             ["jk"]
-                        ]
+                        ],
+                        editing: {
+                            notAllowed: [true]
+                        }
                     }
                 });
                 expect(table.delete({
@@ -411,7 +425,10 @@
                         data: [
                             ["hello"],
                             ["jk"]
-                        ]
+                        ],
+                        editing: {
+                            notAllowed: [true]
+                        }
                     }
                 });
                 expect(table.delete({
