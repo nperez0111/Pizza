@@ -553,7 +553,7 @@
                 expect(table.moveTo("1", "2")).to.be.false;
             });
         });
-        describe('.sendToDataBase(Obj)', function() {
+        describe('.SendToDataBase(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.sendToDataBase).to.exist;
@@ -598,6 +598,24 @@
                 } catch (err) {
                     expect(err).to.be.instanceOf(Error);
                 }
+            });
+        });
+        describe('.MakeObj(arr)', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.makeObj).to.exist;
+            });
+            it('Should accept an array', function() {
+                var table = new Table();
+                expect(table.makeObj([])).to.exist;
+            });
+            it('Should make rows the properties of a new object and the values are equal to the array passed in', function() {
+                var table = new Table({
+                    data: {
+                        rows: ["prop"]
+                    }
+                });
+                expect(table.makeObj(["0"]).prop).to.equal("0");
             });
         });
     });
