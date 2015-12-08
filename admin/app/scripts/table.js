@@ -157,9 +157,10 @@ var Table = Ractive.extend({
         }
         return obj;
     },
-    alerter: function(str) {
+    alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
-        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>");
+        moreInfo = (str.second || moreInfo) + "";
+        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>" + moreInfo + "</p><p>Check internet connection Or Contact Support.</p>").slideDown();
         return true;
     },
     moveTo: function(from, to) {
@@ -198,7 +199,7 @@ var Table = Ractive.extend({
         return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
-            that.alerter("Sorry, Issues sending Data to API..");
+            that.alerter("Sorry, Issues sending Data to API..", JSON.parse(err.responseText).data);
             throw Error(JSON.stringify(err));
             return Error(err);
         });
