@@ -53,14 +53,13 @@ var Table = Ractive.extend({
         }
         this.set("add", []);
         this.get('data').push(itemToAdd);
-        this.sendToDataBase({
-            url: this.url + this.get("table") + '/',
+        return this.sendToDataBase({
             type: "PUT",
             data: this.makeObj(itemToAdd)
+        }, this.get("table") + '/').then(function(o) {
+            $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
+            return o;
         });
-        $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
-        //actually send data to server
-        return true;
     },
     edit: function(e) {
         var row = e.index.r,
@@ -95,9 +94,8 @@ var Table = Ractive.extend({
         var rowOfDeletion = this.get("data").splice(obj.index.r, 1)[0];
         console.log(rowOfDeletion);
         this.sendToDataBase({
-            type: "DELETE",
-            url: this.url + this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]
-        });
+            type: "DELETE"
+        }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]);
         return rowOfDeletion;
     },
     save: function(obj) {
@@ -133,9 +131,8 @@ var Table = Ractive.extend({
             console.log(previous[row]);
             this.sendToDataBase({
                 type: "POST",
-                data: this.makeObj(arr),
-                url: "http://localhost:80/pizza/api/v1/" + this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]
-            });
+                data: this.makeObj(arr)
+            }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]);
         } else {
             //are the same do nothing
 
@@ -179,11 +176,11 @@ var Table = Ractive.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
-    sendToDataBase: function(obj) {
+    sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
             type: "POST",
             dataType: "json",
-            url: this.url,
+            url: this.url + urlEx ? urlEx : "",
             headers: {
                 Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
             }
