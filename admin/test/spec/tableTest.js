@@ -598,7 +598,7 @@
                     type: "GET",
                     url: 'http://pizza/api/v1/undefined'
                 }).then(function(r) {
-                    expect(r).to.be.true;
+                    expect(r).to.be.ok;
                 });
             });
             it('Should allow for url shorthand', function() {

@@ -157,7 +157,7 @@ var Table = Ractive.extend({
     alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = (str.second || moreInfo) + "";
-        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>" + moreInfo + "</p><p>Check internet connection Or Contact Support.</p>").slideDown();
+        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").slideDown();
         return true;
     },
     moveTo: function(from, to) {
