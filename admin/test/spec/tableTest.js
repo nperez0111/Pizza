@@ -438,7 +438,7 @@
                 })).to.deep.equal(["hello"]);
             });
         });
-        describe('.Alerter(String)', function() {
+        describe('.Alerter(String,String MoreInfo)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.alerter).to.exist;
@@ -455,6 +455,16 @@
                     str: "wkj"
                 });
                 expect($el.text()).to.contain("wkj");
+            });
+            it('Should alert user with more info if provided', function() {
+                var table = new Table(),
+                    $el = $.el('div', {});
+                table.alerter({
+                    el: $el,
+                    str: "wkj",
+                    second: "second"
+                });
+                expect($el.text()).to.contain("second");
             });
         });
         describe('.SwitchTable(Obj)', function() {
