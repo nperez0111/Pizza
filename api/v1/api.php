@@ -572,7 +572,7 @@ function sql_DELETE($req){
 function sql_PUT($table){
     $str="INSERT INTO ".$table."(".buildIdentifiers($table,false).") VALUES(";
     
-    for($i=0,$arr=buildProps($table,true);$i<count($arr);$i++){
+    for($i=0,$arr=buildIdentifiers($table,true);$i<count($arr);$i++){
         $str.=":".$arr[$i].(($i!==(count($arr)-1))?",":"");
     }
 
