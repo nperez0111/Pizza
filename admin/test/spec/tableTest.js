@@ -71,7 +71,7 @@
                 });
                 expect(table.add({
                     node: ".k"
-                })).to.be.ok;
+                })).to.be.true;
             });
             it('Should manipulate both the data and add properties of the data object', function() {
                 var dat = [],
@@ -147,18 +147,15 @@
                     ).append($.el('input', {
                         'value': ''
                     }));
-
                 table.add({
-                    node: $node,
-                    el: $el.find('input')
+                    node: $node
                 });
-                expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.ok;
+                expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
                 table.add({
                     node: ".k",
                     el: $el.find('input')
                 });
                 expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
-
             });
         });
         describe('.Edit(Obj)', function() {
@@ -583,7 +580,7 @@
                 expect(table.moveTo("1", "2")).to.be.false;
             });
         });
-        describe('.SendToDataBase(Obj,URL extension)', function() {
+        describe('.SendToDataBase(Obj)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.sendToDataBase).to.exist;
@@ -596,17 +593,9 @@
                 });
                 table.sendToDataBase({
                     type: "GET",
-                    url: 'http://pizza/api/v1/undefined'
+                    url: 'http:///pizza/api/v1/undefined'
                 }).then(function(r) {
                     expect(r).to.be.true;
-                });
-            });
-            it('Should allow for url shorthand', function() {
-                var table = new Table();
-                table.sendToDataBase({
-                    type: "GET"
-                }, 'undefined').then(function(r) {
-                    expect(r).to.be.ok;
                 });
             });
             it('Should return a promise', function() {

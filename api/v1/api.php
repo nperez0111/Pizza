@@ -55,7 +55,7 @@ $JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$JSON;
     if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, DELETE, LOGOUT");         
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, LOGOUT, DELETE");         
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
             header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
@@ -68,7 +68,7 @@ if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)){
 }
 else if(!loginWJson()&&(!checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]))){
    
-   rest_error("You must be logged in to use this API.",401);
+   rest_error("You must be logged in to use this API.".(loginWJson()?"true":"FALSE"),401);
     exit;
     die;
 }
