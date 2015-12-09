@@ -12,6 +12,7 @@
         url: "*/pizza/api/v1/undefined",
         responseText: {
             status: "success",
+            data: "",
             message: JSON.stringify([{
                 fname: "FAKE",
                 lname: "OBJ",
@@ -441,7 +442,7 @@
                 })).to.deep.equal(["hello"]);
             });
         });
-        describe('.Alerter(String,String MoreInfo)', function() {
+        describe('.Alerter(String,String MoreInfo || Array MoreInfo)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.alerter).to.exist;
@@ -464,10 +465,15 @@
                     $el = $.el('div', {});
                 table.alerter({
                     el: $el,
-                    str: "wkj",
-                    second: "second"
-                });
+                    str: "wkj"
+                }, "second");
                 expect($el.text()).to.contain("second");
+                table.alerter({
+                    el: $el,
+                    str: "wkj"
+                }, ["val", "other"]);
+                expect($el.text()).to.contain("val");
+                expect($el.text()).to.contain("other");
             });
         });
         describe('.SwitchTable(Obj)', function() {
