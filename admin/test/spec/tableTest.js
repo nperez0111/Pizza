@@ -335,7 +335,7 @@
                             data: [
                                 ["hello"]
                             ],
-                            table: "",
+                            table: "undefined",
                             rows: [""]
                         }
                     }),
@@ -523,9 +523,6 @@
                 } catch (err) {
                     expect(err).to.be.instanceOf(Error);
                 }
-                table.switchTable().then(function(a) {
-                    expect(a).to.deep.equal([]);
-                });
 
             });
             it('Should set the editing status per table', function() {
@@ -538,10 +535,10 @@
                         }
                     }
                 });
-                table.set("table", "users");
+                table.set("table", "undefined");
 
                 table.switchTable({
-                    url: 'http:///pizza/api/v1/undefined',
+                    url: 'http://pizza/api/v1/undefined',
                     dataType: 'json',
                     type: 'GET'
                 }).then(function() {

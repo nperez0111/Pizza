@@ -32,7 +32,7 @@ var Table = Ractive.extend({
         //find a way to initialize the data object
 
     },
-    url: 'http://localhost:80/pizza/api/v1/',
+    url: 'http://' + window.location.hostname + ':80/pizza/api/v1/',
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
@@ -180,7 +180,7 @@ var Table = Ractive.extend({
         obj = $.extend({
             type: "POST",
             dataType: "json",
-            url: this.url + urlEx ? urlEx : "",
+            url: this.url + (urlEx ? urlEx : ""),
             headers: {
                 Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
             }
