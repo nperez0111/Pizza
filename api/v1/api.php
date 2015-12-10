@@ -49,6 +49,7 @@ $JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$JSON;
         header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 86400');    // cache for 1 day
+        header("Access-Control-Allow-Headers: *");
     }
 
     // Access-Control headers are received during OPTIONS requests
@@ -59,7 +60,8 @@ $JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$JSON;
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
             header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        http_response_code(204);
         exit(0);
     }
 include '../../includes/database.php';
