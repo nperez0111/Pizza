@@ -19,7 +19,7 @@ var Table = Ractive.extend({
         });
         this.observe("table", function(newVal, oldVal, obj) {
             this.switchTable({
-                url: 'http://localhost:80/pizza/api/v1/' + newVal,
+                url: this.url + newVal,
                 type: 'GET',
                 dataType: 'json',
                 //*
@@ -32,6 +32,7 @@ var Table = Ractive.extend({
         //find a way to initialize the data object
 
     },
+    url: 'http://' + window.location.hostname + ':80/pizza/api/v1/',
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
@@ -52,9 +53,13 @@ var Table = Ractive.extend({
         }
         this.set("add", []);
         this.get('data').push(itemToAdd);
-        $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
-        //actually send data to server
-        return true;
+        return this.sendToDataBase({
+            type: "PUT",
+            data: this.makeObj(itemToAdd)
+        }, this.get("table") + '/').then(function(o) {
+            $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
+            return o;
+        });
     },
     edit: function(e) {
         var row = e.index.r,
@@ -86,8 +91,12 @@ var Table = Ractive.extend({
         return true;
     },
     delete: function(obj) {
-        var rowOfDeletion = obj.index.r;
-        return this.get("data").splice(rowOfDeletion, 1)[0];
+        var rowOfDeletion = this.get("data").splice(obj.index.r, 1)[0];
+        console.log(rowOfDeletion);
+        this.sendToDataBase({
+            type: "DELETE"
+        }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]);
+        return rowOfDeletion;
     },
     save: function(obj) {
         this.set("editing.cur", -1);
@@ -122,9 +131,8 @@ var Table = Ractive.extend({
             console.log(previous[row]);
             this.sendToDataBase({
                 type: "POST",
-                data: this.makeObj(arr),
-                url: "http://localhost:80/pizza/api/v1/" + this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]
-            });
+                data: this.makeObj(arr)
+            }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]);
         } else {
             //are the same do nothing
 
@@ -146,9 +154,10 @@ var Table = Ractive.extend({
         }
         return obj;
     },
-    alert: function(str) {
+    alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
-        $(str.el || '#alert').slideDown().html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other) + "</h3><p>Check internet connection Or Contact Support.</p>");
+        moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
+        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").slideDown();
         return true;
     },
     moveTo: function(from, to) {
@@ -167,15 +176,14 @@ var Table = Ractive.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
-    sendToDataBase: function(obj) {
+    sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
             type: "POST",
             dataType: "json",
-            url: "/IDK"
-                /*,
-                            headers: {
-                                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                            }*/
+            url: this.url + (urlEx ? urlEx : ""),
+            headers: {
+                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+            }
         }, obj);
         obj.data = $.extend({
             login: {
@@ -188,8 +196,8 @@ var Table = Ractive.extend({
         return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
-            if (obj) {
-                that.alert("Sorry, Issues sending Table Data to API..");
+            that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
+            if (err.responseText) {
                 throw Error(JSON.stringify(err));
             }
             return Error(err);
@@ -199,23 +207,24 @@ var Table = Ractive.extend({
         var that = this;
         obj = $.extend({
             dataType: "json",
-            url: "http://localhost:80/pizza/api/v1/"
+            url: this.url,
+            headers: {
+                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+            }
         }, obj);
-        /*obj.data = $.extend({
+        obj.data = $.extend({
             login: {
                 Email: "nick@nickthesick.com",
                 password: "0046788285"
             }
-        }, obj.data);*/
+        }, obj.data);
         return $.ajax(obj).then(function(r) {
 
             return (JSON.parse(r.message));
 
         }, function(err) {
-            if (obj) {
-                that.alert("Sorry, Issues loading Table Data from API..");
-                throw Error(JSON.stringify(err));
-            }
+            that.alerter("Sorry, Issues loading Table Data from API..");
+            throw Error(JSON.stringify(err));
             return Error(err);
         }).then(function(objs) {
 

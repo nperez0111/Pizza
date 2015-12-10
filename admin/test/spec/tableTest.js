@@ -12,6 +12,7 @@
         url: "*/pizza/api/v1/undefined",
         responseText: {
             status: "success",
+            data: "",
             message: JSON.stringify([{
                 fname: "FAKE",
                 lname: "OBJ",
@@ -71,7 +72,7 @@
                 });
                 expect(table.add({
                     node: ".k"
-                })).to.be.true;
+                })).to.be.ok;
             });
             it('Should manipulate both the data and add properties of the data object', function() {
                 var dat = [],
@@ -79,7 +80,11 @@
                     table = new Table({
                         data: {
                             data: dat,
-                            add: adder
+                            add: adder,
+                            editing: {
+                                notAllowed: [true]
+                            },
+                            rows: []
                         }
                     });
                 table.add({
@@ -93,7 +98,10 @@
                 var table = new Table({
                         data: {
                             data: [],
-                            add: ['ok', '']
+                            add: ['ok', ''],
+                            editing: {
+                                notAllowed: [true]
+                            }
                         }
                     }),
                     $el = $.el('div', {
@@ -123,7 +131,11 @@
                 var table = new Table({
                         data: {
                             data: [],
-                            add: ['ok', '']
+                            add: ['ok', ''],
+                            editing: {
+                                notAllowed: [true]
+                            },
+                            rows: []
                         }
                     }),
                     $node = $.el('div', {}),
@@ -136,15 +148,18 @@
                     ).append($.el('input', {
                         'value': ''
                     }));
+
                 table.add({
-                    node: $node
+                    node: $node,
+                    el: $el.find('input')
                 });
-                expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
+                expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.ok;
                 table.add({
                     node: ".k",
                     el: $el.find('input')
                 });
                 expect($($node.find('span')).hasClass('glyphicon-floppy-saved')).to.be.true;
+
             });
         });
         describe('.Edit(Obj)', function() {
@@ -320,7 +335,7 @@
                             data: [
                                 ["hello"]
                             ],
-                            table: "",
+                            table: "undefined",
                             rows: [""]
                         }
                     }),
@@ -396,7 +411,10 @@
                         data: [
                             ["hello"],
                             ["jk"]
-                        ]
+                        ],
+                        editing: {
+                            notAllowed: [true]
+                        }
                     }
                 });
                 expect(table.delete({
@@ -411,7 +429,10 @@
                         data: [
                             ["hello"],
                             ["jk"]
-                        ]
+                        ],
+                        editing: {
+                            notAllowed: [true]
+                        }
                     }
                 });
                 expect(table.delete({
@@ -421,23 +442,38 @@
                 })).to.deep.equal(["hello"]);
             });
         });
-        describe('.Alert(String)', function() {
+        describe('.Alerter(String,String MoreInfo || Array MoreInfo)', function() {
             it('Should exist', function() {
                 var table = new Table();
-                expect(table.alert).to.exist;
+                expect(table.alerter).to.exist;
             });
             it('Should accept a string', function() {
                 var table = new Table();
-                expect(table.alert("")).to.be.true;
+                expect(table.alerter("")).to.be.true;
             });
             it('Should alert user', function() {
                 var table = new Table(),
                     $el = $.el('div', {});
-                table.alert({
+                table.alerter({
                     el: $el,
                     str: "wkj"
                 });
                 expect($el.text()).to.contain("wkj");
+            });
+            it('Should alert user with more info if provided', function() {
+                var table = new Table(),
+                    $el = $.el('div', {});
+                table.alerter({
+                    el: $el,
+                    str: "wkj"
+                }, "second");
+                expect($el.text()).to.contain("second");
+                table.alerter({
+                    el: $el,
+                    str: "wkj"
+                }, ["val", "other"]);
+                expect($el.text()).to.contain("val");
+                expect($el.text()).to.contain("other");
             });
         });
         describe('.SwitchTable(Obj)', function() {
@@ -482,9 +518,11 @@
                         rows: []
                     }
                 });
-                table.switchTable().then(function(a) {
-                    expect(a).to.deep.equal([]);
-                });
+                try {
+                    table.switchTable();
+                } catch (err) {
+                    expect(err).to.be.instanceOf(Error);
+                }
 
             });
             it('Should set the editing status per table', function() {
@@ -497,10 +535,10 @@
                         }
                     }
                 });
-                table.set("table", "users");
+                table.set("table", "undefined");
 
                 table.switchTable({
-                    url: 'http:///pizza/api/v1/undefined',
+                    url: 'http://pizza/api/v1/undefined',
                     dataType: 'json',
                     type: 'GET'
                 }).then(function() {
@@ -548,7 +586,7 @@
                 expect(table.moveTo("1", "2")).to.be.false;
             });
         });
-        describe('.sendToDataBase(Obj)', function() {
+        describe('.SendToDataBase(Obj,URL extension)', function() {
             it('Should exist', function() {
                 var table = new Table();
                 expect(table.sendToDataBase).to.exist;
@@ -556,18 +594,75 @@
             it('Should accept an Obj', function() {
                 var table = new Table();
                 table.switchTable({
-                    url: 'http:///pizza/api/v1/FAKE',
-                    type: 'FAKE'
+                    url: 'http:///pizza/api/v1/undefined',
+                    type: 'GET'
                 });
                 table.sendToDataBase({
-                    type: "FAKE"
+                    type: "GET",
+                    url: 'http://pizza/api/v1/undefined'
                 }).then(function(r) {
-                    expect(r).to.be.true;
+                    expect(r).to.be.ok;
+                });
+            });
+            it('Should allow for url shorthand', function() {
+                var table = new Table();
+                table.sendToDataBase({
+                    type: "GET"
+                }, 'undefined').then(function(r) {
+                    expect(r).to.be.ok;
                 });
             });
             it('Should return a promise', function() {
                 var table = new Table();
-                expect(table.sendToDataBase().then).to.exist;
+                expect(table.sendToDataBase({
+                    type: "GET",
+                    url: 'http:///pizza/api/v1/undefined'
+                }).then).to.exist;
+            });
+            it('Should return the resultant data within a promise', function() {
+                var table = new Table();
+                table.switchTable({
+                    url: 'http:///pizza/api/v1/undefined',
+                    type: 'GET'
+                });
+                table.sendToDataBase({
+                    type: "GET",
+                    url: 'http:///pizza/api/v1/undefined'
+                }).then(function(r) {
+                    expect(JSON.parse(r)[0].fname).to.equal("FAKE");
+                });
+            });
+            it('Should throw an error if no parameters given', function() {
+                var table = new Table();
+                try {
+                    table.sendToDataBase();
+                } catch (err) {
+                    expect(err).to.be.instanceOf(Error);
+                }
+            });
+        });
+        describe('.MakeObj(arr)', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.makeObj).to.exist;
+            });
+            it('Should accept an array', function() {
+                var table = new Table();
+                expect(table.makeObj([])).to.exist;
+            });
+            it('Should make rows the properties of a new object and the values are equal to the array passed in', function() {
+                var table = new Table({
+                    data: {
+                        rows: ["prop"]
+                    }
+                });
+                expect(table.makeObj(["0"]).prop).to.equal("0");
+            });
+        });
+        describe('.Url', function() {
+            it('Should exist', function() {
+                var table = new Table();
+                expect(table.url).to.exist;
             });
         });
     });

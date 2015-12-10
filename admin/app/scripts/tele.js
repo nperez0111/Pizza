@@ -24,6 +24,6 @@ $.ajax({
 
 }, function(err) {
     tele = new Tele();
-    tele.alert("Sorry, Issues loading template file...");
+    tele.alerter("Sorry, Issues loading template file...");
     return Error(err);
 });
