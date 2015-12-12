@@ -29,8 +29,11 @@ $routes=[
 //props are only for when the object is being added(PUT)
 //identifier is default identifier
 //identifiers are all possible identifiers
-$JSON=(json_decode(file_get_contents("php://input"),true));
-$JSON=!isset($JSON['login'])?$_POST:$JSON;
+$JSON = array();
+parse_str(file_get_contents('php://input'), $JSON);
+//$JSON=(json_decode($put,true));
+//echo $JSON;
+$JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$JSON;
 /*
    _____ ____  _____   _____ 
   / ____/ __ \|  __ \ / ____|
@@ -46,17 +49,19 @@ $JSON=!isset($JSON['login'])?$_POST:$JSON;
         header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 86400');    // cache for 1 day
+        header("Access-Control-Allow-Headers: *");
     }
 
     // Access-Control headers are received during OPTIONS requests
     if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, LOGOUT");         
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, DELETE, LOGOUT");         
 
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
             header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        http_response_code(204);
         exit(0);
     }
 include '../../includes/database.php';
@@ -65,7 +70,7 @@ if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)){
 }
 else if(!loginWJson()&&(!checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]))){
    
-   rest_error("You must be logged in to use this API.".(loginWJson()?"true":"FALSE"),401);
+   rest_error("You must be logged in to use this API.",401);
     exit;
     die;
 }
@@ -300,14 +305,15 @@ function checkTableReqs($table,&$JSON){
     global $routes;
     switch($table){
         case"users":
-            if(!isset($JSON['password'])){
-                rest_error("Mal-Formed JSON please read Documentation, missing 'password' property",400);
-                return false;
+            if(isset($JSON['password'])){
+                $JSON['password']=create_hash($JSON['password']);
+                //rest_error("Mal-Formed JSON please read Documentation, missing 'password' property",400);
+                //return false;
             }
-            $JSON['password']=create_hash($JSON['password']);
-            for($i=0,$arr=$routes[$table]['props'];$i<count($arr);$i++){
+            //echo json_encode($JSON);
+            for($i=0,$arr=$routes[$table]['identifiers'];$i<count($arr);$i++){
                 if(!isset($JSON[$arr[$i]])){
-                    rest_error("Mal-Formed JSON please read Documentation, missing '".$JSON[$arr[$i]]."' property",400);
+                    rest_error("Mal-Formed JSON please read Documentation, missing '".$arr[$i]."' property",400);
                     return false;
                 }
             }
@@ -566,9 +572,9 @@ function sql_DELETE($req){
 }
 
 function sql_PUT($table){
-    $str="INSERT INTO ".$table."(".buildProps($table,false).") VALUES(";
+    $str="INSERT INTO ".$table."(".buildIdentifiers($table,false).") VALUES(";
     
-    for($i=0,$arr=buildProps($table,true);$i<count($arr);$i++){
+    for($i=0,$arr=buildIdentifiers($table,true);$i<count($arr);$i++){
         $str.=":".$arr[$i].(($i!==(count($arr)-1))?",":"");
     }
 
@@ -582,10 +588,14 @@ function buildProps($table,$bool){
     global $routes;
     return $bool?$routes[$table]['props']:implode(",",$routes[$table]['props']);
 }
+function buildIdentifiers($table,$bool){
+    global $routes;
+    return $bool?$routes[$table]['identifiers']:implode(",",$routes[$table]['identifiers']);
+}
 
 //returns array for the spl executer and false if the json obj does not have the property required
 function buildJSONInput($table,$JSON){
-    $keys=buildProps($table,true);
+    $keys=buildIdentifiers($table,true);
     $arr=[];
     for($i=0;$i<count($keys);$i++){
         if(!isset($JSON[$keys[$i]])){

@@ -1,4 +1,5 @@
 <IfModule mod_rewrite.c>
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, ADD, LOGIN, DELETE, LOGOUT"
 RewriteEngine On                
 RewriteCond %{REQUEST_METHOD} OPTIONS 
 RewriteRule ^(.*)$ blank.php [QSA,L]
