@@ -1,6 +1,6 @@
 var table;
 $.ajax({
-    url: "http://" + window.location.hostname + ":9000/views/table.html",
+    url: "views/table.html",
     dataType: "html"
 }).then(function(template) {
     table = new Table({
