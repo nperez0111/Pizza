@@ -26,7 +26,7 @@ $.ajax({
     });
     var interval = setInterval(function() {
         table.switchTable({
-            url: table.url + "users",
+            url: table.url + table.get("table"),
             type: 'GET',
             dataType: 'json',
             //*
