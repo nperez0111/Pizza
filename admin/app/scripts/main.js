@@ -24,7 +24,18 @@ $.ajax({
             tables: ["users", "other", "MeantToCauseAlert"]
         }
     });
-
+    var interval = setInterval(function() {
+        table.switchTable({
+            url: table.url + table.get("table"),
+            type: 'GET',
+            dataType: 'json',
+            //*
+            headers: {
+                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+            }, //*/
+        });
+    }, 4000);
+    console.log(interval);
 }, function(err) {
     table = new Table();
     table.alerter("Sorry, Issues loading template file...");

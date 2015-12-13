@@ -1,6 +1,6 @@
 var tele;
 $.ajax({
-    url: "http://localhost:9000/views/teleprompter.html",
+    url: "views/teleprompter.html",
     dataType: "html"
 }).then(function(template) {
     tele = new Tele({
