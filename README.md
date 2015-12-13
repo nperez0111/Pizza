@@ -24,3 +24,13 @@ Currently the API is built out using a REST API made by yours truly,
 /tableName/identifier | DELETE | Delete row with 'identifier' as the identifier
 /login | LOGIN | Obviously Login
 /logout | LOGIN | Obviously to Logout
+
+## Install Steps
+1. Get Nodejs
+2. Save this Repository somehow
+3. Open Command line 
+4. Get into the admin folder ````cd admin````
+5. Install all the dependencies ````npm install````
+6. Install bower and grunt command line ````npm install grunt-cli bower````
+7. Install bower's dependencies ````bower install````
+8. Run the Web Server ````grunt serve````
