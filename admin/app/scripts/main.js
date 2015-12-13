@@ -33,6 +33,9 @@ $.ajax({
             headers: {
                 Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
             }, //*/
+        }).then(function() {}, function(err) {
+            clearInterval(interval);
+            console.log(err);
         });
     }, 4000);
     console.log(interval);
