@@ -1,0 +1,8 @@
+
+$JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$_SERVER['REQUEST_METHOD']=='GET'?$_GET:$JSON;
+
+
+$_SERVER['PATH_INFO']=str_replace('/pizza/api/v1','',$_SERVER['SCRIPT_URL']);
+
+loginWJson()-
+return (checkUser(@$json['login']['Email'],@$json['login']['password']));
