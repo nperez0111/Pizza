@@ -21,3 +21,12 @@ Auto Increment | String | String | String | String | String
 User Id | Order | Date | Price
 --------| -------| -----|-----
 Integer | String | Date?/String | Decimal
+
+## TelePrompter DB
+ Question | True | False | Order 
+-------------|---------|--------|-----------
+ Name Please? | 2 | 1 | 1 
+ Phone Number Please? | 3 | 2 | 2 
+ Delivery? | 4 | 5 | 3 
+ Address? | 5 | 3 | 4 
+What would you like? | 7 | 5 | 5
