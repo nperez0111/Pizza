@@ -25,9 +25,9 @@ $routes=[
         'identifiers'=>['FName','LName','Email']
     ],
     'orders'=>[
-        'identifiers'=>['ID','Order','Date','Price'],
+        'identifiers'=>['ID','OrderSymbols','DateOrdered','Price'],
         'methods'=>[1,1,1,1],
-        'props'=>['ID','Order','Date','Price'],
+        'props'=>['ID','OrderSymbols','DateOrdered','Price'],
         'identifier'=>'ID'
     ]
 ];
@@ -530,14 +530,17 @@ function sql_GET($req){
     return $arr;
     
 }
-function sql_GET_ALL($table,$pos){
+function sql_GET_ALL($tabl,$pos){
     global $routes;
     include '../../includes/database.php';
     $arr=[];
-    foreach($db->query("SELECT ".implode(",",$routes[$table]['identifiers'])." FROM `".$table."`".(isset($pos)?(" ORDER BY ".$pos[0]." ".$pos[1]):"")) as $row) {
+    $STR="SELECT ".implode(",",$routes[$tabl]['identifiers'])." FROM `".$tabl."`".(isset($pos)?(" ORDER BY ".$pos[0]." ".$pos[1]):"");
+    $stmt=$db->prepare($STR);
+    $resul=$stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         $data=[];
-        for($i=0;$i<count($routes[$table]['identifiers']);$i++){
-            $data[$routes[$table]['identifiers'][$i]]=$row[$routes[$table]['identifiers'][$i]];
+        for($i=0;$i<count($routes[$tabl]['identifiers']);$i++){
+            $data[$routes[$tabl]['identifiers'][$i]]=$row[$routes[$tabl]['identifiers'][$i]];
         }
         array_push($arr,$data);
     }
@@ -560,9 +563,9 @@ function sql_GET_COLUMNS(){
                 }
             }
             else{
-                /*if(!isIdentifier($table,$val)){
+                if(!isIdentifier($table,$val)){
                         return null;
-                    }*/
+                    }
                 array_push($arr,$val);
             }
 
@@ -697,7 +700,7 @@ function checkUser($userName,$password){
     
     include '../../includes/database.php';
     // Retrieve username and password from database according to user's input
-    $stmt = $db->prepare("SELECT * FROM ".$table." WHERE (`Email` = :Email)");
+    $stmt = $db->prepare("SELECT * FROM "."users"." WHERE (`Email` = :Email)");
 
     $resul = $stmt->execute(array(':Email'=>$userName));
     $result = $stmt->fetch();
