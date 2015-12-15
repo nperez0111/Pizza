@@ -9,26 +9,28 @@ This is the admin dashboard of the pizza Api in order to control every aspect to
 
 Currently the API is built out using a REST API made by yours truly,
 
-Methods Available to the API
- - GET -GETTER
-  - VIA
-   - /tableName
-    - /search
-     - /identifierRow
-     - /identifierRow/value
-    - /sortBy
-     - /identifierRow
-     - /identifierRow/SORT[DESC OR ASC]
- - POST -SETTER
-  - VIA
-   - /tableName/identifierRow/value
-   - /tableName/identifier
- - PUT -ADD
-  - VIA
-   - /tableName
- - LOGIN
-  - VIA
-   - /login
- - LOGOUT
-  - VIA
-   - /logout
+## Methods Available to the API
+ 
+ URL | Method | Responses
+ ----| ------ | ---------
+/tableName | GET | Whole table
+/tableName/search/identifierRow | GET | List of rows with identifierRow
+/tableName/search/identifierRow/value | GET | ~~List of rows with identifierRow containing value value~~ (Check This)
+/tableName/sortBy/identifierRow | GET | List rows sorted ascending by identifierRow
+/tableName/sortBy/identifierRow/SORT[ASC OR DESC] | GET | Same as above but, allows specifying order
+/tableName/identifier | POST | Update identifier's row with JSON data
+/tableName/identifierRow/value | POST | Update identifierRow with provided value
+/tableName | PUT | Add JSON data to tableName
+/tableName/identifier | DELETE | Delete row with 'identifier' as the identifier
+/login | LOGIN | Obviously Login
+/logout | LOGIN | Obviously to Logout
+
+## Install Steps
+1. Get Nodejs
+2. Save this Repository somehow
+3. Open Command line 
+4. Get into the admin folder ````cd admin````
+5. Install all the dependencies ````npm install````
+6. Install bower and grunt command line ````npm install grunt-cli bower````
+7. Install bower's dependencies ````bower install````
+8. Run the Web Server ````grunt serve````

@@ -157,7 +157,10 @@ var Table = Ractive.extend({
     alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
-        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").slideDown();
+        if (!str.el && ($('#alert').length === 0)) {
+            $('#container').prepend('<div id="alert" style="display:none" class="alert alert-danger"></div>');
+        }
+        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
         return true;
     },
     moveTo: function(from, to) {
@@ -224,7 +227,6 @@ var Table = Ractive.extend({
 
         }, function(err) {
             that.alerter("Sorry, Issues loading Table Data from API..");
-            throw Error(JSON.stringify(err));
             return Error(err);
         }).then(function(objs) {
 
