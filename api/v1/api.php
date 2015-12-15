@@ -540,7 +540,7 @@ function sql_GET_ALL($table,$pos){
 function sql_GET_COLUMNS(){
     global $JSON;
     $arr=[];
-    foreach ($JSON as $table){
+    foreach ($JSON as $table=>$val){
         if($table!=="login"){
             array_push($arr,$table);
             if(is_array($table)){
