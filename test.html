@@ -57,13 +57,10 @@
             }
         };
         var getAll = {
-            url: 'api/v1/users',
+            url: 'api/v1/orders',
             type: 'GET',
             dataType: 'json',
-            data: JSON.stringify({
-                password: "0046788285",
-                email: "nick@nickthesick.com"
-            }),
+            data: "",
             //*
             headers: {
                 Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
@@ -186,7 +183,7 @@
             }
         };
 
-        $.ajax(columns);
+        $.ajax(getAll);
     });
     </script>
 </head>

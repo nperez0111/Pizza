@@ -21,7 +21,7 @@ $.ajax({
                     ["To", "The", "Internet"]
                 ],
                 table: "users",
-                tables: ["users", "other", "MeantToCauseAlert"]
+                tables: ["users", "other", "orders", "MeantToCauseAlert"]
             }
         });
         var func = function() {

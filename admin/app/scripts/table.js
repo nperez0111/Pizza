@@ -247,6 +247,7 @@ var Table = Ractive.extend({
             for (key in objs[0]) {
                 arry.push(key);
             }
+            console.log(arr);
             that.set("data", arr);
             that.set("rows", arry);
             return arr;
@@ -255,6 +256,9 @@ var Table = Ractive.extend({
             switch (tabler) {
                 case "users":
                     that.set("editing.notAllowed", [false, false, true]);
+                    break;
+                case "orders":
+                    that.set("editing.notAllowed", [true, false, false, false]);
                     break;
             }
             return data;
