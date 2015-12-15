@@ -165,17 +165,12 @@
             type: 'GET',
             dataType: 'json',
             data: {
-                orders: 'orderly',
-                users: ['fname', 'LName'],
-                login: {
-                    Email: 'nick@nickthesick.com',
-                    password: '0046788285'
-                }
+                orders: 'Order',
+                users: ['FName', 'LName']
             },
-            /*
-                        headers: {
-                            Authorization: 'Basic ' + btoa('nick@nickthesick.com' + ':' + '0046788285')
-                        },*/
+            headers: {
+                Authorization: 'Basic ' + btoa('nick@nickthesick.com' + ':' + '0046788285')
+            },
             success: function(data) {
                 document.write(JSON.stringify(data));
                 console.log(data);

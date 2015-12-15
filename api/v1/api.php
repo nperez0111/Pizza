@@ -23,6 +23,12 @@ $routes=[
         'props'=>['FName','LName','Email','password'],
         'identifier'=>'Email',
         'identifiers'=>['FName','LName','Email']
+    ],
+    'orders'=>[
+        'identifiers'=>['ID','Order','Date','Price'],
+        'methods'=>[1,1,1,1],
+        'props'=>['ID','Order','Date','Price'],
+        'identifier'=>'ID'
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -542,9 +548,22 @@ function sql_GET_COLUMNS(){
     $arr=[];
     foreach ($JSON as $table=>$val){
         if($table!=="login"){
-            array_push($arr,$table);
-            if(is_array($table)){
-                array_push($arr,"IS Array");
+            
+            if(is_array($val)){
+                //array_push($arr,"IS Array");
+                for($i=0;$i<count($val);$i++){
+                    $cur=$val[$i];
+                    if(!isIdentifier($table,$cur)){
+                        return null;
+                    }
+                    array_push($arr,$cur);
+                }
+            }
+            else{
+                /*if(!isIdentifier($table,$val)){
+                        return null;
+                    }*/
+                array_push($arr,$val);
             }
 
         }
