@@ -33,7 +33,7 @@ $JSON = array();
 parse_str(file_get_contents('php://input'), $JSON);
 //$JSON=(json_decode($put,true));
 //echo $JSON;
-$JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$JSON;
+$JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$_SERVER['REQUEST_METHOD']=='GET'?$_GET:$JSON;
 /*
    _____ ____  _____   _____ 
   / ____/ __ \|  __ \ / ____|
@@ -242,6 +242,9 @@ function rest_get($req){
         case 5:
         $response=(sql_GET_SORT($req,false));
         break;
+        case 6:
+        $response=sql_GET_COLUMNS();
+        break;
         case 0:
         default:
         rest_error("Mal-Formed request, check url params",400);
@@ -335,16 +338,27 @@ function checkTableReqs($table,&$JSON){
 
 */
 function reqRouter($req,$http){
-    if(!isset($req[0])||(!isMethodAllowed($req[0],$http)&&!($http=="LOGIN"||$http=="LOGOUT"))){
+    if(isset($req)&&($req[0]=="columns")){
+
+    }
+    else if(!isset($req[0])||(!isMethodAllowed($req[0],$http)&&!($http=="LOGIN"||$http=="LOGOUT"))){
 
         //rest_error("Bad Request",401);
         return 0;
     }
     if($http=="GET"){
         if(count($req)==1){
-                
-            //the users is asking/manipulating an entire table
+            global $routes;
+            if(isset($routes[$req[0]])){
+                //the users is requesting an entire table
             return 1;
+            }
+            else if($req[0]=="columns"){
+                return 6;
+                //user is requesting to retrieve multiple columns
+            }else{
+                return 0;
+            }
         }
         else{
             //the user is requesting a search
@@ -520,6 +534,20 @@ function sql_GET_ALL($table,$pos){
             $data[$routes[$table]['identifiers'][$i]]=$row[$routes[$table]['identifiers'][$i]];
         }
         array_push($arr,$data);
+    }
+    return $arr;
+}
+function sql_GET_COLUMNS(){
+    global $JSON;
+    $arr=[];
+    foreach ($JSON as $table){
+        if($table!=="login"){
+            array_push($arr,$table);
+            if(is_array($table)){
+                array_push($arr,"IS Array");
+            }
+
+        }
     }
     return $arr;
 }

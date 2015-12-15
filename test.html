@@ -81,14 +81,10 @@
                 url: 'api/v1/users/search/fname/nick',
                 type: 'GET',
                 dataType: 'json',
-                data: JSON.stringify({
+                data: JSON.stringify({login:{
                     password: "0046788285",
                     email: "nick@nickthesick.com"
-                }),
-                //*
-                headers: {
-                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                },//*/
+                }}),
                 success: function (data) {
                     document.write(JSON.stringify(data));
                     console.log(data);
@@ -157,8 +153,30 @@
                     }
                 }
             };
+            var columns={
+                url: 'api/v1/columns',
+                type: 'GET',
+                dataType: 'json',
+                data: JSON.stringify({login:{
+                    password: "0046788285",
+                    email: "nick@nickthesick.com"
+                },users:["fname","LName"],orders:"orderly"}),
+                success: function (data) {
+                    document.write(JSON.stringify(data));
+                    console.log(data);
+                    
+                },
+                error: function (no) {
+                    console.log((no.responseText));
+                },
+                complete: function (j) {
+                    if (j.readyState == 4) {
+                        console.log(j);
+                    }
+                }
+            };
             
-            $.ajax(PUT);
+            $.ajax(columns);
         });
     </script>
 </head>
