@@ -53,12 +53,18 @@ var Table = Ractive.extend({
         }
         this.set("add", []);
         this.get('data').push(itemToAdd);
+        var that = this;
         return this.sendToDataBase({
             type: "PUT",
             data: this.makeObj(itemToAdd)
         }, this.get("table") + '/').then(function(o) {
+
             $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
             return o;
+        }, function(a) {
+            that.get('data').splice(that.get('data').length - 1, 1);
+            $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
+            return a;
         });
     },
     edit: function(e) {
@@ -195,14 +201,14 @@ var Table = Ractive.extend({
             }
         }, obj.data);
         console.log(obj);
+        if (obj.type == "POST") {
+            obj.data = JSON.stringify(obj.data);
+        }
         var that = this;
         return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
             that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
-            if (err.responseText) {
-                throw Error(JSON.stringify(err));
-            }
             return Error(err);
         });
     },
