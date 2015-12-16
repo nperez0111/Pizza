@@ -131,13 +131,17 @@
             }
         };
         var POST = {
-            url: 'api/v1/users/fname/nick@nickthesick.c0',
+            url: 'http://localhost:80/pizza/api/v1/users/TOGETHER',
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
-                password: "0046788285",
-                email: "nick@nickthesick.c0",
-                fname: "macaroni"
+                LName: "Perez",
+                Email: "TOGETHER",
+                FName: "macaroni",
+                login: {
+                    Email: "nick@nickthesick.com",
+                    password: "0046788285"
+                }
             }),
             //*
             headers: {

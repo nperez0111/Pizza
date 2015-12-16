@@ -41,12 +41,12 @@ $.ajax({
                     $("#alert").fadeTo(500, 0).slideUp(500, function() {
                         $(this).remove();
                     });
-                    interval = setInterval(func, 4000);
+                    interval = setInterval(func, 10000);
                 });
                 console.log(Error(err));
             });
         };
-        var interval = setInterval(func, 4000);
+        var interval = setInterval(func, 10000);
         //console.log(interval);
     },
     function(err) {
