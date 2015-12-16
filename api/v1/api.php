@@ -27,7 +27,7 @@ $routes=[
     'orders'=>[
         'identifiers'=>['ID','OrderSymbols','DateOrdered','Price'],
         'methods'=>[1,1,1,1],
-        'props'=>['ID','OrderSymbols','DateOrdered','Price'],
+        'props'=>['OrderSymbols','Price'],
         'identifier'=>'ID'
     ]
 ];
@@ -36,10 +36,18 @@ $routes=[
 //identifier is default identifier
 //identifiers are all possible identifiers
 $JSON = array();
-parse_str(file_get_contents('php://input'), $JSON);
-//$JSON=(json_decode($put,true));
-//echo $JSON;
-$JSON=$_SERVER['REQUEST_METHOD']=='POST'?$_POST:$_SERVER['REQUEST_METHOD']=='GET'?$_GET:$JSON;
+$val=file_get_contents('php://input');
+//parse_str(file_get_contents('php://input'), $JSON);
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $JSON=(json_decode($val,true));
+}
+else if($_SERVER['REQUEST_METHOD']=='GET'){
+    $JSON=$_GET;
+}
+else{
+    parse_str($val, $JSON);
+}
+
 /*
    _____ ____  _____   _____ 
   / ____/ __ \|  __ \ / ____|
@@ -189,7 +197,7 @@ function rest_post($req){
 function rest_put($req){
     global $routes;
     global $JSON;
-   $table=$routes[$req[0]];
+   $table=$req[0];
    if(checkPrivileges($req[0])==false||checkTableReqs($req[0],$JSON)==false){
        rest_error("Insufficient Priveleges OR incorrect JSON Requirements",401); 
        return;
@@ -201,7 +209,7 @@ function rest_put($req){
    include '../../includes/database.php';
 
    $stmt=$db->prepare(sql_PUT($table));
-   $ex=buildJSONInput($table,$JSON);
+   $ex=buildJSONInputWProps($table,$JSON);
 
    if($ex==false){
     rest_error("Your JSON May be Mal-Formed,incorrect for the database or some other error may have occured",400);
@@ -411,7 +419,12 @@ function reqRouter($req,$http){
                 if(!isset($JSON[$keys[$i]])){
                     return 0;
                 }
-            }//count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
+            }
+            if(isIdentifier($table,$col)==false){
+                return 0;
+            }
+            
+            //count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
             if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$id]))==1&&$col==$routes[$table]['identifier']?count(sql_GET([$table,"search",$col,$JSON[$col]]))==0:true){
                 return 1;
             }
@@ -427,6 +440,7 @@ function reqRouter($req,$http){
                     return 0;
                 }
             }
+            
             if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$JSON[$routes[$table]['identifier']]]))==1){
                 return 2;
             }
@@ -622,9 +636,9 @@ function sql_DELETE($req){
 }
 
 function sql_PUT($table){
-    $str="INSERT INTO ".$table."(".buildIdentifiers($table,false).") VALUES(";
+    $str="INSERT INTO ".$table."(".buildProps($table,false).") VALUES(";
     
-    for($i=0,$arr=buildIdentifiers($table,true);$i<count($arr);$i++){
+    for($i=0,$arr=buildProps($table,true);$i<count($arr);$i++){
         $str.=":".$arr[$i].(($i!==(count($arr)-1))?",":"");
     }
 
@@ -646,6 +660,17 @@ function buildIdentifiers($table,$bool){
 //returns array for the spl executer and false if the json obj does not have the property required
 function buildJSONInput($table,$JSON){
     $keys=buildIdentifiers($table,true);
+    $arr=[];
+    for($i=0;$i<count($keys);$i++){
+        if(!isset($JSON[$keys[$i]])){
+            return false;
+        }
+        $arr[":".$keys[$i]]=$JSON[$keys[$i]];
+    }
+    return $arr;
+}
+function buildJSONInputWProps($table,$JSON){
+    $keys=buildprops($table,true);
     $arr=[];
     for($i=0;$i<count($keys);$i++){
         if(!isset($JSON[$keys[$i]])){
