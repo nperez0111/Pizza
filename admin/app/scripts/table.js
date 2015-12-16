@@ -32,7 +32,7 @@ var Table = Ractive.extend({
         //find a way to initialize the data object
 
     },
-    url: 'http://' + window.location.hostname + ':80/pizza/api/v1/',
+    url: 'http://' +( (window.location.hostname.split(".").length)==2?"api."+(window.location.hostname)+"/":(window.location.hostname.split(".").length)==3?("api."+window.location.hostname.split(".").splice(1,2).join(".")+"/"):(window.location.hostname + ':80'+'/pizza/api/v1/')),
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
