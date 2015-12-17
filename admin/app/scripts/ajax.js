@@ -1,5 +1,5 @@
 $.mockjax({
-    url: "*/pizza/api/v1/other",
+    url: "*/other",
     responseText: {
         status: "success",
         message: JSON.stringify([{
