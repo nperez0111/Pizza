@@ -1,18 +1,35 @@
-<div class="jumbotron">
-    <h1 class="text-capitalize text-center">{{title}}</h1>
-    <form class="form-horizontal">
-        {{#each possibleInps:i}}
-        <div class="form-group">
-            <label for="inp{{i}}" id="label{{i}}" class="col-sm-6 col-lg-4 control-label">Question {{i+1}}: {{possibleInps[i].label}}</label>
-            <div class="col-sm-6 col-lg-8">
-                <input type="{{possibleInps[i].type}}" placeholder="Answer" value="{{possibleInps[i].answer}}" id="inp{{i}}" class="form-control" aria-describedby="label{{i}}" autofocus="{{i==0}}">
-            </div>
-        </div>
-        {{/each}}
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10 col-lg-offset-4 col-lg-8">
-                <button type="submit" class="btn btn-default" on-click="next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
-            </div>
-        </div>
-    </form>
-</div>
+{{#each (Array(Math.ceil(type.length/cols))):i}}
+    <div class="row">
+        
+        {{#each Array(cols):cur}}
+          
+           {{#if type[(cur+(i*cols))]}}
+               
+                <div class="col-lg-{{12/cols}}">
+                   
+                    <div class="page-header">
+                       
+                        <h1 class="text-capitalize text-center">{{type[(cur+(i*cols))].name}}</h1>
+                        
+                    </div>
+                    
+                    
+                    <h2>Quick Order :</h2>
+                    
+                    <div class="row">
+                       
+                        {{#each type[(cur+(i*cols))].quickOrders:q}}
+                            {{type[(cur+(i*cols))].quickOrders[q]}}
+                        {{/each}}
+                        
+                    </div>
+                    
+                </div>
+                
+            {{/if}}
+            
+       {{/each}}
+       
+    </div>
+
+{{/each}}
