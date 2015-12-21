@@ -1,7 +1,7 @@
 var table, tele;
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('#tele').click(teler);
     $('#home').click(home);
     teler();
@@ -12,7 +12,7 @@ function home(e) {
     $.ajax({
         url: "views/table.html",
         dataType: "html"
-    }).then(function(template) {
+    }).then(function (template) {
             table = new Table({
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -34,7 +34,7 @@ function home(e) {
                     tables: ["users", "other", "orders", "MeantToCauseAlert"]
                 }
             });
-            var func = function() {
+            var func = function () {
                 table.switchTable({
                     url: table.url + table.get("table"),
                     type: 'GET',
@@ -43,12 +43,12 @@ function home(e) {
                     headers: {
                         Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
                     }, //*/
-                }).then(function() {}, function(err) {
+                }).then(function () {}, function (err) {
                     clearInterval(interval);
                     table.alerter('Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>");
-                    $('#click').click(function() {
+                    $('#click').click(function () {
                         $(this).find('span').addClass("glyphicon-refresh-animate");
-                        $("#alert").fadeTo(500, 0).slideUp(500, function() {
+                        $("#alert").fadeTo(500, 0).slideUp(500, function () {
                             $(this).remove();
                         });
                         interval = setInterval(func, 10000);
@@ -59,7 +59,7 @@ function home(e) {
             var interval = setInterval(func, 10000);
             //console.log(interval);
         },
-        function(err) {
+        function (err) {
             table = new Table();
             table.alerter("Sorry, Issues loading template file...");
             return Error(err);
@@ -71,7 +71,7 @@ function teler(e) {
     return $.ajax({
         url: "views/teleprompter.html",
         dataType: "html"
-    }).then(function(template) {
+    }).then(function (template) {
         tele = new Tele({
             // The `el` option can be a node, an ID, or a CSS selector.
             el: '#container',
@@ -81,21 +81,26 @@ function teler(e) {
                 cols: 2,
                 type: [{
                     name: "Pizza",
-                    quickOrders: ["Large Peperoni"]
+                    quickOrders: ["Large Peperoni"],
+                    buildYourOwn: true
                 }, {
                     name: "Wings",
-                    quickOrders: ["Spicy buffalo"]
+                    quickOrders: ["Spicy buffalo"],
+                    buildYourOwn: true
                 }, {
                     name: "Salad",
-                    quickOrders: ["Regular", "Lechuga"]
+                    quickOrders: ["Regular", "Lechuga"],
+                    buildYourOwn: true
                 }, {
                     name: "Drink",
-                    quickOrders: ["Sprite", "Coke"]
+                    quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
+                    buildYourOwn: false,
+                    images: ["sprite.png", "coke.png", "diet_coke.png", "materva.png", "water.png"]
                 }]
             }
         });
 
-    }, function(err) {
+    }, function (err) {
         tele = new Tele();
         tele.alerter("Sorry, Issues loading template file...");
         return Error(err);
@@ -106,7 +111,7 @@ function teler(e) {
 function pre(e) {
     if (e) {
         e.preventDefault();
-        $('.nav li').each(function() {
+        $('.nav li').each(function () {
             $(this).removeClass("active");
         });
         $($(e.target)[0]).parent().addClass("active");

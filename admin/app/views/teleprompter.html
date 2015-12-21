@@ -13,16 +13,23 @@
                         
                     </div>
                     
-                    
-                    <h2>Quick Order :</h2>
-                    
-                    <div class="row">
-                       
+                    {{#if type[(cur+(i*cols))].buildYourOwn}}
+                    <h2><a onclick="build" class="text-center text-capitalize">Build Your Own:</a></h2>
+                    {{/if}}
+                      
+                       <div class="row">
                         {{#each type[(cur+(i*cols))].quickOrders:q}}
-                            {{type[(cur+(i*cols))].quickOrders[q]}}
+                            <div class="col-lg-{{12/(cols+1)}}">
+                                <button type="button" class="btn btn-default btn-block">
+                                    {{#if type[(cur+(i*cols))].images}}
+                                        <img src="images/{{type[(cur+(i*cols))].images[q]}}">
+                                    {{else}}
+                                    {{type[(cur+(i*cols))].quickOrders[q]}}
+                                    {{/if}}
+                                </button>
+                            </div>
                         {{/each}}
-                        
-                    </div>
+                        </div>
                     
                 </div>
                 
