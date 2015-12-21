@@ -211,8 +211,8 @@ function rest_put($req){
    $stmt=$db->prepare(sql_PUT($table));
    $ex=buildJSONInputWProps($table,$JSON);
 
-   if($ex==false){
-    rest_error("Your JSON May be Mal-Formed,incorrect for the database or some other error may have occured",400);
+   if(is_string($ex)){
+    rest_error("Property: '".$ex."' is not set on provided JSON Object. Your JSON May be Mal-Formed,incorrect for the database or some other error may have occured",400);
     return;
    }
    $stmt->execute($ex);
@@ -657,13 +657,13 @@ function buildIdentifiers($table,$bool){
     return $bool?$routes[$table]['identifiers']:implode(",",$routes[$table]['identifiers']);
 }
 
-//returns array for the spl executer and false if the json obj does not have the property required
+//returns array for the spl executer and string with what is missing if the json obj does not have the property required
 function buildJSONInput($table,$JSON){
     $keys=buildIdentifiers($table,true);
     $arr=[];
     for($i=0;$i<count($keys);$i++){
         if(!isset($JSON[$keys[$i]])){
-            return false;
+            return $keys[$i];
         }
         $arr[":".$keys[$i]]=$JSON[$keys[$i]];
     }
@@ -674,7 +674,7 @@ function buildJSONInputWProps($table,$JSON){
     $arr=[];
     for($i=0;$i<count($keys);$i++){
         if(!isset($JSON[$keys[$i]])){
-            return false;
+            return $keys[$i];
         }
         $arr[":".$keys[$i]]=$JSON[$keys[$i]];
     }
