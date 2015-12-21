@@ -20,7 +20,7 @@ define("HASH_PBKDF2_INDEX", 3);
 $routes=[
     'users'=>[
         'methods'=>[1,1,1,1],
-        'props'=>['FName','LName','Email','password'],
+        'props'=>['FName','LName','Email'],
         'identifier'=>'Email',
         'identifiers'=>['FName','LName','Email']
     ],
