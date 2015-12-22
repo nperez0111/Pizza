@@ -95,7 +95,7 @@ function teler(e) {
                     name: "Drink",
                     quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
                     buildYourOwn: false,
-                    images: ["sprite.png", "coke.png", "diet_coke.png", "materva.png", "water.png"]
+                    images: ["sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg"]
                 }]
             }
         });
