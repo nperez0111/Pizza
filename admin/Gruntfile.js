@@ -224,7 +224,6 @@ module.exports = function(grunt) {
                 src: [
                     '<%= config.dist %>/scripts/{,*/}*.js',
                     '<%= config.dist %>/styles/{,*/}*.css',
-                    '<%= config.dist %>/images/{,*/}*.*',
                     '<%= config.dist %>/styles/fonts/{,*/}*.*',
                     '<%= config.dist %>/*.{ico,png}'
                 ]
@@ -246,7 +245,6 @@ module.exports = function(grunt) {
             options: {
                 assetsDirs: [
                     '<%= config.dist %>',
-                    '<%= config.dist %>/images',
                     '<%= config.dist %>/styles'
                 ]
             },
