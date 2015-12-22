@@ -29,6 +29,12 @@ $routes=[
         'methods'=>[1,1,1,1],
         'props'=>['OrderSymbols','Price'],
         'identifier'=>'ID'
+    ],
+    'quickOrders'=>[
+        'identifiers'=>['Name','OrderName'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Name','OrderName'],
+        'identifier'=>'OrderName'
     ]
 ];
 //methods refer to [get,post,put,delete]
