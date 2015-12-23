@@ -19,9 +19,10 @@ var Tele = Ractive.extend({
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
 
     },
+    types: ["Pizza", "Wings", "Salad"],
     getQuickOrders: function() {
         var that = this,
-            arry = ["Pizza", "Wings", "Salad"],
+            arry = this.types,
             i = 0;
         //NOT The most sustainable way of doing this will fix once multiple colum selecting is sorted through
         var func = function(ary, x) {
@@ -42,16 +43,24 @@ var Tele = Ractive.extend({
         });
     },
     order: function(obj) {
-        var param = this.get(obj.keypath);
-        var arry = ["Pizza", "Wings", "Salad"];
+        var param = this.get(obj.keypath),
+            that = this,
+            arry = this.types;
         console.log(obj);
         this.sendToDataBase({
             type: "GET"
-        }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(a) {
-            console.log(a);
+        }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(object) {
+            that.placeOrder(JSON.parse(object)[0]);
         }, function(e) {
             console.log(e);
         });
+    },
+    placeOrder: function(order) {
+        console.log(order);
+    },
+    sortOrder: function(order) {
+        //returns the order sorted correctly
+        return order;
     },
     sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
