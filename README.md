@@ -3,19 +3,19 @@
 Pizza Web App, Point of Sale and API
 ## Pizza Admin Page
 
-This is the admin dashboard of the pizza Api in order to control every aspect to the site.
+This is the admin dashboard of the pizza Api in order to control every aspect to the site. Of course able to change all settings and able to edit databases in a user friendly manner.
 
 ## Pizza API
 
 Currently the API is built out using a REST API made by yours truly,
 
-## Methods Available to the API
+### Methods Available to the API
  
  URL | Method | Responses
  ----| ------ | ---------
 /tableName | GET | Whole table
 /tableName/search/identifierRow | GET | List of rows with identifierRow
-/tableName/search/identifierRow/value | GET | ~~List of rows with identifierRow containing value value~~ (Check This)
+/tableName/search/identifierRow/value | GET | List of rows with identifierRow containing value value
 /tableName/sortBy/identifierRow | GET | List rows sorted ascending by identifierRow
 /tableName/sortBy/identifierRow/SORT[ASC OR DESC] | GET | Same as above but, allows specifying order
 /tableName/identifier | POST | Update identifier's row with JSON data
