@@ -48,6 +48,12 @@ $routes=[
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
     ],
+    'quickOrdersDrink'=>[
+        'identifiers'=>['Name','OrderName'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Name','OrderName'],
+        'identifier'=>'OrderName'
+    ],
     'symbols'=>[
         'identifiers'=>['ID','Name','Symbol'],
         'methods'=>[1,1,1,1],
