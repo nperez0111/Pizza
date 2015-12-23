@@ -19,7 +19,7 @@ var Tele = Ractive.extend({
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
 
     },
-    types: ["Pizza", "Wings", "Salad"],
+    types: ["Pizza", "Wings", "Salad", "Drink"],
     getQuickOrders: function() {
         var that = this,
             arry = this.types,
@@ -33,12 +33,12 @@ var Tele = Ractive.extend({
                 that.set("type[" + x + "].quickOrders", JSON.parse(obj));
 
             }, function(e) {
-                console.log(e);
+                that.alerter(e);
             });
         };
         func(arry, i).then(function() {
             func(arry, ++i).then(function() {
-                func(arry, ++i);
+                func(arry, ++i); //doesnt go a fourth time around to not include drinks...
             });
         });
     },
@@ -46,16 +46,18 @@ var Tele = Ractive.extend({
         var param = this.get(obj.keypath),
             that = this,
             arry = this.types;
-        console.log(obj);
         this.sendToDataBase({
             type: "GET"
         }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(object) {
-            that.placeOrder(JSON.parse(object)[0]);
+            that.stageOrder(JSON.parse(object)[0]);
         }, function(e) {
-            console.log(e);
+            that.alerter(e);
         });
     },
     placeOrder: function(order) {
+        console.log(order);
+    },
+    stageOrder: function(order) {
         console.log(order);
     },
     sortOrder: function(order) {
