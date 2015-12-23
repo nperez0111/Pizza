@@ -30,7 +30,7 @@ function home(e) {
                         ["To", "The", "Internet"]
                     ],
                     table: "users",
-                    tables: ["users", "other", "orders", "MeantToCauseAlert", "quickOrders"]
+                    tables: ["users", "other", "orders", "MeantToCauseAlert", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings"]
                 }
             });
             var func = function() {
@@ -80,7 +80,7 @@ function teler(e) {
                 cols: 2,
                 type: [{
                     name: "Pizza",
-                    quickOrders: ["Large Peperoni"],
+                    quickOrders: ["Large eperoni"],
                     buildYourOwn: true
                 }, {
                     name: "Wings",

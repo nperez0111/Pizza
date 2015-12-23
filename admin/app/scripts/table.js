@@ -263,8 +263,14 @@ var Table = Ractive.extend({
                 case "users":
                     that.set("editing.notAllowed", [false, false, true]);
                     break;
+                case "symbols":
+                    that.set("editing.notAllowed", [true, false, false]);
+                    break;
                 case "orders":
                     that.set("editing.notAllowed", [true, false, false, false]);
+                    break;
+                default:
+                    that.set("editing.notAllowed", [false, false, false]);
                     break;
             }
             return data;

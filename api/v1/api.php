@@ -30,11 +30,29 @@ $routes=[
         'props'=>['OrderSymbols','Price'],
         'identifier'=>'ID'
     ],
-    'quickOrders'=>[
+    'quickOrdersPizza'=>[
         'identifiers'=>['Name','OrderName'],
         'methods'=>[1,1,1,1],
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
+    ],
+    'quickOrdersSalad'=>[
+        'identifiers'=>['Name','OrderName'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Name','OrderName'],
+        'identifier'=>'OrderName'
+    ],
+    'quickOrdersWings'=>[
+        'identifiers'=>['Name','OrderName'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Name','OrderName'],
+        'identifier'=>'OrderName'
+    ],
+    'symbols'=>[
+        'identifiers'=>['ID','Name','Symbol'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Name','Symbol'],
+        'identifier'=>'ID'
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -523,7 +541,7 @@ function sql_GET_SORT($req,$bool){
 //$bool?"sort by pref":"sort ASC"
     return $bool?sql_GET_ALL($req[0],[$req[2],$req[3]]):sql_GET_ALL($req[0],[$req[2],"ASC"]);
 }
-function sql_GET_ROW($req,$pos){
+function sql_GET_ROW($req){
     $table=$req[0];
     global $routes;
     include '../../includes/database.php';
@@ -591,6 +609,7 @@ function sql_GET_COLUMNS(){
 
         }
     }
+    json_encode($arr);
     return $arr;
 }
 
