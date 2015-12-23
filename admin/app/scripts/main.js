@@ -30,7 +30,7 @@ function home(e) {
                         ["To", "The", "Internet"]
                     ],
                     table: "users",
-                    tables: ["users", "other", "orders", "MeantToCauseAlert", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings"]
+                    tables: ["users", "other", "orders", "MeantToCauseAlert", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink"]
                 }
             });
             var func = function() {
