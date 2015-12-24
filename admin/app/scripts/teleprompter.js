@@ -58,16 +58,28 @@ var Tele = Ractive.extend({
         console.log(order);
     },
     stageOrder: function(order) {
+        this.notify("order "+order.Name+" added Successfully!");
         return this.get('queue').push(order);
+    },
+    notify:function(str){
+        
     },
     sortOrder: function(order) {
         //returns the order sorted correctly
         return order;
     },
+    priorities:[],
+    getPriority:function (){
+        if(this.priorities.length>0){
+            return this.priorities;
+        }
+        
+    },
     build: function() {},
     sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
-            type: "POST",
+            type: "POST
+",
             dataType: "json",
             url: this.url + (urlEx ? urlEx : ""),
             headers: {
