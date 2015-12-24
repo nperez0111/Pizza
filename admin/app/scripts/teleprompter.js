@@ -66,7 +66,13 @@ var Tele = Ractive.extend({
     },
     sortOrder: function(order) {
         //returns the order sorted correctly
-        return order;
+        database = {
+            delimiter: " "
+        };
+        return order.split(database.delimiter).sort(function(a, b) {
+            //this is totally just an I think ...
+            return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
+        });
     },
     priorities: [],
     getPriority: function() {
