@@ -4,7 +4,7 @@
 
 ID | Symbol | Priority | Price | Units
 ---| -------------|--------|---------|--------
-Auto Increment | Integer of Symbol | Integer | Decimal | Integer
+Auto Increment | Name of Symbol | Integer | Decimal | Integer
 
 ## Symbol DB
 
