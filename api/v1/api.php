@@ -295,7 +295,7 @@ function rest_get($req){
         return;
     }
 	
-    if(isset($response)){
+    if(isset($response)&&(is_array($response)&&count($response)>0)){
             rest_success(json_encode($response));
         }
     else{
