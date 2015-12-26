@@ -58,11 +58,41 @@ var Tele = Ractive.extend({
         console.log(order);
     },
     stageOrder: function(order) {
-        this.notify("order " + order.Name + " added Successfully!");
+        this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "", order);
         return this.get('queue').push(order);
     },
-    notify: function(str) {
+    notify: function(title, message, order) {
+        var that = this,
+            cur = order,
+            not = $.notify({
+                title: title,
+                message: message !== "" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>',
+                type: 'info'
+            }, {
+                type: 'minimalist',
+                delay: 5000,
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button><img data-notify="icon" class="img-circle pull-left">' +
+                    '<span data-notify="title">{1}</span>' +
+                    '<span data-notify="message">{2}</span>' +
+                    '</div>'
+            });
+        if (message === "") {
+            $('.rmv').click(function() {
 
+                that.get("queue").forEach(function(obj, index, arr) {
+                    if (obj.Name == cur.Name) {
+                        arr.splice(index, 1);
+                        not.close();
+                        return;
+                    }
+                });
+            });
+        }
     },
     sortOrder: function(order) {
         //returns the order sorted correctly
