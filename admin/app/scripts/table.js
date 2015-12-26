@@ -206,6 +206,7 @@ var Table = Ractive.extend({
         }
         var that = this;
         return $.ajax(obj).then(function(r) {
+            console.log(r);
             return ((r.message));
         }, function(err) {
             that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
@@ -265,6 +266,18 @@ var Table = Ractive.extend({
                     break;
                 case "symbols":
                     that.set("editing.notAllowed", [true, false, false]);
+                    break;
+                case "quickOrdersDrink":
+                    that.set("editing.notAllowed", [false, true]);
+                    break;
+                case "quickOrdersPizza":
+                    that.set("editing.notAllowed", [false, true]);
+                    break;
+                case "quickOrdersSalad":
+                    that.set("editing.notAllowed", [false, true]);
+                    break;
+                case "quickOrdersWings":
+                    that.set("editing.notAllowed", [false, true]);
                     break;
                 case "orders":
                     that.set("editing.notAllowed", [true, false, false, false]);

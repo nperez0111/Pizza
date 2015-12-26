@@ -106,6 +106,7 @@ var Tele = Ractive.extend({
         }
         var that = this;
         return $.ajax(obj).then(function(r) {
+            console.log(r);
             return ((r.message));
         }, function(err) {
             that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
