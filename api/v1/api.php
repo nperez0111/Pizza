@@ -59,6 +59,12 @@ $routes=[
         'methods'=>[1,1,1,1],
         'props'=>['Name','Symbol'],
         'identifier'=>'ID'
+    ],
+    'tablesPrimaryKeys'=>[
+        'identifiers'=>['tableName','primaryKeyArr'],
+        'methods'=>[1,1,1,1],
+        'props'=>['tableName','primaryKeyArr'],
+        'identifier'=>'tableName'
     ]
 ];
 //methods refer to [get,post,put,delete]

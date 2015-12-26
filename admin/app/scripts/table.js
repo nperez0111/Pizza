@@ -259,33 +259,15 @@ var Table = Ractive.extend({
             that.set("rows", arry);
             return arr;
         }).then(function(data) {
-            var tabler = that.get("table");
-            switch (tabler) {
-                case "users":
-                    that.set("editing.notAllowed", [false, false, true]);
-                    break;
-                case "symbols":
-                    that.set("editing.notAllowed", [true, false, false]);
-                    break;
-                case "quickOrdersDrink":
-                    that.set("editing.notAllowed", [false, true]);
-                    break;
-                case "quickOrdersPizza":
-                    that.set("editing.notAllowed", [false, true]);
-                    break;
-                case "quickOrdersSalad":
-                    that.set("editing.notAllowed", [false, true]);
-                    break;
-                case "quickOrdersWings":
-                    that.set("editing.notAllowed", [false, true]);
-                    break;
-                case "orders":
-                    that.set("editing.notAllowed", [true, false, false, false]);
-                    break;
-                default:
-                    that.set("editing.notAllowed", [false, false, false]);
-                    break;
-            }
+            var tabler = that.get("table"),
+                tha = that;
+            that.sendToDataBase({
+                type: "GET"
+            }, ("tablesPrimaryKeys/search/tableName/" + tabler)).then(function(response) {
+                tha.set("editing.notAllowed", JSON.parse(JSON.parse(response)[0].primaryKeyArr));
+            }, function(err) {
+                console.log(err);
+            });
             return data;
         });
     }
