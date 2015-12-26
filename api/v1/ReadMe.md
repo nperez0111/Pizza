@@ -42,3 +42,8 @@ What would you like? | 7 | 5 | 5
 Name | Order String | Price
 -----| ------------ | -----
 String | String of Symbols | Decimal
+
+## quickOrders{Drinks | Pizza | Salad | Wings}
+OrderName | Name
+---------- | ----
+String (Primary Key) | String (Unique)
