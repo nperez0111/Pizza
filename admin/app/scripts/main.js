@@ -61,7 +61,7 @@ function home(e) {
         function(err) {
             table = new Table();
             table.alerter("Sorry, Issues loading template file...");
-            return Error(err);
+            return Error(JSON.stringify(err));
         });
 }
 

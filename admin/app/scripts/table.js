@@ -210,7 +210,7 @@ var Table = Ractive.extend({
             return ((r.message));
         }, function(err) {
             that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
-            return err;
+            return Error(JSON.stringify(err));
         });
     },
     switchTable: function(obj) {
@@ -234,7 +234,7 @@ var Table = Ractive.extend({
 
         }, function(err) {
             that.alerter("Sorry, Issues loading Table Data from API..");
-            return Error(err);
+            return Error(JSON.stringify(err));
         }).then(function(objs) {
 
             var arr = [],

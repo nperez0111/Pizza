@@ -111,7 +111,7 @@ var Tele = Ractive.extend({
         }, function(err) {
             that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
             console.log(err);
-            return Error(err);
+            return Error(JSON.stringify(err));
         });
     }
 });
