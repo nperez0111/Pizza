@@ -77,6 +77,12 @@ $routes=[
         'methods'=>[1,1,1,1],
         'props'=>['ID','Title'],
         'identifier'=>'ID'
+    ],
+    'pizzaHeadings'=>[
+        'identifiers'=>['Title','Name'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Title','Name'],
+        'identifier'=>'Name'
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -251,7 +257,7 @@ function rest_put($req){
        return;
     }
     if(reqRouter($req,"PUT")==0){
-        rest_error("Item Exists",409);
+        rest_error("Item Exists Or Incorrect JSON Properties.",409);
         return;
     }
    include '../../includes/database.php';
@@ -263,8 +269,13 @@ function rest_put($req){
     rest_error("Property: '".$ex."' is not set on provided JSON Object. Your JSON May be Mal-Formed,incorrect for the database or some other error may have occured",400);
     return;
    }
-   $stmt->execute($ex);
+   $var=$stmt->execute($ex);
+   if($var){
    rest_success('INPUTTED SUCCESSFULLY INTO DATABASE');
+    }
+    else{
+        rest_error('Addition was unsuccessful value may not be allowed',406);
+    }
     /*
     $stmt = $db->prepare(sql_PUT($req));
     $stmt->execute(array(':fname' => $fname, ':lname' => $lname,':email' => $email,':pass' => $password,':verified'=>0));*/
@@ -343,7 +354,7 @@ function rest_delete($req){
     }
     $resp=reqRouter($req,"DELETE");
     if($resp==0){
-        rest_error("Check URL Request, The value you are attempting to delete may not exist, check ID '".$req[2]."'",400);
+        rest_error("Check URL Request, The value you are attempting to delete may not exist, check ID '".$req[1]."'",400);
         return;
     }
     $response=sql_DELETE($req);
@@ -597,7 +608,8 @@ function reqRouter($req,$http){
         global $routes;
         global $JSON;
         $table=$req[0];
-        $keys=$routes[$table]['identifiers'];
+        $keys=$routes[$table]['props'];
+        array_push($keys,$routes[$table]['identifier']);
         for($i=0;$i<count($keys);$i++){
             if(!isset($JSON[$keys[$i]])){
                 return 0;
