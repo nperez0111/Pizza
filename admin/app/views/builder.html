@@ -1,1 +1,13 @@
-ok
+{{#each types:i}}
+   <div class="panel panel-primary">
+       <div class="panel-heading ">{{headings[i]}}</div>
+    
+    <div class="panel-body">
+    {{#each types[i]:r}}
+    
+        <label class="checkbox-inline" for="option.{{i}}.{{r}}"><input type="checkbox">{{types[i][r]}}</label>
+    
+    {{/each}}
+    </div>
+    </div>
+{{/each}}

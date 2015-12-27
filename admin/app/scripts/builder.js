@@ -1,6 +1,6 @@
 var Builder = Ractive.extend({
     oninit: function() {
-        this.getData();
+        this.getData({}, "pizzaHeadings");
     },
     url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
     data: function() {
@@ -11,28 +11,25 @@ var Builder = Ractive.extend({
             ]
         };
     },
-    getData: function() {
+    getData: function(toDB, urlEx) {
         var that = this;
         this.sendToDataBase({
             type: "GET",
-            data: {
-                tables: ["symbols", "choiceHeadings"],
-                from: "possibleChoices",
-                relations: [
-                    ["symbols.ID", "possibleChoices.SymbolID"],
-                    ["possibleChoices.HeadingID", "choiceHeadings.ID"]
-                ],
-                select: ["symbols.Name", "choiceHeadings.Title"]
-            }
-        }, "join").then(function(obj) {
+            data: toDB
+        }, urlEx).then(function(obj) {
             var titles = [],
                 types = [
                     []
                 ];
             JSON.parse(obj).forEach(function(obj, i, arr) {
                 if (titles.indexOf(obj.Title) === -1) {
-                    titles.push(obj.Title);
-                    types[titles.length - 1] = [(obj.Name)];
+                    if (obj.Title === "Size") {
+                        titles.unshift(obj.Title);
+                        types.unshift([obj.Name]);
+                    } else {
+                        titles.push(obj.Title);
+                        types[titles.length - 1] = [(obj.Name)];
+                    }
                 } else {
                     types[titles.indexOf(obj.Title)].push(obj.Name);
                 }
