@@ -18,6 +18,7 @@ Currently the API is built out using a REST API made by yours truly,
 /tableName/search/identifierRow/value | GET | List of rows with identifierRow containing value value
 /tableName/sortBy/identifierRow | GET | List rows sorted ascending by identifierRow
 /tableName/sortBy/identifierRow/SORT[ASC OR DESC] | GET | Same as above but, allows specifying order
+/join | GET | allows JOIN Syntax based upon JSON Request
 /tableName/identifier | POST | Update identifier's row with JSON data
 /tableName/identifierRow/value | POST | Update identifierRow with provided value
 /tableName | PUT | Add JSON data to tableName
