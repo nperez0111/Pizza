@@ -84,21 +84,23 @@ var Tele = Ractive.extend({
         if (message === "") {
             $('.rmv').click(function() {
 
-                that.get("queue").forEach(function(obj, index, arr) {
+                that.get("queue").every(function(obj, index, arr) {
                     if (obj.Name == cur.Name) {
                         arr.splice(index, 1);
                         not.close();
-                        return;
+                        return false;
                     }
+                    return true;
                 });
             });
         }
     },
+    rmvqueue: function(obj) {
+        return this.get("queue").splice(obj.index.i, 1);
+    },
     sortOrder: function(order) {
         //returns the order sorted correctly
-        database = {
-            delimiter: " "
-        };
+        database = this.settings().delimiter;
         return order.split(database.delimiter).sort(function(a, b) {
             //this is totally just an I think ...
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
