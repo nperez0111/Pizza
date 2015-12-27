@@ -31,10 +31,12 @@ var Tele = Ractive.extend({
             dbdelimiter: " "
         };
     },
-    data: {
-        cols: 2,
-        queue: []
-            //TODO implement the default types with their settings
+    data: function() {
+        return {
+            cols: 2,
+            queue: []
+        };
+        //TODO implement the default types with their settings
     },
     types: ["Pizza", "Wings", "Salad", "Drink"],
     getQuickOrders: function() {
