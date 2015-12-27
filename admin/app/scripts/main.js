@@ -1,9 +1,10 @@
-var table, tele;
+var table, tele, build;
 Ractive.DEBUG = false;
 $(document).ready(function() {
     $('#tele').click(teler);
     $('#home').click(home);
-    teler();
+    $('#build').click(builde);
+    builde();
 });
 
 function home(e) {
@@ -101,9 +102,32 @@ function teler(e) {
     }, function(err) {
         tele = new Tele();
         tele.alerter("Sorry, Issues loading template file...");
-        return Error(err);
+        return Error(JSON.stringify(err));
     });
 
+}
+
+function builde(e) {
+    pre(e);
+    return $.ajax({
+        url: "views/builder.html",
+        dataType: "html"
+    }).then(function(template) {
+        build = new Builder({
+            // The `el` option can be a node, an ID, or a CSS selector.
+            el: '#container',
+            template: template,
+            // Here, we're passing in some initial data
+            data: {
+
+            }
+        });
+
+    }, function(err) {
+        build = new Builder();
+        build.alerter("Sorry, Issues loading template file...");
+        return Error(JSON.stringify(err));
+    });
 }
 
 function pre(e) {
