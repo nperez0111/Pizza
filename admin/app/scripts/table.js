@@ -46,6 +46,9 @@ var Table = Ractive.extend({
             } else {
                 $(this).removeClass("has-error");
             }
+            if (i === 0) {
+                $(this).find('input').focus();
+            }
         });
         if (missing) {
             $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
@@ -158,6 +161,7 @@ var Table = Ractive.extend({
         for (var i = 0, l = arr.length; i < l; i++) {
             obj[rows[i]] = arr[i];
         }
+        console.log(obj);
         return obj;
     },
     alerter: function(str, moreInfo) {

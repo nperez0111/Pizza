@@ -28,7 +28,8 @@ var Tele = Ractive.extend({
     settings: function() {
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
         return {
-            dbdelimiter: " "
+            dbdelimiter: " ",
+            splitter: " , "
         };
     },
     data: function() {
@@ -74,7 +75,28 @@ var Tele = Ractive.extend({
         });
     },
     placeOrder: function(order) {
-        console.log(order);
+
+        var str = order.map(function(obj) {
+                return (obj.OrderName);
+            }).join(this.settings().splitter),
+            that = this;
+        this.getPrice(str).then(function(p) {
+            that.sendToDataBase({
+                type: "PUT",
+                data: {
+                    OrderSymbols: str,
+                    Price: p,
+                    ID: 99999999999
+                }
+            }, "orders");
+        });
+
+
+    },
+    getPrice: function(order) {
+        return new Promise(function(resolve, reject) {
+            resolve(order.length);
+        });
     },
     stageOrder: function(order) {
         this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "", order);
