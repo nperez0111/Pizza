@@ -77,7 +77,6 @@ function teler(e) {
             template: template,
             // Here, we're passing in some initial data
             data: {
-                queue: [],
                 type: [{
                     name: "Pizza",
                     quickOrders: ["Large eperoni"],

@@ -8,7 +8,7 @@ var Tele = Ractive.extend({
             this.rmvqueue(event);
         });
         this.on('checkout', function(event) {
-            if (this.get("queue").length == 0) {
+            if (this.get("queue").length === 0) {
                 //nothing in queue to order
                 return;
             }
@@ -102,7 +102,7 @@ var Tele = Ractive.extend({
             $('.rmv').click(function() {
 
                 that.get("queue").every(function(obj, index, arr) {
-                    if (obj.Name == cur.Name) {
+                    if (obj.Name === cur.Name) {
                         arr.splice(index, 1);
                         not.close();
                         return false;
