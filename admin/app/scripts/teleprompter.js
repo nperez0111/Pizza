@@ -77,7 +77,7 @@ var Tele = Ractive.extend({
     placeOrder: function(order) {
 
         var str = order.map(function(obj) {
-                return (obj.OrderName);
+                return this.sortOrder(obj.OrderName);
             }).join(this.settings().splitter),
             that = this;
         this.getPrice(str).then(function(p) {
@@ -86,7 +86,7 @@ var Tele = Ractive.extend({
                 data: {
                     OrderSymbols: str,
                     Price: p,
-                    ID: 99999999999
+                    ID: -1
                 }
             }, "orders");
         });
@@ -142,6 +142,8 @@ var Tele = Ractive.extend({
     sortOrder: function(order) {
         //returns the order sorted correctly
         database = this.settings().delimiter;
+        //the sort should be accessed from the database within the init method
+        //this should access wherever that is stored and properly sort it correctly
         return order.split(database.delimiter).sort(function(a, b) {
             //this is totally just an I think ...
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
