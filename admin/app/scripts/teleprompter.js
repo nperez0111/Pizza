@@ -15,7 +15,7 @@ var Tele = Ractive.extend({
             this.placeOrder(this.get("queue"));
         });
     },
-    url: 'http://' + ((window.location.hostname.split(".").length) == 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) == 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
+    url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
     alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
