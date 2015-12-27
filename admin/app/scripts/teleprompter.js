@@ -8,6 +8,10 @@ var Tele = Ractive.extend({
             this.rmvqueue(event);
         });
         this.on('checkout', function(event) {
+            if (this.get("queue").length == 0) {
+                //nothing in queue to order
+                return;
+            }
             this.placeOrder(this.get("queue"));
         });
     },
