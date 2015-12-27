@@ -65,6 +65,18 @@ $routes=[
         'methods'=>[1,1,1,1],
         'props'=>['tableName','primaryKeyArr'],
         'identifier'=>'tableName'
+    ],
+    'possibleChoices'=>[
+        'identifiers'=>['SymbolID','HeadingID'],
+        'methods'=>[1,1,1,1],
+        'props'=>['SymbolID','HeadingID'],
+        'identifier'=>'SymbolID'
+    ],
+    'choiceHeadings'=>[
+        'identifiers'=>['ID','Title'],
+        'methods'=>[1,1,1,1],
+        'props'=>['ID','Title'],
+        'identifier'=>'ID'
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -295,6 +307,9 @@ function rest_get($req){
         case 6:
         $response=sql_GET_COLUMNS();
         break;
+        case 7:
+        $response=sql_GET_JOIN();
+        break;
         case 0:
         default:
         rest_error("Mal-Formed request, check url params",400);
@@ -388,7 +403,7 @@ function checkTableReqs($table,&$JSON){
 
 */
 function reqRouter($req,$http){
-    if(isset($req)&&($req[0]=="columns")){
+    if(isset($req)&&($req[0]=="columns"||$req[0]=="join")){
 
     }
     else if(!isset($req[0])||(!isMethodAllowed($req[0],$http)&&!($http=="LOGIN"||$http=="LOGOUT"))){
@@ -406,6 +421,79 @@ function reqRouter($req,$http){
             else if($req[0]=="columns"){
                 return 6;
                 //user is requesting to retrieve multiple columns
+            }
+            else if($req[0]=="join"){
+                global $JSON;
+                $required=["from","tables","relations","select"];
+
+                for($i=0;$i<count($required);$i++){
+                    if(!isset($JSON[$required[$i]])){
+                        return 0;
+                    }
+                    if(is_string($JSON[$required[$i]])&&!isset($routes[$JSON[$required[$i]]])){
+                        return 0;
+                    }
+                    if(is_array($JSON[$required[$i]])){
+
+                        if($required[$i]=="tables"){
+
+                            for($c=0;$c<count($JSON[$required[$i]]);$c++){
+
+                                if(!isset($routes[$JSON[$required[$i]][$c]])){
+                                    
+                                    return 0;
+
+                                }
+
+                            }
+                        }
+                        if($required[$i]=="select"){
+                            $arr=$JSON[$required[$i]];
+
+                                if(!isset($arr)){
+                                    
+                                    return 0;
+                                }
+
+                                for($r=0;$r<count($arr);$r++){
+
+                                    $cur=explode(".",$arr[$r]);
+
+                                    if(!isset($routes[$cur[0]])||!isIdentifier($cur[0],$cur[1])){
+                                        
+                                        return 0;
+                                    }
+
+                                }
+                        }
+                        if($required[$i]=="relations"){
+
+                            for($r=0;$r<count($JSON[$required[$i]]);$r++){
+
+                                $arr=$JSON[$required[$i]][$r];
+
+                                if(!isset($arr)){
+                                    
+                                    return 0;
+                                }
+
+                                for($r=0;$r<count($arr);$r++){
+
+                                    $cur=explode(".",$arr[$r]);
+
+                                    if(!isset($routes[$cur[0]])||!isIdentifier($cur[0],$cur[1])){
+                                        
+                                        return 0;
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+                return 7;
+                //user is requesting to join multiple columns
             }else{
                 return 0;
             }
@@ -624,7 +712,30 @@ function sql_GET_COLUMNS(){
     json_encode($arr);
     return $arr;
 }
-
+function sql_GET_JOIN(){
+    global $JSON;
+    include '../../includes/database.php';
+    $required=["from","tables","relations","select"];
+    $STR="SELECT ";
+    for($i=0;$i<count($JSON["select"]);$i++){
+        $STR.=$JSON["select"][$i].($i+1==count($JSON["select"])?" ":", ");
+    }
+    $STR.="FROM ".$JSON["from"]." ";
+    for($i=0;$i<count($JSON["tables"]);$i++){
+        $STR.="INNER JOIN ".$JSON["tables"][$i]." ";
+    }
+    $STR.="ON ";
+    for($r=0;$r<count($JSON["relations"]);$r++){
+            $STR.=$JSON["relations"][$r][0]." = ".$JSON["relations"][$r][1].($r+1==count($JSON["relations"])?" ":" AND ");
+    }
+    $stmt=$db->prepare($STR);
+    $resul=$stmt->execute();
+    $arr=[];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($arr,$row);
+    }
+    return $arr;
+}
 function sql_POST($req){
     $table=$req[0];
     $col=$req[1];
