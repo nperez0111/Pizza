@@ -4,6 +4,12 @@ var Tele = Ractive.extend({
         this.on('order', function(event) {
             this.order(event);
         });
+        this.on('rmvqueue', function(event) {
+            this.rmvqueue(event);
+        });
+        this.on('checkout', function(event) {
+            this.placeOrder(this.get("queue"));
+        });
     },
     url: 'http://' + ((window.location.hostname.split(".").length) == 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) == 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
     alerter: function(str, moreInfo) {
@@ -17,7 +23,14 @@ var Tele = Ractive.extend({
     },
     settings: function() {
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
-
+        return {
+            dbdelimiter: " "
+        };
+    },
+    data: {
+        cols: 2,
+        queue: []
+            //TODO implement the default types with their settings
     },
     types: ["Pizza", "Wings", "Salad", "Drink"],
     getQuickOrders: function() {
