@@ -82,7 +82,8 @@ $routes=[
         'identifiers'=>['Title','Name'],
         'methods'=>[1,1,1,1],
         'props'=>['Title','Name'],
-        'identifier'=>'Name'
+        'identifier'=>'Name',
+        'orderBy'=>'Title'
     ]
 ];
 //methods refer to [get,post,put,delete]
@@ -301,7 +302,14 @@ function rest_get($req){
     $response;
     switch($resp){
         case 1:
-        $response=sql_GET_ALL($req[0],null);
+        global $routes;
+        $order=@$routes[$req[0]]["orderBy"];
+        if(isset($order)){
+            $response=sql_GET_ALL($req[0],[$order,"ASC"]);
+        }
+        else{
+            $response=sql_GET_ALL($req[0],[$routes[$req[0]]['identifier'],"ASC"]);
+        }
         break;
         case 2:
         $response=(sql_GET($req));
