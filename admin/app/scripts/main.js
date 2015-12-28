@@ -1,4 +1,4 @@
-var table, tele, build;
+var table, tele, build, interval;
 Ractive.DEBUG = false;
 $(document).ready(function() {
     $('#tele').click(teler);
@@ -51,12 +51,12 @@ function home(e) {
                         $("#alert").fadeTo(500, 0).slideUp(500, function() {
                             $(this).remove();
                         });
-                        interval = setInterval(func, 10000);
+                        interval = setInterval(func, 12000);
                     });
                     console.log(err);
                 });
             };
-            var interval = setInterval(func, 10000);
+            interval = setInterval(func, 12000);
             //console.log(interval);
         },
         function(err) {
@@ -137,5 +137,8 @@ function pre(e) {
             $(this).removeClass("active");
         });
         $($(e.target)[0]).parent().addClass("active");
+    }
+    if (interval) {
+        clearInterval(interval);
     }
 }

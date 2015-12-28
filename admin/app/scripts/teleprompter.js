@@ -42,8 +42,6 @@ var Tele = Base.extend({
 
                 that.set("type[" + x + "].quickOrders", JSON.parse(obj));
 
-            }, function(e) {
-                that.alerter(e);
             });
         };
         func(arry, i).then(function() {
@@ -60,8 +58,6 @@ var Tele = Base.extend({
             type: "GET"
         }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(object) {
             that.stageOrder(JSON.parse(object)[0]);
-        }, function(e) {
-            that.alerter(e);
         });
     },
     placeOrder: function(order) {

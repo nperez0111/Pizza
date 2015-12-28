@@ -33,15 +33,9 @@ var Builder = Base.extend({
                     types[titles.indexOf(obj.Title)].push(obj.Name);
                 }
             });
-            console.log(titles);
-            console.log(types);
             that.set("headings", titles);
             that.set("types", types);
 
-        }, function(err) {
-            that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
-            console.log(err);
-            return Error(JSON.stringify(err));
         });
     }
 });
