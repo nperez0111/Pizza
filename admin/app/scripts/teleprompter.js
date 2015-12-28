@@ -95,7 +95,7 @@ var Tele = Base.extend({
 
         bassy.notify(a, message);
 
-        if (message === "") {
+        if (message === "-1-") {
             $('.rmv').click(function() {
 
                 that.get("queue").every(function(obj, index, arr) {
