@@ -1,4 +1,4 @@
-var Table = Ractive.extend({
+var Table = Base.extend({
 
     oninit: function(options) {
         //add the on handlers
@@ -21,18 +21,11 @@ var Table = Ractive.extend({
             this.switchTable({
                 url: this.url + newVal,
                 type: 'GET',
-                dataType: 'json',
-                //*
-                headers: {
-                    Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                }, //*/
             });
             //console.log(obj+" changed from "+oldVal+" to "+newVal);
         });
-        //find a way to initialize the data object
 
     },
-    url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
@@ -164,15 +157,7 @@ var Table = Ractive.extend({
         console.log(obj);
         return obj;
     },
-    alerter: function(str, moreInfo) {
-        var other = (str.str || str) + "";
-        moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
-        if (!str.el && ($('#alert').length === 0)) {
-            $('#container').prepend('<div id="alert" style="display:none" class="alert alert-danger"></div>');
-        }
-        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
-        return true;
-    },
+
     moveTo: function(from, to) {
         if (from !== parseInt(from, 10) || to !== parseInt(to, 10)) {
             return false;
@@ -189,52 +174,12 @@ var Table = Ractive.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
-    sendToDataBase: function(obj, urlEx) {
-        obj = $.extend({
-            type: "POST",
-            dataType: "json",
-            url: this.url + (urlEx ? urlEx : ""),
-            headers: {
-                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-            }
-        }, obj);
-        obj.data = $.extend({
-            login: {
-                Email: "nick@nickthesick.com",
-                password: "0046788285"
-            }
-        }, obj.data);
-        console.log(obj);
-        if (obj.type == "POST") {
-            obj.data = JSON.stringify(obj.data);
-        }
-        var that = this;
-        return $.ajax(obj).then(function(r) {
-            console.log(r);
-            return ((r.message));
-        }, function(err) {
-            that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
-            return Error(JSON.stringify(err));
-        });
-    },
     switchTable: function(obj) {
         var that = this;
-        obj = $.extend({
-            dataType: "json",
-            url: this.url,
-            headers: {
-                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-            }
-        }, obj);
-        obj.data = $.extend({
-            login: {
-                Email: "nick@nickthesick.com",
-                password: "0046788285"
-            }
-        }, obj.data);
-        return $.ajax(obj).then(function(r) {
 
-            return (JSON.parse(r.message));
+        return this.sendToDataBase(obj).then(function(r) {
+
+            return (JSON.parse(r));
 
         }, function(err) {
             that.alerter("Sorry, Issues loading Table Data from API..");
