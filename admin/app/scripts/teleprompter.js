@@ -88,8 +88,29 @@ var Tele = Base.extend({
             resolve(order.length);
         });
     },
+    notify: function(a, message, c) {
+        var bassy = new Base(),
+            that = this,
+            cur = c;
+
+        bassy.notify(a, message);
+
+        if (message === "") {
+            $('.rmv').click(function() {
+
+                that.get("queue").every(function(obj, index, arr) {
+                    if (obj.Name === cur.Name) {
+                        arr.splice(index, 1);
+                        not.close();
+                        return false;
+                    }
+                    return true;
+                });
+            });
+        }
+    },
     stageOrder: function(order) {
-        this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "", order);
+        this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "-1-", order);
         return this.get('queue').push(order);
     },
     rmvqueue: function(obj) {

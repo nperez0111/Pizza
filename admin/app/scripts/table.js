@@ -61,6 +61,8 @@ var Table = Base.extend({
             that.get('data').splice(that.get('data').length - 1, 1);
             $(obj.node).html('<span class="glyphicon glyphicon-floppy-saved"></span> Add');
             return a;
+        }).then(function(message) {
+            that.notify(message, "Table Row added!");
         });
     },
     edit: function(e) {
@@ -90,14 +92,18 @@ var Table = Base.extend({
                 $(this).text(to[i]);
             }
         });
+        this.notify("Changes not saved", "All changes have been reverted.");
         return true;
     },
     delete: function(obj) {
-        var rowOfDeletion = this.get("data").splice(obj.index.r, 1)[0];
+        var rowOfDeletion = this.get("data").splice(obj.index.r, 1)[0],
+            that = this;
         console.log(rowOfDeletion);
         this.sendToDataBase({
             type: "DELETE"
-        }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]);
+        }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
+            that.notify(message, "Delete went well!");
+        });
         return rowOfDeletion;
     },
     save: function(obj) {
@@ -129,18 +135,17 @@ var Table = Base.extend({
         if (!flag) {
             //send to database to update val
             console.log("changes observed");
-            console.log(arr);
-            console.log(previous[row]);
+            var that = this;
             this.sendToDataBase({
                 type: "POST",
                 data: this.makeObj(arr)
-            }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]);
+            }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
+                that.notify(message, "Changes Saved!");
+            });
         } else {
             //are the same do nothing
 
             console.log("no changes");
-            console.log(arr);
-            console.log(previous[row]);
             return false;
         }
         delete previous[row];

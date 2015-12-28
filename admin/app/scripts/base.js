@@ -9,12 +9,11 @@ var Base = Ractive.extend({
         $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
         return true;
     },
-    notify: function(title, message, order) {
+    notify: function(title, message) {
         var that = this,
-            cur = order,
             not = $.notify({
                 title: title,
-                message: message !== "" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>',
+                message: message !== "-1-" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>',
                 type: 'info'
             }, {
                 type: 'minimalist',
@@ -29,19 +28,6 @@ var Base = Ractive.extend({
                     '<span data-notify="message">{2}</span>' +
                     '</div>'
             });
-        if (message === "") {
-            $('.rmv').click(function() {
-
-                that.get("queue").every(function(obj, index, arr) {
-                    if (obj.Name === cur.Name) {
-                        arr.splice(index, 1);
-                        not.close();
-                        return false;
-                    }
-                    return true;
-                });
-            });
-        }
     },
     sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
