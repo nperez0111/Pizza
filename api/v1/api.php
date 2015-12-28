@@ -231,9 +231,9 @@ function rest_post($req){
     $response=$resp==1?sql_POST($req):sql_POST_ALL($req);
     if(isset($response)){
         global $JSON;
-        rest_success("'".$req[0]." was updated: ".$req[1]." updated successfully!'");
+        rest_success("'$req[1]' Has Been Updated Successfully!");
     }
-    else{rest_error("POST ERROR",500);}
+    else{rest_error("POST ERROR Has Occurred",500);}
     return 0;
 }
 /*
@@ -271,7 +271,7 @@ function rest_put($req){
    }
    $var=$stmt->execute($ex);
    if($var){
-   rest_success('INPUTTED SUCCESSFULLY INTO DATABASE');
+   rest_success('Inputted Successfully Into the DataBase!');
     }
     else{
         rest_error('Addition was unsuccessful value may not be allowed',406);
@@ -360,7 +360,7 @@ function rest_delete($req){
     $response=sql_DELETE($req);
     if(isset($response)){
         global $JSON;
-        rest_success($req[1]." was deleted successfully!");
+        rest_success("'$req[1]' was deleted successfully!");
     }
     else{rest_error("DELETION ERROR",500);}
     return 0;
