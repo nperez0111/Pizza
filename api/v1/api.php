@@ -339,7 +339,7 @@ function rest_get($req){
             rest_success(json_encode($response));
         }
     else{
-            rest_error("GET ERROR OCCURRED",500);
+            rest_error("Empty Results, Check if item exists in dataBase, Check Url requested.",404);
         }
     return 0;
 }
