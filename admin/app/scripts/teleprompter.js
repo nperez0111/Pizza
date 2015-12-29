@@ -62,8 +62,9 @@ var Tele = Base.extend({
     },
     placeOrder: function(order) {
 
-        var str = order.map(function(obj) {
-                return this.sortOrder(obj.OrderName);
+        var that = this,
+            str = order.map(function(obj) {
+                return that.sortOrder(obj.OrderName);
             }).join(this.settings().splitter),
             that = this;
         this.getPrice(str).then(function(p) {
@@ -113,6 +114,7 @@ var Tele = Base.extend({
         return this.get("queue").splice(obj.index.i, 1);
     },
     sortOrder: function(order) {
+        return order;
         //returns the order sorted correctly
         database = this.settings().delimiter;
         //the sort should be accessed from the database within the init method
