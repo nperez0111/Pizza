@@ -1,11 +1,18 @@
 var table, tele, build, interval;
 Ractive.DEBUG = false;
-$(document).ready(function() {
-    $('#tele').click(teler);
-    $('#home').click(home);
-    $('#build').click(builde);
-    builde();
-});
+
+function pre(e) {
+    if (e) {
+        e.preventDefault();
+        $('.nav li').each(function() {
+            $(this).removeClass("active");
+        });
+        $($(e.target)[0]).parent().addClass("active");
+    }
+    if (interval) {
+        clearInterval(interval);
+    }
+}
 
 function home(e) {
     pre(e);
@@ -130,15 +137,11 @@ function builde(e) {
     });
 }
 
-function pre(e) {
-    if (e) {
-        e.preventDefault();
-        $('.nav li').each(function() {
-            $(this).removeClass("active");
-        });
-        $($(e.target)[0]).parent().addClass("active");
-    }
-    if (interval) {
-        clearInterval(interval);
-    }
-}
+
+
+$(document).ready(function() {
+    $('#tele').click(teler);
+    $('#home').click(home);
+    $('#build').click(builde);
+    builde();
+});

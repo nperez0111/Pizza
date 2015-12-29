@@ -65,8 +65,7 @@ var Tele = Base.extend({
         var that = this,
             str = order.map(function(obj) {
                 return that.sortOrder(obj.OrderName);
-            }).join(this.settings().splitter),
-            that = this;
+            }).join(this.settings().splitter);
         this.getPrice(str).then(function(p) {
             that.sendToDataBase({
                 type: "PUT",
@@ -88,9 +87,8 @@ var Tele = Base.extend({
     notify: function(a, message, c) {
         var bassy = new Base(),
             that = this,
-            cur = c;
-
-        bassy.notify(a, message);
+            cur = c,
+            not = bassy.notify(a, message);
 
         if (message === "-1-") {
             $('.rmv').click(function() {
@@ -115,14 +113,14 @@ var Tele = Base.extend({
     },
     sortOrder: function(order) {
         return order;
-        //returns the order sorted correctly
+        /*/returns the order sorted correctly
         database = this.settings().delimiter;
         //the sort should be accessed from the database within the init method
         //this should access wherever that is stored and properly sort it correctly
         return order.split(database.delimiter).sort(function(a, b) {
             //this is totally just an I think ...
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
-        });
+        });*/
     },
     priorities: [],
     getPriority: function() {

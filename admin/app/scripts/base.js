@@ -28,6 +28,7 @@ var Base = Ractive.extend({
                     '<span data-notify="message">{2}</span>' +
                     '</div>'
             });
+        return not;
     },
     sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
