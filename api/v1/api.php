@@ -17,6 +17,7 @@ define("HASH_ALGORITHM_INDEX", 0);
 define("HASH_ITERATION_INDEX", 1);
 define("HASH_SALT_INDEX", 2);
 define("HASH_PBKDF2_INDEX", 3);
+$adminRequired=["users"];
 $routes=[
     'users'=>[
         'methods'=>[1,1,1,1],
@@ -861,13 +862,8 @@ function buildJSONInputWProps($table,$JSON){
 
 */
  function checkPrivileges($tableName){
-    $adminRequired=false;
-    switch($tableName){
-        case"users":
-        $adminRequired=true;
-        break;
-    }
-    if($adminRequired){
+    global $adminRequired;
+    if(in_array($tableName,$adminRequired)){
         if(!isAdmin()){
             rest_error("Invalid privileges, not an Admin",401);
             return false;
