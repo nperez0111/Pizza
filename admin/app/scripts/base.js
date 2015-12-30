@@ -9,20 +9,19 @@ var Base = Ractive.extend({
         $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
         return true;
     },
-    notify: function(title, message) {
+    notify: function(title, message, time, typely) {
         var that = this,
             not = $.notify({
-                title: title,
-                message: message !== "-1-" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>',
-                type: 'info'
+                title: (typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span>' + title : title),
+                message: message !== "-1-" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>'
             }, {
-                type: 'minimalist',
-                delay: 5000,
+                type: typely || '',
+                delay: time ? time + 5000 : 5000,
                 placement: {
                     from: "bottom",
                     align: "right"
                 },
-                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-minimalist alert-minimalist-{0}" role="alert">' +
                     '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button><img data-notify="icon" class="img-circle pull-left">' +
                     '<span data-notify="title">{1}</span>' +
                     '<span data-notify="message">{2}</span>' +
@@ -54,9 +53,7 @@ var Base = Ractive.extend({
             console.log(r);
             return ((r.message));
         }, function(err) {
-            that.alerter("Sorry, Issues sending Data to API..", err.responseText ? JSON.parse(err.responseText).data : "");
-            console.log(err);
-            return Error(JSON.stringify(err));
+            return err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err);
         });
     }
 });

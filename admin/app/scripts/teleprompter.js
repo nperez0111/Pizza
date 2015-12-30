@@ -99,28 +99,20 @@ var Tele = Base.extend({
             resolve(order.length);
         });
     },
-    notify: function(a, message, c) {
-        var bassy = new Base(),
-            that = this,
-            cur = c,
-            not = bassy.notify(a, message);
-
-        if (message === "-1-") {
-            $('.rmv').click(function() {
-
-                that.get("queue").every(function(obj, index, arr) {
-                    if (obj.Name === cur.Name) {
-                        arr.splice(index, 1);
-                        not.close();
-                        return false;
-                    }
-                    return true;
-                });
-            });
-        }
-    },
     stageOrder: function(order) {
-        this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "-1-", order);
+        var not = this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "-1-", order),
+            that = this;
+        $('.rmv').click(function() {
+
+            that.get("queue").every(function(obj, index, arr) {
+                if (obj.Name === order.Name) {
+                    arr.splice(index, 1);
+                    not.close();
+                    return false;
+                }
+                return true;
+            });
+        });
         return this.get('queue').push(order);
     },
     rmvqueue: function(obj) {

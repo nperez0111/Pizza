@@ -123,6 +123,9 @@ footer p {
     border-radius: 3px;
     color: #666;
     padding: 10px;
+    &.alert-minimalist-error{
+        @extend .alert-danger;
+    }
 }
 
 .alert-minimalist > [data-notify="icon"] {

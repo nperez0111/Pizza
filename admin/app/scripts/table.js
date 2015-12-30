@@ -63,6 +63,8 @@ var Table = Base.extend({
             return a;
         }).then(function(message) {
             that.notify(message, "Table Row added!");
+        }, function(err) {
+            that.notify("Error occured", err, 5000, "error");
         });
     },
     edit: function(e) {
@@ -102,7 +104,9 @@ var Table = Base.extend({
         this.sendToDataBase({
             type: "DELETE"
         }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
-            that.notify(message, "Delete went well!");
+            that.notify("Delete went well!", message);
+        }, function(err) {
+            that.notify("Error occured", err, 5000, "error");
         });
         return rowOfDeletion;
     },
@@ -140,7 +144,9 @@ var Table = Base.extend({
                 type: "POST",
                 data: this.makeObj(arr)
             }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
-                that.notify(message, "Changes Saved!");
+                that.notify("Changes Saved!", message);
+            }, function(err) {
+                that.notify("Error occured", err, 5000, "error");
             });
         } else {
             //are the same do nothing
