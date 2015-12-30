@@ -12,7 +12,7 @@ var Base = Ractive.extend({
     notify: function(title, message, time, typely) {
         var that = this,
             not = $.notify({
-                title: (typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span>' + title : title),
+                title: (typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span> ' + title : title),
                 message: message !== "-1-" ? message : '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>'
             }, {
                 type: typely || '',

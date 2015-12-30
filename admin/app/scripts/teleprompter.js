@@ -10,7 +10,7 @@ var Tele = Base.extend({
         this.on('checkout', function(event) {
             if (this.get("queue").length === 0) {
                 //nothing in queue to order
-                return;
+                return false;
             }
             this.placeOrder(this.get("queue"));
         });
@@ -79,7 +79,7 @@ var Tele = Base.extend({
     },
     placeOrder: function(order) {
         if (this.get("queue").length === 0) {
-            this.notify("Nothing to Order", "Queue is empty :<");
+            this.notify("Nothing to Order", "Queue is empty :<", 0, "error");
             return false;
         }
         var that = this,
