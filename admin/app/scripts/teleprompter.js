@@ -14,6 +14,15 @@ var Tele = Base.extend({
             }
             this.placeOrder(this.get("queue"));
         });
+        var that = this;
+        $(document).on('keydown', function(e) {
+            if (e.shiftKey && e.keyCode === 65) {
+                that.placeOrder(that.get("queue"));
+            }
+        });
+    },
+    unrender: function() {
+        $(document).off();
     },
     settings: function() {
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
@@ -61,20 +70,26 @@ var Tele = Base.extend({
         });
     },
     placeOrder: function(order) {
-
+        if (this.get("queue").length == 0) {
+            this.notify("Nothing to Order", "Queue is empty :<");
+            return false;
+        }
         var that = this,
             str = order.map(function(obj) {
                 return that.sortOrder(obj.OrderName);
             }).join(this.settings().splitter);
-        this.getPrice(str).then(function(p) {
-            that.sendToDataBase({
+        return this.getPrice(str).then(function(p) {
+            return that.sendToDataBase({
                 type: "PUT",
                 data: {
                     OrderSymbols: str,
                     Price: p,
                     ID: -1
                 }
-            }, "orders");
+            }, "orders").then(function(message) {
+                that.notify(message, "Order Fulfilled :>");
+                that.set("queue", []);
+            });
         });
 
 
