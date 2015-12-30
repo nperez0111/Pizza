@@ -38,7 +38,7 @@ function home(e) {
                         ["To", "The", "Internet"]
                     ],
                     table: "users",
-                    tables: ["users", "other", "orders", "MeantToCauseAlert", "tablesPrimaryKeys", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings"]
+                    tables: ["users", "other", "orders", "MeantToCauseAlert", "tablesPrimaryKeys", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients"]
                 }
             });
             var func = function() {

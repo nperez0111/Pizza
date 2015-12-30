@@ -24,12 +24,20 @@ var Tele = Base.extend({
     unrender: function() {
         $(document).off();
     },
+    cache: {
+        dbdelimiter: " ",
+        splitter: " , ",
+        isset: true
+    },
     settings: function() {
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
-        return {
-            dbdelimiter: " ",
-            splitter: " , "
-        };
+        if (this.cache.isset) {
+            return this.cache;
+        } else {
+            //get from DB
+            return this.cache;
+        }
+
     },
     data: function() {
         return {
@@ -70,7 +78,7 @@ var Tele = Base.extend({
         });
     },
     placeOrder: function(order) {
-        if (this.get("queue").length == 0) {
+        if (this.get("queue").length === 0) {
             this.notify("Nothing to Order", "Queue is empty :<");
             return false;
         }
