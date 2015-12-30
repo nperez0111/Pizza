@@ -23,7 +23,8 @@ $routes=[
         'methods'=>[1,1,1,1],
         'props'=>['FName','LName','Email'],
         'identifier'=>'Email',
-        'identifiers'=>['FName','LName','Email']
+        'identifiers'=>['FName','LName','Email'],
+        'orderBy'=>'FName'
     ],
     'orders'=>[
         'identifiers'=>['ID','OrderSymbols','DateOrdered','Price'],
@@ -85,7 +86,13 @@ $routes=[
         'props'=>['Title','Name'],
         'identifier'=>'Name',
         'orderBy'=>'Title'
-    ]
+    ],
+    'ingredients'=>[
+        'identifiers'=>['ID','Symbol','Priority','Price','Units'],
+        'methods'=>[1,1,1,1],
+        'props'=>['Symbol','Priority','Price','Units'],
+        'identifier'=>'ID'
+    ],
 ];
 //methods refer to [get,post,put,delete]
 //props are only for when the object is being added(PUT)
@@ -276,7 +283,7 @@ function rest_put($req){
    rest_success('Inputted Successfully Into the DataBase!');
     }
     else{
-        rest_error('Addition was unsuccessful value may not be allowed',406);
+        rest_error('Input unsuccessful. Check spelling this is usually thrown when an item should match another tables item.',406);
     }
     /*
     $stmt = $db->prepare(sql_PUT($req));
