@@ -220,6 +220,7 @@ var Table = Base.extend({
             }, ("tablesPrimaryKeys/search/tableName/" + tabler)).then(function(response) {
                 tha.set("editing.notAllowed", JSON.parse(JSON.parse(response)[0].primaryKeyArr));
             }, function(err) {
+                tha.notify("Table Missing", "This may not be a valid table according to DataBase!");
                 console.log(err);
             });
             return data;
