@@ -36,6 +36,8 @@ var Builder = Base.extend({
             that.set("headings", titles);
             that.set("types", types);
 
+        }, function(err) {
+            that.notify("Error occured", err, 5000, "error");
         });
     }
 });
