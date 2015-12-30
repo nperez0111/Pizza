@@ -86,7 +86,9 @@
                 {{/if}}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" on-click="checkout">Checkout</button>
+               {{#if queue.length>0}}
+                <button type="button" class="btn btn-default" on-click="checkout">Order</button>
+                {{/if}}
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
