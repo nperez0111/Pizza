@@ -108,7 +108,7 @@ var Tele = Base.extend({
         });
     },
     stageOrder: function(order) {
-        var not = this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', "-1-", order),
+        var not = this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>'),
             that = this;
         $('.rmv').click(function() {
 
