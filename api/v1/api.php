@@ -20,7 +20,7 @@ define("HASH_PBKDF2_INDEX", 3);
 $adminRequired=["users"];
 $routes=[
     'users'=>[
-        'methods'=>[1,1,1,1],
+        'methods'=>[0,0,1,0],
         'props'=>['FName','LName','Email'],
         'identifier'=>'Email',
         'identifiers'=>['FName','LName','Email'],
@@ -28,68 +28,68 @@ $routes=[
     ],
     'orders'=>[
         'identifiers'=>['ID','OrderSymbols','DateOrdered','Price'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[0,0,1,0],
         'props'=>['OrderSymbols','Price'],
         'identifier'=>'ID'
     ],
     'quickOrdersPizza'=>[
         'identifiers'=>['Name','OrderName'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
     ],
     'quickOrdersSalad'=>[
         'identifiers'=>['Name','OrderName'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
     ],
     'quickOrdersWings'=>[
         'identifiers'=>['Name','OrderName'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
     ],
     'quickOrdersDrink'=>[
         'identifiers'=>['Name','OrderName'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Name','OrderName'],
         'identifier'=>'OrderName'
     ],
     'symbols'=>[
         'identifiers'=>['ID','Name','Symbol'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Name','Symbol'],
         'identifier'=>'ID'
     ],
     'tablesPrimaryKeys'=>[
         'identifiers'=>['tableName','primaryKeyArr'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['tableName','primaryKeyArr'],
         'identifier'=>'tableName'
     ],
     'possibleChoices'=>[
         'identifiers'=>['SymbolID','HeadingID'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['SymbolID','HeadingID'],
         'identifier'=>'SymbolID'
     ],
     'choiceHeadings'=>[
         'identifiers'=>['ID','Title'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['ID','Title'],
         'identifier'=>'ID'
     ],
     'pizzaHeadings'=>[
         'identifiers'=>['Title','Name'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Title','Name'],
         'identifier'=>'Name',
         'orderBy'=>'Title'
     ],
     'ingredients'=>[
         'identifiers'=>['ID','Symbol','Priority','Price','Units'],
-        'methods'=>[1,1,1,1],
+        'methods'=>[1,0,0,0],
         'props'=>['Symbol','Priority','Price','Units'],
         'identifier'=>'ID'
     ],
@@ -142,12 +142,11 @@ else{
         exit(0);
     }
 include '../../includes/database.php';
-if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)){
-
-}
-else if(!loginWJson()&&(!checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]))){
+if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)||(loginWJson())||(checkUser(@$_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]))){
    
-   rest_error("You must be logged in to use this API.",401);
+   
+}else{
+    rest_error("You must be logged in to use this API.",401);
     exit;
     die;
 }
@@ -659,6 +658,9 @@ function isMethodAllowed($table,$accessor){
         default:
         return false;
     }
+    if(isAdmin()){
+        return true;
+    }
     return @$routes[$table]['methods'][$i]==1?true:false;
 }
 function isIdentifier($table,$test){
@@ -885,11 +887,10 @@ function loginWJson(){
     //echo "json is";
     //echo json_encode($JSON);
     //echo (checkUser(@$json['login']['Email'],@$json['login']['password']))?"TRUE":"FALSE";
-    return (checkUser(@$_POST['login']['Email'],@$_POST['login']['password']));
+    return (checkUser(@$json['login']['Email'],@$json['login']['password']));
 }
 
 function checkUser($userName,$password){
-    
     if(!isset($userName)&& !isset($password)){
         return false;
     }
