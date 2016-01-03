@@ -21,17 +21,26 @@ var Tele = Base.extend({
             }
         });
         this.getCache("priorities", function() {
-            return that.sendToDataBase({
-                type: "GET",
-                data: {
-                    tables: ["symbols"],
-                    from: "ingredients",
-                    relations: [
-                        ["symbols.Name", "ingredients.Symbol"]
-                    ],
-                    select: ["symbols.Name", "ingredients.Priority"]
-                }
-            }, "join");
+            return new Promise(function(resolve, reject) {
+                that.sendToDataBase({
+                    type: "GET",
+                    data: {
+                        tables: ["symbols"],
+                        from: "ingredients",
+                        relations: [
+                            ["symbols.Name", "ingredients.Symbol"]
+                        ],
+                        select: ["symbols.Name", "ingredients.Priority"]
+                    }
+                }, "join").then(function(a) {
+                    resolve(JSON.stringify(JSON.parse(a).map(function(cur) {
+                        cur.Priority = parseInt(cur.Priority, 10);
+                        return cur;
+                    })));
+                }, function(a) {
+                    reject(a);
+                });
+            });
         });
         this.getCache("settings", function() {
             return new Promise(function(resolve, reject) {
