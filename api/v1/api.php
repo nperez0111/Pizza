@@ -93,6 +93,12 @@ $routes=[
         'props'=>['Symbol','Priority','Price','Units'],
         'identifier'=>'ID'
     ],
+    'settings'=>[
+        'identifiers'=>['keyKey','val'],
+        'methods'=>[1,0,0,0],
+        'props'=>['keyKey','val'],
+        'identifier'=>'keyKey'
+    ]
 ];
 //methods refer to [get,post,put,delete]
 //props are only for when the object is being added(PUT)
