@@ -911,6 +911,7 @@ function checkUser($userName,$password){
         $_SESSION['FName'] = $result['FName'];
         $_SESSION['LName'] = $result['LName'];
         $_SESSION['Index'] = $result['Index'];
+        $_SESSION['verified'] = @$result['verified'];
         return true;
     }
     else {
