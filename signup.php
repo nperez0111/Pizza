@@ -145,7 +145,7 @@ $lname = mysql_real_escape_string($_POST['lName']);
 $email = mysql_real_escape_string($_POST['email']);
 $password = create_hash($_POST['password']);
 
-$stmt = $db->prepare("INSERT INTO ".$table."(fname,lname,email,password,verified) VALUES(:fname,:lname,:email,:pass,:verified)");
+$stmt = $db->prepare("INSERT INTO "."users"."(fname,lname,email,password,verified) VALUES(:fname,:lname,:email,:pass,:verified)");
 $stmt->execute(array(':fname' => $fname, ':lname' => $lname,':email' => $email,':pass' => $password,':verified'=>0));
 //echo $fname.$lname.$email.$password;
 echo 'Thank you for signing up. Click <a href="signin.php">here.</a> To get logged in.';

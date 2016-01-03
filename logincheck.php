@@ -150,7 +150,7 @@ header('Location: index.php');
 
 include 'includes/database.php';
 // Retrieve username and password from database according to user's input
-$stmt = $db->prepare("SELECT * FROM ".$table." WHERE (`email` = :email)");
+$stmt = $db->prepare("SELECT * FROM "."users"." WHERE (`email` = :email)");
 
 $resul = $stmt->execute(array(':email'=>$email));
 $result = $stmt->fetch();
