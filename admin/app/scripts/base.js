@@ -16,7 +16,7 @@ var Base = Ractive.extend({
                 message: message
             }, {
                 type: typely || '',
-                delay: time ? time + 5000 : 5000,
+                delay: (time || 0) + 4000,
                 placement: {
                     from: "bottom",
                     align: "right"
