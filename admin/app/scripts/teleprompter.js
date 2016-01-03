@@ -20,23 +20,45 @@ var Tele = Base.extend({
                 that.placeOrder(that.get("queue"));
             }
         });
+        this.getCache("priorities", function() {
+            return that.sendToDataBase({
+                type: "GET",
+                data: {
+                    tables: ["symbols"],
+                    from: "ingredients",
+                    relations: [
+                        ["symbols.Name", "ingredients.Symbol"]
+                    ],
+                    select: ["symbols.Name", "ingredients.Priority"]
+                }
+            }, "join");
+        });
+        this.getCache("settings", function() {
+            return new Promise(function(resolve, reject) {
+                that.sendToDataBase({
+                    type: "GET"
+                }, "settings").then(function(ob) {
+                    ob = JSON.parse(ob);
+                    resolve(JSON.stringify(ob.map(function(cur) {
+                        var ret = {};
+                        ret[cur["keyKey"]] = cur["val"];
+                        return ret;
+                    }).reduce(function(prev, cur, index, arr) {
+                        $.extend(cur, prev);
+                        return cur;
+                    })));
+                }, function(err) {
+                    reject(err);
+                });
+            });
+        });
     },
     unrender: function() {
         $(document).off();
     },
-    cache: {
-        dbdelimiter: " ",
-        splitter: " , ",
-        isset: true
-    },
     settings: function() {
         //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
-        if (this.cache.isset) {
-            return this.cache;
-        } else {
-            //get from DB
-            return this.cache;
-        }
+        return this.getCache("settings", function() {});
 
     },
     data: function() {
@@ -91,7 +113,7 @@ var Tele = Base.extend({
         var that = this,
             str = order.map(function(obj) {
                 return that.sortOrder(obj.OrderName);
-            }).join(this.settings().splitter);
+            }).join(this.getCache("settings").splitter);
         return this.getPrice(str).then(function(p) {
             return that.sendToDataBase({
                 type: "PUT",
@@ -133,7 +155,15 @@ var Tele = Base.extend({
         return this.get("queue").splice(obj.index.i, 1);
     },
     sortOrder: function(order) {
-        return order;
+        //return order;
+        var special = ["SM", "MD", "LG"];
+        console.log(this.getCache("priorities"));
+        var arr = order.split(this.getCache("settings").dbdelimiter).sort(function(a, b) {
+            if (special.indexOf(a) > 0) {
+                return 1;
+            }
+        });
+        console.log(arr);
         /*/returns the order sorted correctly
         database = this.settings().delimiter;
         //the sort should be accessed from the database within the init method
@@ -144,13 +174,17 @@ var Tele = Base.extend({
         });*/
     },
     priorities: [],
-    getPriority: function() {
-        if (this.priorities.length > 0) {
-            return this.priorities;
+    cache: {},
+    getCache: function(prop, func) {
+        if (prop in this.cache) {
+            return this.cache[prop];
         }
-        this.sendToDataBase({
-            type: "GET"
-        }, "");
+        var that = this;
+        return func().then(function(obj) {
+            console.log(obj);
+            that.cache[prop] = JSON.parse(obj);
+            return JSON.parse(obj);
+        });
 
     },
     build: function() {}
