@@ -16,34 +16,40 @@ Auto Increment | Name of Symbol | Integer | Decimal | Integer
 
  ID | Type | Amount
  ---- | ----- | ------
- Auto Increment | Number(0=Cash,1=Cred) | Decimal
+ Auto Increment | Tiny Int(0=Cash,1=Cred) | Decimal
 
 ## User DB
 ID | Phone Number | Address | Name | Email | Password
 -----| ----------| --------|-------|-------|---------
 Auto Increment | String | String | String | String | String
 
-## Order DB
-User Id | Order | Date | Price
+## Orders DB
+Id | OrderSymbols | DateOrdered | Price
 --------| -------| -----|-----
 Integer | String of Symbols | Date?/String | Decimal
 
-## TelePrompter DB
- Question | True | False | Order 
--------------|---------|--------|-----------
-String | Integer of Order | Integer of Order | Integer
- Name Please? | 2 | 1 | 1 
- Phone Number Please? | 3 | 2 | 2 
- Delivery? | 4 | 5 | 3 
- Address? | 5 | 3 | 4 
-What would you like? | 7 | 5 | 5
 
-## Specials DB
-Name | Order String | Price
------| ------------ | -----
-String | String of Symbols | Decimal
+## Settings DB
+keyKey | val 
+------ | -----
+String | String
 
-## quickOrders{Drinks | Pizza | Salad | Wings}
+## TablesPrimaryKeys DB
+TableName | primaryKeyArr
+--------- | -------------
+String (table) | String (True/False Array)
+
+## QuickOrders{Drinks | Pizza | Salad | Wings} DB
 OrderName | Name
 ---------- | ----
 String (Primary Key) | String (Unique)
+
+## PossibleChoices DB
+SymbolID | HeadingID
+------- | ---------
+ID from symbols table | ID from choiceHeadings table
+
+## choiceHeadings DB
+ID | Title
+--- | ----
+Int | String
