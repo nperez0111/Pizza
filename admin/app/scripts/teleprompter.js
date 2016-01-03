@@ -113,7 +113,7 @@ var Tele = Base.extend({
         var that = this,
             str = order.map(function(obj) {
                 return that.sortOrder(obj.OrderName);
-            }).join(this.getCache("settings").splitter);
+            }).join(this.cache.settings.splitter);
         return this.getPrice(str).then(function(p) {
             return that.sendToDataBase({
                 type: "PUT",
@@ -123,7 +123,7 @@ var Tele = Base.extend({
                     ID: -1
                 }
             }, "orders").then(function(message) {
-                that.notify(message, "Order Fulfilled :>");
+                that.notify(message, "Order Fulfilled : >");
                 that.set("queue", []);
             });
         });
@@ -157,9 +157,9 @@ var Tele = Base.extend({
     sortOrder: function(order) {
         //return order;
         var special = ["SM", "MD", "LG"];
-        console.log(this.getCache("priorities"));
-        var arr = order.split(this.getCache("settings").dbdelimiter).sort(function(a, b) {
-            if (special.indexOf(a) > 0) {
+        console.log(this.cache.priorities);
+        var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
+            if (special.indexOf(a) > -1) {
                 return 1;
             }
         });
