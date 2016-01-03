@@ -275,7 +275,12 @@ function rest_put($req){
         return;
     }
    include '../../includes/database.php';
-
+   if($req[0]=="users"){
+        if(!filter_var($JSON["Email"], FILTER_VALIDATE_EMAIL)){
+            rest_error("Invalid Email, Please Enter a Valid Email address.",406);
+            return;
+        }
+   }
    $stmt=$db->prepare(sql_PUT($table));
    $ex=buildJSONInputWProps($table,$JSON);
 
