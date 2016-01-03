@@ -70,10 +70,19 @@
             <div class="modal-body">
                {{#if queue.length>0}}
                     <table class="table table-striped table-bordered table-hover table-fixed">
-                        <tbody>
+                       <thead>
+                            <tr>
+                                <th class="text-center text-capitalize">Order Name</th>
+                                <th class="text-center text-capitalize">Price</th>
+                                <th class="text-center text-capitalize">Delete?</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody class="text-center">
                             {{#each queue:i}}
                             <tr>
                                 <td>{{queue[i].Name}}</td>
+                                <td>{{queue[i].Price}}</td>
                                 <td>
                                     <button class="btn btn-default table-remove" on-click="rmvqueue"><span class="glyphicon glyphicon-remove"></span>Delete</button>
                                 </td>

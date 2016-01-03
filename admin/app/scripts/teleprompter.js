@@ -74,7 +74,13 @@ var Tele = Base.extend({
         this.sendToDataBase({
             type: "GET"
         }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(object) {
-            that.stageOrder(JSON.parse(object)[0]);
+            var ob = JSON.parse(object)[0];
+            that.getPrice(ob.Name).then(function(pri) {
+                that.stageOrder($.extend(ob, {
+                    Price: pri
+                }));
+            });
+
         });
     },
     placeOrder: function(order) {
