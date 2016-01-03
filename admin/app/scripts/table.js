@@ -35,6 +35,7 @@ var Table = Base.extend({
         $(obj.el || 'th .input-group').each(function(i) {
             if (itemToAdd.length < i || !itemToAdd[i]) {
                 $(this).addClass("has-error");
+                $(this).find('input').focus();
                 missing = true;
             } else {
                 $(this).removeClass("has-error");

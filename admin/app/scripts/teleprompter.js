@@ -65,11 +65,6 @@ var Tele = Base.extend({
     unrender: function() {
         $(document).off();
     },
-    settings: function() {
-        //we will add this functionality in version 2, will be storing settings into a database to make it truly configurable
-        return this.getCache("settings", function() {});
-
-    },
     data: function() {
         return {
             cols: 2,
@@ -182,7 +177,6 @@ var Tele = Base.extend({
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
         });*/
     },
-    priorities: [],
     cache: {},
     getCache: function(prop, func) {
         if (prop in this.cache) {
