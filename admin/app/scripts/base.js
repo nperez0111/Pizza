@@ -44,15 +44,17 @@ var Base = Ractive.extend({
                 password: "0046788285"
             }
         }, obj.data);
-        console.log(obj);
         if (obj.type == "POST") {
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
         return $.ajax(obj).then(function(r) {
-            console.log(r);
             return ((r.message));
         }, function(err) {
+            console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
+            console.warn(err);
+            console.warn(obj);
+            console.groupEnd();
             return err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err);
         });
     }
