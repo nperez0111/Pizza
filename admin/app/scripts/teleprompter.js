@@ -7,6 +7,10 @@ var Tele = Base.extend({
         this.on('rmvqueue', function(event) {
             this.rmvqueue(event);
         });
+        this.on('build', function(event) {
+            this.build(this.get("type")[event.index.cur + (event.index.i * this.get("cols"))].name);
+
+        });
         this.on('checkout', function(event) {
             if (this.get("queue").length === 0) {
                 //nothing in queue to order
@@ -161,7 +165,7 @@ var Tele = Base.extend({
     sortOrder: function(order) {
         //return order;
         var special = ["SM", "MD", "LG"];
-        console.log(this.cache.priorities);
+        //console.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
             if (special.indexOf(a) > -1) {
                 return -1;
@@ -169,7 +173,8 @@ var Tele = Base.extend({
                 return 1;
             }
         });
-        console.log(arr);
+        return arr.join(this.cache.settings.dbdelimiter);
+        //console.log(arr);
         /*/returns the order sorted correctly
         database = this.settings().delimiter;
         //the sort should be accessed from the database within the init method
@@ -194,5 +199,34 @@ var Tele = Base.extend({
         });
 
     },
-    build: function() {}
+    builder: {},
+    build: function(name) {
+        name = name.toLowerCase();
+        var buildy, that = this;
+        return $.ajax({
+            url: "views/builder.html",
+            dataType: "html"
+        }).then(function(template) {
+            buildy = new Builder({
+                // The `el` option can be a node, an ID, or a CSS selector.
+                el: '#modal',
+                template: template,
+                oninit: function() {
+                    this.getData({}, name + "Headings");
+                },
+                // Here, we're passing in some initial data
+                data: {
+
+                }
+            });
+            return buildy;
+        }, function(err) {
+            that.alerter("Sorry, Issues loading template file...");
+            return Error(JSON.stringify(err));
+        }).then(function(build) {
+            that.builder = build;
+            $('#moduler').modal('show');
+            return build;
+        });
+    }
 });
