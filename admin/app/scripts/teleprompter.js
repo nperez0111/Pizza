@@ -30,7 +30,7 @@ var Tele = Base.extend({
                         relations: [
                             ["symbols.Name", "ingredients.Symbol"]
                         ],
-                        select: ["symbols.Name", "ingredients.Priority"]
+                        select: ["symbols.Symbol", "symbols.Name", "ingredients.Priority"]
                     }
                 }, "join").then(function(a) {
                     resolve(JSON.stringify(JSON.parse(a).map(function(cur) {
@@ -164,6 +164,8 @@ var Tele = Base.extend({
         console.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
             if (special.indexOf(a) > -1) {
+                return -1;
+            } else {
                 return 1;
             }
         });
@@ -184,9 +186,11 @@ var Tele = Base.extend({
         }
         var that = this;
         return func().then(function(obj) {
-            console.log(obj);
             that.cache[prop] = JSON.parse(obj);
             return JSON.parse(obj);
+        }, function(err) {
+            console.warn(err);
+            that.notify("Error occured", err, 1000, "error");
         });
 
     },
