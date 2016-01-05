@@ -166,7 +166,6 @@ var Table = Base.extend({
         for (var i = 0, l = arr.length; i < l; i++) {
             obj[rows[i]] = arr[i];
         }
-        console.log(obj);
         return obj;
     },
 
@@ -215,21 +214,33 @@ var Table = Base.extend({
             for (key in objs[0]) {
                 arry.push(key);
             }
-            console.log(arr);
             that.set("data", arr);
             that.set("rows", arry);
             return arr;
         }).then(function(data) {
             var tabler = that.get("table"),
-                tha = that;
-            that.sendToDataBase({
-                type: "GET"
-            }, ("tablesPrimaryKeys/search/tableName/" + tabler)).then(function(response) {
-                tha.set("editing.notAllowed", JSON.parse(JSON.parse(response)[0].primaryKeyArr));
-            }, function(err) {
-                tha.notify("Table Missing", "This may not be a valid table according to DataBase!");
-                console.log(err);
-            });
+                val = that.getCache("tablesInfo" + tabler, function() {
+                    return new Promise(function(resolve, reject) {
+                        that.sendToDataBase({
+                            type: "GET"
+                        }, ("tablesInfo/search/tableName/" + tabler)).then(function(response) {
+                            return JSON.parse(response)[0];
+                        }, function(err) {
+                            that.notify("Table Missing", "This may not be a valid table according to DataBase!");
+                            reject(err);
+                            return (err);
+
+                        }).then(function(response) {
+                            that.set("editing.notAllowed", JSON.parse(response.primaryKeyArr));
+                            that.set("description", response.description);
+                            resolve(JSON.stringify(response));
+                            return response;
+                        });
+                    });
+                });
+            that.set("editing.notAllowed", JSON.parse(val.primaryKeyArr || "[]"));
+            that.set("description", val.description);
+
             return data;
         });
     }

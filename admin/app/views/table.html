@@ -1,6 +1,9 @@
 <div class="panel panel-primary marg-top">
     <div class="panel-heading">
         <h3 class="text-capitalize">"{{table}}" Table</h3>
+        {{#if description}}
+            <small>{{description}}</small>
+        {{/if}}
     </div>
 <div class="table-responsive">
     <table class="table table-striped table-bordered table-hover table-fixed">

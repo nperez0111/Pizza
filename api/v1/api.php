@@ -62,10 +62,10 @@ $routes=[
         'props'=>['Name','Symbol'],
         'identifier'=>'ID'
     ],
-    'tablesPrimaryKeys'=>[
-        'identifiers'=>['tableName','primaryKeyArr'],
+    'tablesInfo'=>[
+        'identifiers'=>['tableName','primaryKeyArr','description'],
         'methods'=>[1,0,0,0],
-        'props'=>['tableName','primaryKeyArr'],
+        'props'=>['tableName','primaryKeyArr','description'],
         'identifier'=>'tableName'
     ],
     'possibleChoices'=>[

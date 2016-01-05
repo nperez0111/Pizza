@@ -57,5 +57,20 @@ var Base = Ractive.extend({
             console.groupEnd();
             return err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err);
         });
+    },
+    cache: {},
+    getCache: function(prop, func) {
+        if (prop in this.cache) {
+            return this.cache[prop];
+        }
+        var that = this;
+        return func().then(function(obj) {
+            that.cache[prop] = JSON.parse(obj);
+            return JSON.parse(obj);
+        }, function(err) {
+            console.warn(err);
+            that.notify("Error occured", err, 1000, "error");
+        });
+
     }
 });

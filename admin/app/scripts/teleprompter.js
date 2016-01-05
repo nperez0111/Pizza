@@ -184,21 +184,6 @@ var Tele = Base.extend({
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
         });*/
     },
-    cache: {},
-    getCache: function(prop, func) {
-        if (prop in this.cache) {
-            return this.cache[prop];
-        }
-        var that = this;
-        return func().then(function(obj) {
-            that.cache[prop] = JSON.parse(obj);
-            return JSON.parse(obj);
-        }, function(err) {
-            console.warn(err);
-            that.notify("Error occured", err, 1000, "error");
-        });
-
-    },
     builder: {},
     build: function(name) {
         name = name.toLowerCase();
