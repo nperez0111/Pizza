@@ -157,7 +157,9 @@ if((isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==true)||(loginWJson())||
     exit;
     die;
 }
-
+if(isset($_SERVER['SCRIPT_URL'])){
+    $_SERVER['PATH_INFO']=str_replace('/pizza/api/v1','',$_SERVER['SCRIPT_URL']);
+}
 if(@$_SERVER['PATH_INFO']==null){
     rest_error("You are requesting an empty set.",400);
     exit;
