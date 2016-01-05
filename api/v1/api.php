@@ -18,6 +18,7 @@ define("HASH_ITERATION_INDEX", 1);
 define("HASH_SALT_INDEX", 2);
 define("HASH_PBKDF2_INDEX", 3);
 $adminRequired=["users"];
+$keyRoutes=["columns","join"];
 $routes=[
     'users'=>[
         'methods'=>[0,0,1,0],
@@ -440,7 +441,8 @@ function checkTableReqs($table,&$JSON){
 
 */
 function reqRouter($req,$http){
-    if(isset($req)&&($req[0]=="columns"||$req[0]=="join")){
+    global $keyRoutes;
+    if(isset($req)&&(array_search($req[0],$keyRoutes)!==false)){
 
     }
     else if(!isset($req[0])||(!isMethodAllowed($req[0],$http)&&!($http=="LOGIN"||$http=="LOGOUT"))){
