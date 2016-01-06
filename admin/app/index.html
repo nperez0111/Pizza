@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Admin Page</title>
     <meta name="description" content="">
@@ -19,33 +20,38 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-    
-    
-  </head>
-  <body>
+
+
+</head>
+
+<body>
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#" id="home">Home</a></li>
-          <li><a href="views/teleprompter.html" id="tele">Tele-Prompter</a></li>
-          <li><a href="views/builder.html" id="build">Builder</a></li>
-        </ul>
-        <h3 class="text-muted">Admin Page</h3>
-      </div>
-      <div id="alert" style="display:none;" class="alert alert-danger"></div>
-      <div class="container-fluid" id='container'>
-          
-      </div>
 
-      <div class="footer"> 
-      </div>
+    <div class="container">
+        <div class="header">
+            <ul class="nav nav-pills pull-right">
+                <li class="active"><a href="#" id="home">Home</a></li>
+                <li><a href="views/teleprompter.html" id="tele">Tele-Prompter</a></li>
+                <li><a href="views/builder.html" id="build">Builder</a></li>
+            </ul>
+            <h3 class="text-muted">Admin Page</h3>
+        </div>
+        <div id="alert" style="display:none;" class="alert alert-danger"></div>
+        <div class="container-fluid" id='container'>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" style="width: 100%">
+                    Loading...
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+        </div>
     </div>
-    
+
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -58,9 +64,9 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    
-    
-    
+
+
+
 
     <!-- build:js scripts/main.js -->
     <script src="scripts/ajax.js"></script>
@@ -73,12 +79,21 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='https://www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
+        (function (b, o, i, l, e, r) {
+            b.GoogleAnalyticsObject = l;
+            b[l] || (b[l] =
+                function () {
+                    (b[l].q = b[l].q || []).push(arguments)
+                });
+            b[l].l = +new Date;
+            e = o.createElement(i);
+            r = o.getElementsByTagName(i)[0];
+            e.src = 'https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e, r)
+        }(window, document, 'script', 'ga'));
+        ga('create', 'UA-XXXXX-X');
+        ga('send', 'pageview');
     </script>
-  </body>
+</body>
+
 </html>
