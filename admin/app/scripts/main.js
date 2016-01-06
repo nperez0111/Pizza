@@ -15,6 +15,9 @@ function pre(e) {
 }
 
 function home(e) {
+    if ($('#home').parent().hasClass("active")) {
+        return;
+    }
     pre(e);
     $.ajax({
         url: "views/table.html",
@@ -74,6 +77,9 @@ function home(e) {
 }
 
 function teler(e) {
+    if ($('#tele').parent().hasClass("active")) {
+        return;
+    }
     pre(e);
     return $.ajax({
         url: "views/teleprompter.html",
@@ -115,6 +121,9 @@ function teler(e) {
 }
 
 function builde(e) {
+    if ($('#build').parent().hasClass("active")) {
+        return;
+    }
     pre(e);
     return $.ajax({
         url: "views/builder.html",

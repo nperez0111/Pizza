@@ -11,11 +11,15 @@ var Tele = Base.extend({
             this.build(this.get("type")[event.index.cur + (event.index.i * this.get("cols"))].name);
 
         });
+        this.on('show', function(event) {
+            $($(event.node).data('target')).modal("show");
+        });
         this.on('checkout', function(event) {
             if (this.get("queue").length === 0) {
                 //nothing in queue to order
                 return false;
             }
+
             this.placeOrder(this.get("queue"));
         });
         var that = this;
