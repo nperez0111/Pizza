@@ -28,9 +28,15 @@ $routes=[
         'orderBy'=>'FName'
     ],
     'orders'=>[
-        'identifiers'=>['ID','OrderSymbols','DateOrdered','Price'],
+        'identifiers'=>['ID','OrderSymbols','DateOrdered','TransactionID'],
         'methods'=>[0,0,1,0],
-        'props'=>['OrderSymbols','Price'],
+        'props'=>['OrderSymbols','Price','TransactionID'],
+        'identifier'=>'ID'
+    ],
+    'transactions'=>[
+        'identifiers'=>['ID','Amount','Type'],
+        'methods'=>[0,0,1,0],
+        'props'=>['Amount','Type'],
         'identifier'=>'ID'
     ],
     'quickOrdersPizza'=>[
