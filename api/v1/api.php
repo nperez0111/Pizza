@@ -644,6 +644,13 @@ function reqRouter($req,$http){
         global $routes;
         global $JSON;
         $table=$req[0];
+
+        if(!isset($routes[$table])){
+            if($table=="placeOrder"){
+                return 2;
+            }
+            return 0;
+        }
         $keys=$routes[$table]['props'];
         array_push($keys,$routes[$table]['identifier']);
         for($i=0;$i<count($keys);$i++){
