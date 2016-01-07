@@ -126,18 +126,15 @@ var Tele = Base.extend({
             str = order.map(function(obj) {
                 return that.sortOrder(obj.OrderName);
             }).join(this.cache.settings.splitter);
-        return this.getPrice(str).then(function(p) {
-            return that.sendToDataBase({
-                type: "PUT",
-                data: {
-                    OrderSymbols: str,
-                    Price: p,
-                    ID: -1
-                }
-            }, "orders").then(function(message) {
-                that.notify(message, "Order Fulfilled : >");
-                that.set("queue", []);
-            });
+        return that.sendToDataBase({
+            type: "PUT",
+            data: {
+                OrderSymbols: str,
+                ID: -1
+            }
+        }, "placeOrder").then(function(message) {
+            that.notify(message, "Order Fulfilled : >");
+            that.set("queue", []);
         });
 
 

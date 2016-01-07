@@ -18,7 +18,7 @@ define("HASH_ITERATION_INDEX", 1);
 define("HASH_SALT_INDEX", 2);
 define("HASH_PBKDF2_INDEX", 3);
 $adminRequired=["users"];
-$keyRoutes=["columns","join"];
+$keyRoutes=["columns","join","placeOrder"];
 $routes=[
     'users'=>[
         'methods'=>[0,0,1,0],
@@ -274,22 +274,30 @@ function rest_post($req){
 function rest_put($req){
     global $routes;
     global $JSON;
+    include '../../includes/database.php';
    $table=$req[0];
    if(checkPrivileges($req[0])==false||checkTableReqs($req[0],$JSON)==false){
        rest_error("Insufficient Priveleges OR incorrect JSON Requirements",401); 
        return;
     }
-    if(reqRouter($req,"PUT")==0){
+    $ret=reqRouter($req,"PUT");
+    if($ret==0){
         rest_error("Item Exists Or Incorrect JSON Properties.",409);
         return;
     }
-   include '../../includes/database.php';
+    else if($ret==2){
+        print_r($JSON);
+        echo"Order";
+        return;
+   }
+   
    if($req[0]=="users"){
         if(!filter_var($JSON["Email"], FILTER_VALIDATE_EMAIL)){
             rest_error("Invalid Email, Please Enter a Valid Email address.",406);
             return;
         }
    }
+   
    $stmt=$db->prepare(sql_PUT($table));
    $ex=buildJSONInputWProps($table,$JSON);
 
