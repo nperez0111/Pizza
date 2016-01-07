@@ -458,6 +458,8 @@ function checkTableReqs($table,&$JSON){
 */
 function reqRouter($req,$http){
     global $keyRoutes;
+    global $routes;
+    global $JSON;
     if(isset($req)&&(array_search($req[0],$keyRoutes)!==false)){
 
     }
@@ -468,7 +470,6 @@ function reqRouter($req,$http){
     }
     if($http=="GET"){
         if(count($req)==1){
-            global $routes;
             if(isset($routes[$req[0]])){
                 //the users is requesting an entire table
             return 1;
@@ -478,7 +479,6 @@ function reqRouter($req,$http){
                 //user is requesting to retrieve multiple columns
             }
             else if($req[0]=="join"){
-                global $JSON;
                 $required=["from","tables","relations","select"];
 
                 for($i=0;$i<count($required);$i++){
@@ -588,8 +588,7 @@ function reqRouter($req,$http){
     }
     if($http=="POST"){
         if(count($req)==3){
-            global $routes;
-            global $JSON;
+            
             $table=$req[0];
             $col=$req[1];
             $id=$req[2];
@@ -609,8 +608,7 @@ function reqRouter($req,$http){
             }
         }
         if(count($req)==2){
-            global $routes;
-            global $JSON;
+            
             $table=$req[0];
             $col=$req[1];
             $keys=$routes[$table]['identifiers'];
@@ -628,8 +626,6 @@ function reqRouter($req,$http){
     if($http=="DELETE"){
         
         if(count($req)==2){
-            global $routes;
-            global $JSON;
             $table=$req[0];
             $id=$req[1];
             if(isset($routes[$table])&&count(sql_GET([$table,"search",$routes[$table]['identifier'],$id]))==1){
@@ -639,18 +635,19 @@ function reqRouter($req,$http){
     }
     if($http=="LOGIN"){
         if($req[0]=="logout"){
-                    unset($_SESSION);
-                    session_destroy();
-                    session_write_close();
-                    return 2;
-                }
+            unset($_SESSION);
+            session_destroy();
+            session_write_close();
+
+            return 2;
+        }
         if($req[0]=="login"){
-                    return 1;
+
+            return 1;
         }
     }
     if($http=="PUT"){
-        global $routes;
-        global $JSON;
+        
         $table=$req[0];
 
         if(!isset($routes[$table])){
