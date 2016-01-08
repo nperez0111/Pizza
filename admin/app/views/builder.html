@@ -1,16 +1,19 @@
-<div class="marg-top">
-    {{#each types:i}}
-    <div class="panel panel-primary">
-        <div class="panel-heading ">{{headings[i]}}</div>
+<div class="row marg-top">
+    <div class="col-sm-5">left</div>
+    <div class="col-sm-7">
+        {{#each types:i}}
+        <div class="panel panel-primary">
+            <div class="panel-heading ">{{headings[i]}}</div>
 
-        <div class="panel-body">
-            {{#each types[i]:r}}
+            <div class="panel-body">
+                {{#each types[i]:r}}
 
-            <label class="checkbox-inline" for="option.{{i}}.{{r}}">
-                <input type="checkbox" id="option.{{i}}.{{r}}">{{types[i][r]}}</label>
+                <label class="checkbox-inline" for="option.{{i}}.{{r}}">
+                    <input type="checkbox" id="option.{{i}}.{{r}}" class="option-input radio"> {{types[i][r]}}</label>
 
-            {{/each}}
+                {{/each}}
+            </div>
         </div>
+        {{/each}}
     </div>
-    {{/each}}
 </div>
