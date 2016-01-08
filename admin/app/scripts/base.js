@@ -31,7 +31,7 @@ var Base = Ractive.extend({
     },
     sendToDataBase: function(obj, urlEx) {
         obj = $.extend({
-            type: "POST",
+            type: "GET",
             dataType: "json",
             url: this.url + (urlEx ? urlEx : ""),
             headers: {
