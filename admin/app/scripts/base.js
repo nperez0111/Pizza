@@ -64,6 +64,10 @@ var Base = Ractive.extend({
             return this.cache[prop];
         }
         var that = this;
+        if (!(func instanceof Function)) {
+            that.notify(prop + " not cached yet!");
+            return Promise.reject(prop);
+        }
         return func().then(function(obj) {
             that.cache[prop] = JSON.parse(obj);
             return JSON.parse(obj);
