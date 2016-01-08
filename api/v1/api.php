@@ -755,24 +755,24 @@ function sql_GET_COLUMNS(){
             
             if(is_array($val)){
                 //array_push($arr,"IS Array");
+                $arr[$table]=[];
                 for($i=0;$i<count($val);$i++){
                     $cur=$val[$i];
                     if(!isIdentifier($table,$cur)){
                         return null;
                     }
-                    array_push($arr,$cur);
+                    array_push($arr[$table],sql_GET_ROW([$table,"",$val[$i]]));
                 }
             }
             else{
                 if(!isIdentifier($table,$val)){
                         return null;
                     }
-                array_push($arr,$val);
+                    $arr[$table]=sql_GET_ROW([$table,"",$val]);
             }
 
         }
     }
-    json_encode($arr);
     return $arr;
 }
 function sql_GET_JOIN(){
