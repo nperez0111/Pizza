@@ -43,17 +43,7 @@ $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 }
 
 .glyphicon-refresh-animate {
-    -animation: spin .7s infinite linear;
-    -webkit-animation: spin2 .7s infinite linear;
-}
-
-@-webkit-keyframes spin2 {
-    from {
-        -webkit-transform: rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-    }
+    animation: spin .7s infinite linear;
 }
 
 @keyframes spin {
@@ -62,15 +52,6 @@ $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
     }
     to {
         transform: scale(1) rotate(360deg);
-    }
-}
-
-@-webkit-keyframes halfspin2 {
-    from {
-        -webkit-transform: scale(0.1) rotate(-180deg);
-    }
-    to {
-        -webkit-transform: scale(1) rotate(0deg);
     }
 }
 
@@ -177,6 +158,10 @@ footer p {
 
 .checkbox-inline {
     padding: 0 !important;
+    flex-basis:((100/3)*1%);
+    & + .checkbox-inline{
+        margin-left:0 !important;
+    }
     span {
         position: relative;
         top: -15px;
@@ -192,8 +177,6 @@ footer p {
     position: relative;
     width: 40px;
     height: 40px;
-    -webkit-transition: all 0.15s ease-out 0;
-    -moz-transition: all 0.15s ease-out 0;
     transition: all 0.15s ease-out 0;
     background: #cbd1d8;
     border: none;
@@ -206,93 +189,52 @@ footer p {
     z-index: 1000;
 }
 
+input[type="radio"] {
+    border-radius: 50%;
+}
+
 .option-input:hover {
     background: #9faab7;
 }
 
 .option-input:checked {
-    background: #337ab7;
+    background: $brand-primary;
+}
+
+.flexer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: space-around;
+}
+
+input[type="radio"].option-input:checked::before {
+    content: "\2713" !important;
+    font-size: 26.66667px !important;
 }
 
 .option-input:checked::before {
     width: 40px;
     height: 40px;
     position: absolute;
-    content: '+';
+    content: '\002B';
     display: inline-block;
-    font-size: 26.66667px;
+    font-size: 35px;
     text-align: center;
     line-height: 40px;
     animation: halfspin .5s ease-out;
-    -webkit-animation: halfspin2 .5s ease-out;
 }
 
 .option-input:checked::after {
     -webkit-animation: click-wave 0.65s;
     -moz-animation: click-wave 0.65s;
     animation: click-wave 0.65s;
-    background: #337ab7;
+    background: $brand-primary;
     content: '';
     display: block;
     position: relative;
     z-index: 100;
+    border-radius: 50%;
     pointer-events: none;
-}
-
-.option-input.radio {
-    border-radius: 50%;
-}
-
-.option-input.radio::after {
-    border-radius: 50%;
-}
-
-@-webkit-keyframes click-wave {
-    0% {
-        width: 40px;
-        height: 40px;
-        opacity: 0.35;
-        position: relative;
-    }
-    100% {
-        width: 200px;
-        height: 200px;
-        margin-left: -80px;
-        margin-top: -80px;
-        opacity: 0.0;
-    }
-}
-
-@-moz-keyframes click-wave {
-    0% {
-        width: 40px;
-        height: 40px;
-        opacity: 0.35;
-        position: relative;
-    }
-    100% {
-        width: 200px;
-        height: 200px;
-        margin-left: -80px;
-        margin-top: -80px;
-        opacity: 0.0;
-    }
-}
-
-@-o-keyframes click-wave {
-    0% {
-        width: 40px;
-        height: 40px;
-        opacity: 0.35;
-        position: relative;
-    }
-    100% {
-        width: 200px;
-        height: 200px;
-        margin-left: -80px;
-        margin-top: -80px;
-        opacity: 0.0;
-    }
 }
 
 @keyframes click-wave {
