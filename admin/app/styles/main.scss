@@ -217,7 +217,6 @@ footer p {
     font-size: 26.66667px;
     text-align: center;
     line-height: 40px;
-
     animation: halfspin .5s ease-out;
     -webkit-animation: halfspin2 .5s ease-out;
 }
@@ -231,6 +230,7 @@ footer p {
     display: block;
     position: relative;
     z-index: 100;
+    pointer-events: none;
 }
 
 .option-input.radio {

@@ -6,12 +6,14 @@
             <div class="panel-heading ">{{headings[i]}}</div>
 
             <div class="panel-body">
+               <form>
                 {{#each types[i]:r}}
 
                 <label class="checkbox-inline" for="option.{{i}}.{{r}}">
-                    <input type="checkbox" id="option.{{i}}.{{r}}" class="option-input radio"> {{types[i][r]}}</label>
+                    <input type="{{headings[i]=='Size'?'radio':'checkbox'}}" id="option.{{i}}.{{r}}" name="group{{i}}"  class="option-input radio"> {{types[i][r]}}</label>
 
                 {{/each}}
+                </form>
             </div>
         </div>
         {{/each}}
