@@ -175,6 +175,14 @@ footer p {
     }
 }
 
+.checkbox-inline {
+    padding: 0 !important;
+    span {
+        position: relative;
+        top: -15px;
+    }
+}
+
 .option-input {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -182,7 +190,6 @@ footer p {
     -o-appearance: none;
     appearance: none;
     position: relative;
-    top: 13.33333px;
     width: 40px;
     height: 40px;
     -webkit-transition: all 0.15s ease-out 0;
@@ -195,10 +202,9 @@ footer p {
     display: inline-block;
     outline: none !important;
     position: relative !important;
-    margin-right: 0.5rem;
-    margin-left: 0 !important;
+    margin: 0 !important;
     z-index: 1000;
-    }
+}
 
 .option-input:hover {
     background: #9faab7;
