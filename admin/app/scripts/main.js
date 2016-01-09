@@ -46,14 +46,8 @@ function home(e) {
             });
             var func = function() {
                 table.switchTable({
-                    url: table.url + table.get("table"),
-                    type: 'GET',
-                    dataType: 'json',
-                    //*
-                    headers: {
-                        Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
-                    }, //*/
-                }).then(function() {}, function(err) {
+                    type: 'GET'
+                }, table.get("table")).then(function() {}, function(err) {
                     clearInterval(interval);
                     table.alerter('Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>");
                     $('#click').click(function() {

@@ -19,10 +19,8 @@ var Table = Base.extend({
         });
         this.observe("table", function(newVal, oldVal, obj) {
             this.switchTable({
-                url: this.url + newVal,
                 type: 'GET',
-            });
-            //console.log(obj+" changed from "+oldVal+" to "+newVal);
+            }, newVal);
         });
 
     },
@@ -185,10 +183,10 @@ var Table = Base.extend({
         data.splice(to, 0, x[0]);
         return true;
     },
-    switchTable: function(obj) {
+    switchTable: function(obj, str) {
         var that = this;
 
-        return this.sendToDataBase(obj).then(function(r) {
+        return this.sendToDataBase(obj, str).then(function(r) {
 
             return (JSON.parse(r));
 
