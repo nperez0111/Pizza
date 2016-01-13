@@ -1,24 +1,31 @@
 var table, tele, build, interval;
 Ractive.DEBUG = false;
 
-function pre(e) {
+function pre(e, str) {
     if (e) {
         e.preventDefault();
+    }
+    if (interval) {
+        clearInterval(interval);
+    }
+    if ($(str).parent().hasClass("active")) {
+        return false;
+    }
+    if (e) {
         $('.nav li').each(function() {
             $(this).removeClass("active");
         });
         $($(e.target)[0]).parent().addClass("active");
     }
-    if (interval) {
-        clearInterval(interval);
-    }
+    return true;
 }
 
 function home(e) {
-    if ($('#home').parent().hasClass("active")) {
+    if (pre(e, '#home') === false) {
         return;
     }
-    pre(e);
+
+
     $.ajax({
         url: "views/table.html",
         dataType: "html"
@@ -71,10 +78,10 @@ function home(e) {
 }
 
 function teler(e) {
-    if ($('#tele').parent().hasClass("active")) {
+    if (pre(e, '#tele') === false) {
         return;
     }
-    pre(e);
+
     return $.ajax({
         url: "views/teleprompter.html",
         dataType: "html"
@@ -115,10 +122,9 @@ function teler(e) {
 }
 
 function builde(e) {
-    if ($('#build').parent().hasClass("active")) {
+    if (pre(e, '#build') === false) {
         return;
     }
-    pre(e);
     return $.ajax({
         url: "views/builder.html",
         dataType: "html"
