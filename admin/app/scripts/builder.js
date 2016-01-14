@@ -7,6 +7,9 @@ var Builder = Base.extend({
             headings: [],
             types: [
                 []
+            ],
+            order: [
+                []
             ]
         };
     },
@@ -34,6 +37,11 @@ var Builder = Base.extend({
                 }
             });
             that.set("headings", titles);
+            that.set("orders", types.map(function(obj) {
+                return obj.map(function(a) {
+                    return false;
+                });
+            }));
             that.set("types", types);
 
         }, function(err) {
