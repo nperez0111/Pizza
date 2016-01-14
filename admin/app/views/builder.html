@@ -1,9 +1,13 @@
 <div class="row marg-top">
     <div class="col-sm-12 col-md-5 col-lg-4">
        <h2 class="page-header">Pizza {{orders.toString()}}</h2>
-        <svg>
-            <circle r="40" cx="50" cy="50"></circle>
+        <div style="display:flex;flex-direction:column;width:100%;align-items:stretch;align-content: stretch;height: 400px;">
+        <svg style="background-color:#CCC;height:100%;width:100%">
+            <!---<circle r="40" cx="50" cy="50"></circle>-->
+            <circle r="{{size()}}%" cx="50%" cy="50%" style="fill:#f7c740;stroke:black;stroke-width:4"></circle>
+            <!--unfinished-->
         </svg>
+        </div>
     </div>
     <div class="col-sm-12 col-md-7 col-lg-8">
         {{#each types:i}}

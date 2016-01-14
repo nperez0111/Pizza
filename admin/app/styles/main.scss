@@ -193,7 +193,7 @@ footer p {
     span {
         position: relative;
         top: -15px;
-        @include bp(small) {
+        @include bp(med) {
             top: 0;
             display: block;
         }

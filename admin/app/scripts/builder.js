@@ -10,7 +10,13 @@ var Builder = Base.extend({
             ],
             order: [
                 []
-            ]
+            ],
+            size:function(num){
+                if(num){return num;}
+                var orders=this.get("orders");
+                var sizes=[45,37.5,30];
+                return orders?orders[0].indexOf(true)>-1?sizes[orders[0].indexOf(true)]:0:0;
+            }
         };
     },
     getData: function(toDB, urlEx) {
