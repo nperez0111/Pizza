@@ -22,7 +22,7 @@
                     {{#each types[i]:r}}
 
                     <label class="checkbox-inline" for="option.{{i}}.{{r}}">
-                        <input type="{{headings[i]=='Size'?'radio':'checkbox'}}" id="option.{{i}}.{{r}}" name="group{{i}}" checked="{{currentChoices[i][r]}}" class="option-input"> 
+                        <input type="{{headings[i]=='Size'?'radio':'checkbox'}}" id="option.{{i+'.'+r}}" name="group{{i}}" checked="{{currentChoices[i][r]}}" class="option-input"> 
                         <span>{{types[i][r]}}</span>
                         </label>
 
