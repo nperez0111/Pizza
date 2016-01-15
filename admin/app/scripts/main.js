@@ -1,32 +1,31 @@
 var table, tele, build, interval, cache = {};
 Ractive.DEBUG = false;
 
-function pre(e, str) {
-    if (e) {
-        e.preventDefault();
+function viewBuilder(evente, el, url, callback) {
+
+    if (evente) {
+        evente.preventDefault();
     }
+    
+    if ($(el).parent().hasClass("active")) {
+        return Promise.reject("Same Element clicked twice");
+    }
+
     if (interval) {
         clearInterval(interval);
     }
-    if ($(str).parent().hasClass("active")) {
-        return false;
-    }
-    if (e) {
+
+    if (evente) {
         $('.nav li').each(function() {
             $(this).removeClass("active");
         });
         $($(e.target)[0]).parent().addClass("active");
     }
-    return true;
-}
 
-function viewBuilder(evente, el, url, callback) {
-    if (pre(evente, el) === false) {
-        return Promise.reject("Same Element clicked twice");
-    }
     if (url in cache) {
         return Promise.resolve(callback(cache[url]));
     }
+
     return $.ajax({
         url: "views/" + url + ".html",
         dataType: "html"
@@ -40,6 +39,7 @@ function viewBuilder(evente, el, url, callback) {
     }).then(function(template) {
         cache[url] = template;
     });
+
 }
 
 
