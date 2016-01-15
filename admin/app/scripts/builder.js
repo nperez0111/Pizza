@@ -1,6 +1,9 @@
 var Builder = Base.extend({
     oninit: function() {
         this.getData({}, "pizzaHeadings");
+        this.observe("currentChoices", function(newVal, oldVal, obj) {
+            var currentSize = this.size();
+        });
     },
     data: function() {
         return {
@@ -8,16 +11,20 @@ var Builder = Base.extend({
             types: [
                 []
             ],
-            order: [
+            currentChoices: [
                 []
             ],
-            size:function(num){
-                if(num){return num;}
-                var orders=this.get("orders");
-                var sizes=[45,37.5,30];
-                return orders?orders[0].indexOf(true)>-1?sizes[orders[0].indexOf(true)]:0:0;
+            sizes: [30, 37.5, 45],
+            svg: {
+                radius: 0
             }
         };
+    },
+    size: function() {
+        var currentSize = this.get("currentChoices[0]").indexOf(true),
+            possibleSizes = this.get("sizes");
+        this.animate("svg.radius", currentSize > -1 ? possibleSizes[currentSize] : 0);
+        return currentSize;
     },
     getData: function(toDB, urlEx) {
         var that = this;
@@ -43,7 +50,7 @@ var Builder = Base.extend({
                 }
             });
             that.set("headings", titles);
-            that.set("orders", types.map(function(obj) {
+            that.set("currentChoices", types.map(function(obj) {
                 return obj.map(function(a) {
                     return false;
                 });
