@@ -1,5 +1,5 @@
 var Base = Ractive.extend({
-    url: 'http://' + /*((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/'))*/"api.nickthesick.com/",
+    url: 'http://' + /*((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/'))*/ "api.nickthesick.com/",
     alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
@@ -7,6 +7,9 @@ var Base = Ractive.extend({
             $('#container').prepend('<div id="alert" style="display:none" class="alert alert-danger"></div>');
         }
         $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
+        $("a[data-dismiss='alert']").click(function() {
+            $("#alert").alert("close");
+        });
         return true;
     },
     notify: function(title, message, time, typely) {
