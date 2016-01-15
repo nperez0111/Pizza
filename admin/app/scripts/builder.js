@@ -14,7 +14,7 @@ var Builder = Base.extend({
             currentChoices: [
                 []
             ],
-            sizes: [30, 37.5, 45],
+            sizes: [45, 37.5, 30],
             svg: {
                 radius: 0
             }
