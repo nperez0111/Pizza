@@ -1,4 +1,4 @@
-var table, tele, build, interval;
+var table, tele, build, interval, cache = {};
 Ractive.DEBUG = false;
 
 function pre(e, str) {
@@ -20,16 +20,63 @@ function pre(e, str) {
     return true;
 }
 
-function home(e) {
-    if (pre(e, '#home') === false) {
-        return;
+function viewBuilder(evente, el, url, callback) {
+    if (pre(evente, el) === false) {
+        return Promise.reject("Same Element clicked twice");
     }
-
-
-    $.ajax({
-        url: "views/table.html",
+    if (url in cache) {
+        return Promise.resolve(callback(cache[url]));
+    }
+    return $.ajax({
+        url: "views/" + url + ".html",
         dataType: "html"
     }).then(function(template) {
+        callback(template);
+        return template;
+    }, function(err) {
+        var base = new Base();
+        base.alerter("Sorry, Issues loading template file...");
+        return Error(JSON.stringify(err));
+    }).then(function(template) {
+        cache[url] = template;
+    });
+}
+
+
+
+$(document).ready(function() {
+    $('#tele').click(function(e) {
+        viewBuilder(e, "#tele", "teleprompter", function(template) {
+            tele = new Tele({
+                // The `el` option can be a node, an ID, or a CSS selector.
+                el: '#container',
+                template: template,
+                // Here, we're passing in some initial data
+                data: {
+                    type: [{
+                        name: "Pizza",
+                        quickOrders: ["Large eperoni"],
+                        buildYourOwn: true
+                    }, {
+                        name: "Wings",
+                        quickOrders: ["Spicy buffalo"],
+                        buildYourOwn: true
+                    }, {
+                        name: "Salad",
+                        quickOrders: ["Regular", "Lechuga"],
+                        buildYourOwn: true
+                    }, {
+                        name: "Drink",
+                        quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
+                        buildYourOwn: false,
+                        images: ["sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg"]
+                    }]
+                }
+            });
+        });
+    });
+    $('#home').click(function(e) {
+        viewBuilder(e, "#home", "table", function(template) {
             table = new Table({
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -51,6 +98,7 @@ function home(e) {
                     tables: ["users", "other", "orders", "transactions", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients"]
                 }
             });
+        }).then(function() {
             var func = function() {
                 table.switchTable({
                     type: 'GET'
@@ -68,89 +116,23 @@ function home(e) {
                 });
             };
             interval = setInterval(func, 12000);
-            //console.log(interval);
-        },
-        function(err) {
-            table = new Table();
-            table.alerter("Sorry, Issues loading template file...");
-            return Error(JSON.stringify(err));
+        }, function(err) {
+            console.log(err);
         });
-}
-
-function teler(e) {
-    if (pre(e, '#tele') === false) {
-        return;
-    }
-
-    return $.ajax({
-        url: "views/teleprompter.html",
-        dataType: "html"
-    }).then(function(template) {
-        tele = new Tele({
-            // The `el` option can be a node, an ID, or a CSS selector.
-            el: '#container',
-            template: template,
-            // Here, we're passing in some initial data
-            data: {
-                type: [{
-                    name: "Pizza",
-                    quickOrders: ["Large eperoni"],
-                    buildYourOwn: true
-                }, {
-                    name: "Wings",
-                    quickOrders: ["Spicy buffalo"],
-                    buildYourOwn: true
-                }, {
-                    name: "Salad",
-                    quickOrders: ["Regular", "Lechuga"],
-                    buildYourOwn: true
-                }, {
-                    name: "Drink",
-                    quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
-                    buildYourOwn: false,
-                    images: ["sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg"]
-                }]
-            }
-        });
-
-    }, function(err) {
-        tele = new Tele();
-        tele.alerter("Sorry, Issues loading template file...");
-        return Error(JSON.stringify(err));
     });
+    $('#build').click(function(e) {
+        viewBuilder(e, "#build", "builder", function(template) {
+            build = new Builder({
+                // The `el` option can be a node, an ID, or a CSS selector.
+                el: '#container',
+                template: template,
+                // Here, we're passing in some initial data
+                data: {
 
-}
-
-function builde(e) {
-    if (pre(e, '#build') === false) {
-        return;
-    }
-    return $.ajax({
-        url: "views/builder.html",
-        dataType: "html"
-    }).then(function(template) {
-        build = new Builder({
-            // The `el` option can be a node, an ID, or a CSS selector.
-            el: '#container',
-            template: template,
-            // Here, we're passing in some initial data
-            data: {
-
-            }
+                }
+            });
         });
-
-    }, function(err) {
-        build = new Builder();
-        build.alerter("Sorry, Issues loading template file...");
-        return Error(JSON.stringify(err));
-    });
-}
+    }).trigger("click");
 
 
-
-$(document).ready(function() {
-    $('#tele').click(teler);
-    $('#home').click(home);
-    $('#build').click(builde);
-    builde();
 });
