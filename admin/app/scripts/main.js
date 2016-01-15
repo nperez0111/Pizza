@@ -6,7 +6,7 @@ function viewBuilder(evente, el, url, callback) {
     if (evente) {
         evente.preventDefault();
     }
-    
+
     if ($(el).parent().hasClass("active")) {
         return Promise.reject("Same Element clicked twice");
     }
@@ -19,7 +19,7 @@ function viewBuilder(evente, el, url, callback) {
         $('.nav li').each(function() {
             $(this).removeClass("active");
         });
-        $($(e.target)[0]).parent().addClass("active");
+        $($(evente.target)[0]).parent().addClass("active");
     }
 
     if (url in cache) {
