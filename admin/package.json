@@ -2,6 +2,7 @@
   "private": true,
   "devDependencies": {
     "autoprefixer": "^6.0.2",
+    "bower":"^1.7.X",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.0",
     "grunt-browser-sync": "^2.1.2",
@@ -14,6 +15,7 @@
     "grunt-contrib-imagemin": "^1.0.0",
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-cli":"^0.1.X",
     "grunt-eslint": "^17.0.0",
     "grunt-filerev": "^2.2.0",
     "grunt-ftp-deploy": "^0.1.10",
