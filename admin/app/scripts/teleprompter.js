@@ -198,7 +198,7 @@ var Tele = Base.extend({
                 el: '#modal',
                 template: template,
                 oninit: function() {
-                    this.getData({}, name + "Headings");
+                    this.getData(name + "Headings");
                 },
                 // Here, we're passing in some initial data
                 data: {

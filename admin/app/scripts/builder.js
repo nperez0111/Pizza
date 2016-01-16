@@ -1,6 +1,6 @@
 var Builder = Base.extend({
     oninit: function() {
-        this.getData({}, "pizzaHeadings");
+        this.getData("pizzaHeadings");
         this.observe("currentChoices", function(newVal, oldVal, obj) {
             var currentSize = this.size();
         });
@@ -26,11 +26,10 @@ var Builder = Base.extend({
         this.animate("svg.radius", currentSize > -1 ? possibleSizes[currentSize] : 0);
         return currentSize;
     },
-    getData: function(toDB, urlEx) {
+    getData: function(urlEx) {
         var that = this;
         this.sendToDataBase({
-            type: "GET",
-            data: toDB
+            type: "GET"
         }, urlEx).then(function(obj) {
             var titles = [],
                 types = [
