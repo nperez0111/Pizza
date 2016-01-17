@@ -12,17 +12,19 @@ $animationSpeed:1.5s;
     svg {
         height: 100%;
         width: 100%;
-        circle {
-            animation: slight-bounce infinite alternate $animationSpeed ease-in;
-            fill: $pizzaFill;
-            stroke: $pizzaBorder;
-            stroke-width: 4;
-        }
-        ellipse {
-            fill: $pizzaShadow;
-            transform-origin: 0 50%;
-            animation: slight-grow infinite alternate $animationSpeed ease-out;
-            animation-delay: $animationSpeed/2;
+        #crustAndShadow {
+            circle {
+                animation: slight-bounce infinite alternate $animationSpeed ease-in;
+                fill: $pizzaFill;
+                stroke: $pizzaBorder;
+                stroke-width: 4;
+            }
+            ellipse {
+                fill: $pizzaShadow;
+                transform-origin: 0 50%;
+                animation: slight-grow infinite alternate $animationSpeed ease-out;
+                animation-delay: $animationSpeed/2;
+            }
         }
     }
 }
@@ -35,12 +37,13 @@ $animationSpeed:1.5s;
         transform: translate(0px, 0px);
     }
 }
+
 @keyframes slight-grow {
-    $scale:10;
+    $scale: 10;
     0% {
-        transform: scaleX(1) translate(0%,0px);
+        transform: scaleX(1) translate(0%, 0px);
     }
     100% {
-        transform: scaleX((1+($scale/100))) translate(((-$scale)/2)*1%,0px);
+        transform: scaleX((1+($scale/100))) translate(((-$scale)/2)*1%, 0px);
     }
 }

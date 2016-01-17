@@ -3,10 +3,13 @@
         <h2 class="page-header">Pizza {{orders.toString()}}</h2>
         <div id="pizza">
             {{#with svg}}
-            <svg id="pizza">
-
-                <ellipse cx="50%" cy="{{50+radius}}%" rx="{{radius*5/6}}%" ry="{{radius/3}}" />
-                <circle r="{{radius}}%" cx="50%" cy="50%" />
+            <svg>
+                <g id="crustAndShadow">
+                   <title>Crust and Shadow</title>
+                   <desc>This handles the outer crust of the pizza and it's shadow</desc>
+                    <ellipse cx="50%" cy="{{50+radius}}%" rx="{{radius*5/6}}%" ry="{{radius/3}}" />
+                    <circle r="{{radius}}%" cx="50%" cy="50%" />
+                </g>
 
             </svg>
             {{/with}}
