@@ -3,6 +3,7 @@ $brand-primary:#456;
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
+@import "svg.scss";
 @mixin bp($point) {
     @if $point==big {
         @media (max-width: 1600px) {
@@ -264,13 +265,7 @@ input[type="radio"] {
         justify-content: center;
     }
 }
-circle{
-    animation:slight-bounce infinite alternate 1.5s;
-}
-@keyframes slight-bounce{
-    0%{transform:translate(0px,-10px)}
-    100%{transform:translate(0px,0px)}
-}
+
 @keyframes click-wave {
     0% {
         width: 40px;

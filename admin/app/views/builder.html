@@ -1,16 +1,15 @@
 <div class="row marg-top">
     <div class="col-sm-12 col-md-5 col-lg-4">
-       <h2 class="page-header">Pizza {{orders.toString()}}</h2>
-        <div style="display:flex;flex-direction:column;width:100%;align-items:stretch;align-content: stretch;height: 400px;">
-        {{#with svg}}
-        <svg style="height:100%;width:100%">
-            <!---<circle r="40" cx="50" cy="50"></circle>-->
-            <ellipse cx="50%" cy="{{50+radius}}%" rx="{{radius}}%" ry="{{radius/3}}"  style="fill:#CCC;" />
-            <circle r="{{radius}}%" cx="50%" cy="50%" style="fill:#f7c740;stroke:black;stroke-width:4" />
-            
-            <!--unfinished-->
-        </svg>
-        {{/with}}
+        <h2 class="page-header">Pizza {{orders.toString()}}</h2>
+        <div id="pizza">
+            {{#with svg}}
+            <svg id="pizza">
+
+                <ellipse cx="50%" cy="{{50+radius}}%" rx="{{radius*5/6}}%" ry="{{radius/3}}" />
+                <circle r="{{radius}}%" cx="50%" cy="50%" />
+
+            </svg>
+            {{/with}}
         </div>
     </div>
     <div class="col-sm-12 col-md-7 col-lg-8">
