@@ -36,10 +36,11 @@ $animationSpeed:1.5s;
     }
 }
 @keyframes slight-grow {
+    $scale:10;
     0% {
-        transform: scaleX(1) translate(0px,0px);
+        transform: scaleX(1) translate(0%,0px);
     }
     100% {
-        transform: scaleX(1.1) translate(-10px,0px);
+        transform: scaleX((1+($scale/100))) translate(((-$scale)/2)*1%,0px);
     }
 }
