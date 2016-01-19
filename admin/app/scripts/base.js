@@ -48,7 +48,7 @@ var Base = Ractive.extend({
                 password: "0046788285"
             }
         }, obj.data);
-        if (obj.type == "POST") {
+        if (obj.type.valueOf() === "POST") {
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
@@ -80,5 +80,8 @@ var Base = Ractive.extend({
             that.notify("Error occured", err, 1000, "error");
         });
 
+    },
+    unrender: function() {
+        Mousetrap.reset();
     }
 });

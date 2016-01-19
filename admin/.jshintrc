@@ -110,7 +110,9 @@
         "Tele": true,
         "Builder": true,
         "Table": true,
-        "Ractive": true
+        "Ractive": true,
+        "Mousetrap": true,
+        "Promise": true
     } // additional predefined global variables
 
 }

@@ -57,7 +57,7 @@ var Tele = Base.extend({
                     ob = JSON.parse(ob);
                     resolve(JSON.stringify(ob.map(function(cur) {
                         var ret = {};
-                        ret[cur["keyKey"]] = cur["val"];
+                        ret[cur.keyKey] = cur.val;
                         return ret;
                     }).reduce(function(prev, cur, index, arr) {
                         $.extend(cur, prev);
@@ -68,9 +68,6 @@ var Tele = Base.extend({
                 });
             });
         });
-    },
-    unrender: function() {
-        Mousetrap.unbind('shift+a');
     },
     data: function() {
         return {
