@@ -23,6 +23,28 @@ var Table = Base.extend({
             }, newVal);
         });
 
+        var that = this,
+            list = ["ctrl+s", "ctrl+z", "ctrl+d"],
+            functions = ["save", "revert", "delete"];
+        Mousetrap.bind(list, function(e, combo) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            } else {
+                // internet explorer
+                e.returnValue = false;
+            }
+            that[functions[list.indexOf(combo)]]({
+                index: {
+                    r: that.get("editing.cur")
+                }
+            });
+
+            return false;
+        });
+
+    },
+    unrender: function() {
+        Mousetrap.unbind(["ctrl+s", "ctrl+z", "ctrl+d"]);
     },
     add: function(obj) {
         var itemToAdd = this.get('add'),

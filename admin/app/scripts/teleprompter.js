@@ -69,6 +69,9 @@ var Tele = Base.extend({
             });
         });
     },
+    unrender: function() {
+        Mousetrap.unbind('shift+a');
+    },
     data: function() {
         return {
             cols: 2,

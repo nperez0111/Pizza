@@ -80,8 +80,5 @@ var Base = Ractive.extend({
             that.notify("Error occured", err, 1000, "error");
         });
 
-    },
-    unrender: function() {
-        Mousetrap.reset();
     }
 });
