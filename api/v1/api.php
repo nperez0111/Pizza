@@ -20,7 +20,8 @@ define( "HASH_PBKDF2_INDEX", 3 );
 $adminRequired=["users"];
 $keyRoutes=["columns", "join", "placeOrder"];
 include '../../includes/routes.php';
-$routes=global $possibleRoutes;
+global $possibleRoutes;
+$routes=$possibleRoutes;
 $JSON = array();
 $val=file_get_contents( 'php://input' );
 //parse_str(file_get_contents('php://input'), $JSON);
@@ -196,8 +197,7 @@ function rest_put( $req ) {
         return;
     }
     else if ( $ret==2 ) {
-            print_r( $JSON );
-            echo"Order";
+            rest_success("Order fulfilled!");
             return;
         }
 
