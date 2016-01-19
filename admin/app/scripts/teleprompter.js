@@ -23,11 +23,10 @@ var Tele = Base.extend({
             this.placeOrder(this.get("queue"));
         });
         var that = this;
-        $(document).on('keydown', function(e) {
-            if (e.shiftKey && e.keyCode === 65) {
-                that.placeOrder(that.get("queue"));
-            }
+        Mousetrap.bind('shift+a', function() {
+            that.placeOrder(that.get("queue"));
         });
+
         this.getCache("priorities", function() {
             return new Promise(function(resolve, reject) {
                 that.sendToDataBase({
@@ -71,7 +70,7 @@ var Tele = Base.extend({
         });
     },
     unrender: function() {
-        $(document).off();
+        Mousetrap.unbind('shift+a');
     },
     data: function() {
         return {
