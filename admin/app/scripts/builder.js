@@ -28,14 +28,16 @@ var Builder = Base.extend({
     },
     getData: function(urlEx) {
         var that = this;
-        this.sendToDataBase({
-            type: "GET"
-        }, urlEx).then(function(obj) {
+        this.getCache("headings", function() {
+            return that.sendToDataBase({
+                type: "GET"
+            }, urlEx);
+        }, true).then(function(obj) {
             var titles = [],
                 types = [
                     []
                 ];
-            JSON.parse(obj).forEach(function(obj, i, arr) {
+            obj.forEach(function(obj, i, arr) {
                 if (titles.indexOf(obj.Title) === -1) {
                     if (obj.Title === "Size") {
                         titles.unshift(obj.Title);

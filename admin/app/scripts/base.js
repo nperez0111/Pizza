@@ -63,9 +63,9 @@ var Base = Ractive.extend({
         });
     },
     cache: {},
-    getCache: function(prop, func) {
+    getCache: function(prop, func, isPromise) {
         if (prop in this.cache) {
-            return this.cache[prop];
+            return isPromise ? Promise.resolve(this.cache[prop]) : this.cache[prop];
         }
         var that = this;
         if (!(func instanceof Function)) {

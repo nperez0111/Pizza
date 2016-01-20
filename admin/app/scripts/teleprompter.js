@@ -63,9 +63,7 @@ var Tele = Base.extend({
                         $.extend(cur, prev);
                         return cur;
                     })));
-                }, function(err) {
-                    reject(err);
-                });
+                }, reject);
             });
         });
     },
@@ -90,11 +88,13 @@ var Tele = Base.extend({
             obj["quickOrders" + title] = ["Name"];
         });
 
-        this.sendToDataBase({
-                type: "GET",
-                data: obj,
-            },
-            "columns").then(JSON.parse).then(function(ret) {
+        this.getCache("types", function() {
+            return that.sendToDataBase({
+                    type: "GET",
+                    data: obj,
+                },
+                "columns");
+        }, true).then(function(ret) {
             for (var i = 0, l = arr.length; i < l; i++) {
                 that.set("type[" + i + "].quickOrders", ret["quickOrders" + arr[i]][0]);
             }
