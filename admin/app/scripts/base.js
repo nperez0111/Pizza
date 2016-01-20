@@ -64,7 +64,10 @@ var Base = Ractive.extend({
     },
     cache: {},
     getCache: function(prop, func, isPromise) {
-        if (prop in this.cache) {
+        if (prop in this.cache || (false || localStorage && localStorage.getItem(prop))) {
+            if (localStorage && localStorage.getItem(prop)) {
+                this.cache[prop] = JSON.parse(localStorage.getItem(prop));
+            }
             return isPromise ? Promise.resolve(this.cache[prop]) : this.cache[prop];
         }
         var that = this;
@@ -74,6 +77,9 @@ var Base = Ractive.extend({
         }
         return func().then(function(obj) {
             that.cache[prop] = JSON.parse(obj);
+            if (localStorage) {
+                localStorage.setItem(prop, obj);
+            }
             return JSON.parse(obj);
         }, function(err) {
             console.warn(err);
