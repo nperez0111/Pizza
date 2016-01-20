@@ -81,23 +81,24 @@ var Tele = Base.extend({
     },
     types: ["Pizza", "Wings", "Salad", "Drink"],
     getQuickOrders: function() {
-        var that = this,
-            arry = this.types,
-            i = 0;
-        //NOT The most sustainable way of doing this will fix once multiple colum selecting is sorted through
-        var func = function(ary, x) {
-            return that.sendToDataBase({
-                type: "GET"
-            }, "quickOrders" + ary[x] + "/search/Name").then(function(obj) {
-
-                that.set("type[" + x + "].quickOrders", JSON.parse(obj));
-
+        var obj = {},
+            that = this,
+            arr = this.types.filter(function(a) {
+                return a.toLowerCase() !== 'drink'
             });
-        };
-        func(arry, i).then(function() {
-            func(arry, ++i).then(function() {
-                func(arry, ++i); //doesnt go a fourth time around to not include drinks...
-            });
+        arr.forEach(function(title) {
+            obj["quickOrders" + title] = ["Name"];
+        });
+
+        this.sendToDataBase({
+                type: "GET",
+                data: obj,
+            },
+            "columns").then(JSON.parse).then(function(ret) {
+            for (var i = 0, l = arr.length; i < l; i++) {
+                that.set("type[" + i + "].quickOrders", ret["quickOrders" + arr[i]][0]);
+            }
+            return arr;
         });
     },
     order: function(obj) {
