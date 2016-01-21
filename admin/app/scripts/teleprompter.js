@@ -65,6 +65,9 @@ var Tele = Base.extend({
                     })));
                 }, reject);
             });
+        }, true).then(function(a) {
+            that.set("cols", parseInt(a.columns, 10));
+            return a;
         });
     },
     unrender: function() {
@@ -169,11 +172,12 @@ var Tele = Base.extend({
         //console.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
             if (special.indexOf(a) > -1) {
-                return -1;
-            } else {
                 return 1;
+            } else {
+                return -1;
             }
         });
+        console.log(arr);
         return arr.join(this.cache.settings.dbdelimiter);
         //console.log(arr);
         /*/returns the order sorted correctly

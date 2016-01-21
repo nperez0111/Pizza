@@ -10,7 +10,7 @@
           
            {{#if type[(cur+(i*cols))]}}
                
-                <div class="col-lg-{{12/cols}}">
+                <div class="col-lg-{{12/cols}} col-md-{{12/(cols)}}">
                    
                     <div class="page-header">
                        
@@ -30,7 +30,7 @@
                        
                             {{#each type[(cur+(i*cols))].quickOrders:q}}
 
-                                <div class="col-lg-{{12/(cols+1)}} col-md-{{12/(cols+1)}} col-sm-{{12/cols}} col-xs-{{(12/cols)-1}}">
+                                <div class="col-lg-{{12/(cols==2?cols+1:cols-1)}} col-md-{{12/(cols+1)}} col-sm-{{12/cols}} col-xs-{{(12/cols)-1}}">
 
                                     <button type="button" class="btn btn-default btn-block marg-top" on-click="order">
 
