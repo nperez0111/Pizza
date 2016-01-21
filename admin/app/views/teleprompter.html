@@ -3,22 +3,30 @@
         <button class="btn btn-default btn-lg pull-right" on-click="show" data-target="#orders"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</button>
     </div>
 </div>
-{{#each (Array(Math.ceil(type.length/cols))):i}}
+
     <div class="row no-gutter">
         
-        {{#each Array(cols):cur}}
+        {{#each type:cur}}
           
-           {{#if type[(cur+(i*cols))]}}
+           {{#if type[cur]}}
+
+                {{#if (12/cols)-1==cur}}
+                    <div class="clearfix visible-lg other">
+                {{/if}}
+
+                {{#if cur%2==0}}
+                    <div class="clearfix visible-md odd">
+                {{/if}}
                
-                <div class="col-lg-{{12/cols}} col-md-{{12/(cols)}}">
+                <div class="col-lg-{{12/cols}} col-md-6">
                    
                     <div class="page-header">
                        
-                        <h1 class="text-capitalize text-center">{{type[(cur+(i*cols))].name}}</h1>
+                        <h1 class="text-capitalize text-center">{{type[cur].name}}</h1>
                         
                     </div>
                     
-                    {{#if type[(cur+(i*cols))].buildYourOwn}}
+                    {{#if type[cur].buildYourOwn}}
                        
                         <h2>
                             <a on-click="build" class="text-center text-capitalize">Build Your Own:</a>
@@ -28,18 +36,18 @@
                       
                        <div class="row">
                        
-                            {{#each type[(cur+(i*cols))].quickOrders:q}}
+                            {{#each type[cur].quickOrders:q}}
 
-                                <div class="col-lg-{{12/(cols==2?cols+1:cols-1)}} col-md-{{12/(cols+1)}} col-sm-{{12/cols}} col-xs-{{(12/cols)-1}}">
+                                <div class="col-lg-{{cols*2}} col-md-{{cols*2}} col-sm-{{12/cols}} col-xs-6">
 
                                     <button type="button" class="btn btn-default btn-block marg-top" on-click="order">
 
-                                        {{#if type[(cur+(i*cols))].images}}
+                                        {{#if type[cur].images}}
 
-                                            <img src="images/{{type[(cur+(i*cols))].images[q]}}" title="{{type[(cur+(i*cols))].quickOrders[q]}}" alt="{{type[(cur+(i*cols))].quickOrders[q]}} Logo, Click to order">
+                                            <img src="images/{{type[cur].images[q]}}" title="{{type[cur].quickOrders[q]}}" alt="{{type[cur].quickOrders[q]}} Logo, Click to order">
                                         {{else}}
 
-                                            {{type[(cur+(i*cols))].quickOrders[q]}}
+                                            {{type[cur].quickOrders[q]}}
 
                                         {{/if}}
 
@@ -59,7 +67,6 @@
        
     </div>
 
-{{/each}}
 
 <div class="modal fade" id="moduler" role="dialog">
     <div class="modal-dialog modal-lg">
