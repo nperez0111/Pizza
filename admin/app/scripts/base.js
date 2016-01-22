@@ -52,12 +52,12 @@ var Base = Ractive.extend({
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
-        return $.ajax(that.logger(obj)).then(that.logger, that.logger).then(function(r) {
+        return $.ajax(obj).then(function(r) {
             return ((r.message));
         }, function(err) {
             console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
-            console.warn(err);
-            console.warn(obj);
+            that.logger(err, true);
+            that.logger(obj, true);
             console.groupEnd();
             return err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err);
         });
@@ -72,7 +72,7 @@ var Base = Ractive.extend({
         }
         var that = this;
         if (!(func instanceof Function)) {
-            that.notify(prop + " not cached yet!");
+            that.logger(prop + " not cached yet!");
             return Promise.reject(prop);
         }
         return func().then(function(obj) {
@@ -82,7 +82,7 @@ var Base = Ractive.extend({
             }
             return JSON.parse(obj);
         }, function(err) {
-            console.warn(err);
+            that.logger(err, true);
             that.notify("Error occured", err, 1000, "error");
         });
 
@@ -90,8 +90,15 @@ var Base = Ractive.extend({
     unrender: function() {
         $("#alert").alert('close');
     },
-    logger: function(a) {
-        console.log(a);
+    verbose: true,
+    logger: function(a, warning) {
+        if (this.verbose) {
+            if (warning) {
+                console.warn(a);
+            } else {
+                console.log(a);
+            }
+        }
         return a;
     }
 });

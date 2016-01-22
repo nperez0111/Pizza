@@ -169,7 +169,8 @@ var Tele = Base.extend({
     sortOrder: function(order) {
         //return order;
         var special = ["SM", "MD", "LG"];
-        //console.log(this.cache.priorities);
+        //cons
+ole.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
             if (special.indexOf(a) > -1) {
                 return 1;
@@ -177,7 +178,7 @@ var Tele = Base.extend({
                 return -1;
             }
         });
-        console.log(arr);
+        this.logger(arr);
         return arr.join(this.cache.settings.dbdelimiter);
         //console.log(arr);
         /*/returns the order sorted correctly

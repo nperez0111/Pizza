@@ -112,7 +112,7 @@ $(document).ready(function() {
                         });
                         interval = setInterval(func, 12000);
                     });
-                    console.log(err);
+                    table.logger(err);
                 });
             };
             interval = setInterval(func, 12000);

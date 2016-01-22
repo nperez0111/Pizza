@@ -121,7 +121,7 @@ var Table = Base.extend({
     delete: function(obj) {
         var rowOfDeletion = this.get("data").splice(obj.index.r, 1)[0],
             that = this;
-        console.log(rowOfDeletion);
+
         this.sendToDataBase({
             type: "DELETE"
         }, this.get('table') + "/" + rowOfDeletion[this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
