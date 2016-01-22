@@ -514,6 +514,7 @@ function reqRouter( $req, $http ) {
 
             //count(sql_GET([$table,"search",$col,$id]))==1 checks if id exists in table
             if ( isset( $routes[$table] )&&count( sql_GET( [$table, "search", $routes[$table]['identifier'], $id] ) )==1&&$col==$routes[$table]['identifier']?count( sql_GET( [$table, "search", $col, $JSON[$col]] ) )==0:true ) {
+                
                 return 1;
             }
         }
@@ -736,9 +737,10 @@ function sql_POST_ALL( $req ) {
         $STR.=$keys[$i]."=:".$keys[$i].( $i+1<count( $keys )?",":"" );
         $arr[":".$keys[$i]]=$JSON[$keys[$i]];
     }
-    $STR.=" WHERE ".$routes[$table]['identifier']."=:val";
+    $STR.=" WHERE ".$routes[$table]['identifier']."=:valu";
+    //UPDATE settings SET keyKey=:keyKey,val=:val WHERE keyKey=:valu
     $stmt = $db->prepare( $STR );
-    $resul = $stmt->execute( array_merge( [":val"=>$col], $arr ) );
+    $resul = $stmt->execute( array_merge( [":valu"=>$col], $arr ) );
     //echo $STR;
     //print_r($arr);
     return true;
