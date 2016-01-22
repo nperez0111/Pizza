@@ -159,20 +159,20 @@ var Table = Base.extend({
 
         if (!flag) {
             //send to database to update val
-            console.log("changes observed");
             var that = this;
+            that.logger(this.makeObj(arr));
             this.sendToDataBase({
                 type: "POST",
                 data: this.makeObj(arr)
             }, this.get("table") + "/" + previous[row][this.get('editing.notAllowed').indexOf(true)]).then(function(message) {
                 that.notify("Changes Saved!", message);
+                return message;
             }, function(err) {
                 that.notify("Error occured", err, 5000, "error");
+                return err;
             });
         } else {
             //are the same do nothing
-
-            console.log("no changes");
             return false;
         }
         delete previous[row];

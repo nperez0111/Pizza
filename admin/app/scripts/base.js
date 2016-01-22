@@ -1,6 +1,6 @@
 var Base = Ractive.extend({
-    //url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
-    url: "http://api.nickthesick.com/",
+    url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
+    //url: "http://api.nickthesick.com/",
     alerter: function(str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
@@ -52,7 +52,7 @@ var Base = Ractive.extend({
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
-        return $.ajax(obj).then(function(r) {
+        return $.ajax(that.logger(obj)).then(that.logger, that.logger).then(function(r) {
             return ((r.message));
         }, function(err) {
             console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
@@ -89,5 +89,9 @@ var Base = Ractive.extend({
     },
     unrender: function() {
         $("#alert").alert('close');
+    },
+    logger: function(a) {
+        console.log(a);
+        return a;
     }
 });
