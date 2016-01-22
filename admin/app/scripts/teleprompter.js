@@ -125,19 +125,19 @@ var Tele = Base.extend({
             this.notify("Nothing to Order", "Queue is empty :<", 0, "error");
             return false;
         }
-        var that = this,
-            str = order.map(function(obj) {
-                return that.sortOrder(obj.OrderName);
-            }).join(this.cache.settings.splitter);
+        var that = this;
         return that.sendToDataBase({
             type: "PUT",
             data: {
-                OrderSymbols: str,
-                ID: -1
+                OrderSymbols: order.map(function(obj) {
+                    return that.sortOrder(obj.OrderName);
+                }).join(that.cache.settings.splitter)
             }
         }, "placeOrder").then(function(message) {
             that.notify(message, "Order Fulfilled : >");
             that.set("queue", []);
+        }, function(message) {
+            that.notify("Order Unsuccessful", "No Worries just retry to send the order, Check internet connection.");
         });
 
 
@@ -169,13 +169,12 @@ var Tele = Base.extend({
     sortOrder: function(order) {
         //return order;
         var special = ["SM", "MD", "LG"];
-        //cons
-ole.log(this.cache.priorities);
+        //console.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
             if (special.indexOf(a) > -1) {
-                return 1;
-            } else {
                 return -1;
+            } else {
+                return 1;
             }
         });
         this.logger(arr);

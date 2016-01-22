@@ -52,14 +52,16 @@ var Base = Ractive.extend({
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
-        return $.ajax(obj).then(function(r) {
-            return ((r.message));
-        }, function(err) {
-            console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
-            that.logger(err, true);
-            that.logger(obj, true);
-            console.groupEnd();
-            return err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err);
+        return new Promise(function(resolve, reject) {
+            $.ajax(obj).then(function(r) {
+                resolve((r.message));
+            }, function(err) {
+                console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
+                that.logger(err.responseText ? err.responseText : err, true);
+                that.logger(obj, true);
+                console.groupEnd();
+                reject(err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err));
+            });
         });
     },
     cache: {},
