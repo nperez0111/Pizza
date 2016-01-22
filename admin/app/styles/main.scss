@@ -175,7 +175,7 @@ footer p {
     }
     span {
         position: relative;
-        top: -15px;
+        top: -19px;
         padding: 10px 0;
         @include bp(med) {
             top: 0;
@@ -201,7 +201,7 @@ footer p {
     display: inline-block;
     outline: none !important;
     position: relative !important;
-    margin: 0 !important;
+    margin: 4px 0 !important;
     z-index: 1000;
     &:checked {
         background: $brand-primary;

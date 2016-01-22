@@ -1,8 +1,9 @@
 $pizzaFill:#f7c740;
 $pizzaBorder:#000;
 $pizzaShadow:#CCC;
-$animationSpeed:1.5s;
+$animationSpeed:1.75s;
 @import "mixins.scss";
+@import "bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss";
 #pizza {
     display: flex;
     flex-direction: column;
@@ -14,6 +15,7 @@ $animationSpeed:1.5s;
     align-items: stretch;
     align-content: stretch;
     @include aspect-ratio(svg,1,1);
+    
     svg {
         height: 100%;
         width: 100%;
@@ -28,8 +30,12 @@ $animationSpeed:1.5s;
             ellipse {
                 fill: $pizzaShadow;
                 transform-origin: 0 50%;
-                animation: slight-grow infinite alternate $animationSpeed ease-out;
+                animation: slight-grow infinite alternate $animationSpeed ease-in;
                 animation-delay: $animationSpeed/2;
+            }
+            text {
+                fill: $gray;
+                font-size: $font-size-h3;
             }
         }
     }
@@ -45,7 +51,7 @@ $animationSpeed:1.5s;
 }
 
 @keyframes slight-grow {
-    $scale: 10;
+    $scale: 13;
     0% {
         transform: scaleX(1) translate(0%, 0px);
     }
