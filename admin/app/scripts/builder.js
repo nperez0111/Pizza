@@ -31,7 +31,7 @@ var Builder = Base.extend({
         this.getCache("headings", function() {
             return that.sendToDataBase({
                 type: "GET"
-            }, urlEx);
+            }, urlEx + "/sortBy/Name");
         }, true).then(function(obj) {
             var titles = [],
                 types = [
