@@ -197,7 +197,23 @@ function rest_put( $req ) {
         return;
     }
     else if ( $ret==2 ) {
-            rest_success("Order fulfilled!");
+            if(!isset($JSON["OrderSymbols"])){
+                rest_error("NO Order received, check JSON",406);
+            }
+            $list=$JSON["OrderSymbols"];
+            $orders=explode(" , ",$list);
+            $arr=[];
+            for($i=0;$i<count($orders);$i++){
+                $ingredients=explode(" ",$orders[$i]);
+                array_push($arr,$ingredients);
+                //from here we need to check that each ingrediant is valid and available?
+            }
+            /*print_r($list);
+            echo "\n";
+            print_r($orders);
+            echo "\n";
+            print_r($arr);*/
+            rest_error("Order fulfilled!",400);
             return;
         }
 
