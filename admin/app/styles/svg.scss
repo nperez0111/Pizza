@@ -2,16 +2,22 @@ $pizzaFill:#f7c740;
 $pizzaBorder:#000;
 $pizzaShadow:#CCC;
 $animationSpeed:1.5s;
+@import "mixins.scss";
 #pizza {
     display: flex;
     flex-direction: column;
     width: 100%;
+    @include bp(med){
+        width:50%;
+        margin:0 auto;
+    }
     align-items: stretch;
     align-content: stretch;
-    height: 400px;
+    @include aspect-ratio(svg,1,1);
     svg {
         height: 100%;
         width: 100%;
+        
         #crustAndShadow {
             circle {
                 animation: slight-bounce infinite alternate $animationSpeed ease-in;

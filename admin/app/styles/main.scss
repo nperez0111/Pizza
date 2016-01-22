@@ -4,28 +4,7 @@ $brand-primary:#456;
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
 @import "svg.scss";
-@mixin bp($point) {
-    @if $point==big {
-        @media (max-width: 1600px) {
-            @content;
-        }
-    }
-    @else if $point==med {
-        @media (max-width: 1250px) {
-            @content;
-        }
-    }
-    @else if $point==small {
-        @media (max-width: 600px) {
-            @content;
-        }
-    }
-    @else if $point==xsmall {
-        @media (max-width: 320px) {
-            @content;
-        }
-    }
-}
+@import "mixins.scss";
 
 .center {
     text-align: center;

@@ -1,0 +1,38 @@
+@mixin aspect-ratio($innerEl, $width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+    > #{$innerEl} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+@mixin bp($point) {
+    @if $point==big {
+        @media (max-width: 1600px) {
+            @content;
+        }
+    }
+    @else if $point==med {
+        @media (max-width: 1250px) {
+            @content;
+        }
+    }
+    @else if $point==small {
+        @media (max-width: 600px) {
+            @content;
+        }
+    }
+    @else if $point==xsmall {
+        @media (max-width: 320px) {
+            @content;
+        }
+    }
+}
