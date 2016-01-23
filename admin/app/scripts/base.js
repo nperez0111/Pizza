@@ -13,6 +13,7 @@ var Base = Ractive.extend({
         });
         return true;
     },
+    notifications: [],
     notify: function(title, message, time, typely) {
         var that = this,
             not = $.notify({
@@ -31,6 +32,7 @@ var Base = Ractive.extend({
                     '<span data-notify="message">{2}</span>' +
                     '</div>'
             });
+        this.notifications.push(not);
         return not;
     },
     sendToDataBase: function(obj, urlEx) {
@@ -89,8 +91,18 @@ var Base = Ractive.extend({
         });
 
     },
-    unrender: function() {
+    onClose: function() {
+        return this;
+    },
+    keyBindings: [],
+    unrender: function(apply) {
         $("#alert").alert('close');
+        var that = this.onClose();
+        that.notifications.forEach(function(a) {
+            a.close();
+        });
+        that.notifications = [];
+        Mousetrap.unbind(that.keyBindings);
     },
     verbose: true,
     logger: function(a, warning) {

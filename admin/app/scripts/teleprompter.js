@@ -23,7 +23,7 @@ var Tele = Base.extend({
             this.placeOrder(this.get("queue"));
         });
         var that = this;
-        Mousetrap.bind('shift+a', function() {
+        Mousetrap.bind(this.keyBindings[0], function() {
             that.placeOrder(that.get("queue"));
         });
 
@@ -70,9 +70,7 @@ var Tele = Base.extend({
             return a;
         });
     },
-    unrender: function() {
-        Mousetrap.unbind('shift+a');
-    },
+    keyBindings: ['shift+a'],
     data: function() {
         return {
             cols: 2,

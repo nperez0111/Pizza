@@ -24,7 +24,7 @@ var Table = Base.extend({
         });
 
         var that = this,
-            list = ["ctrl+s", "ctrl+z", "ctrl+d"],
+            list = this.keyBindings,
             functions = ["save", "revert", "delete"];
         Mousetrap.bind(list, function(e, combo) {
             if (e.preventDefault) {
@@ -43,9 +43,7 @@ var Table = Base.extend({
         });
 
     },
-    unrender: function() {
-        Mousetrap.unbind(["ctrl+s", "ctrl+z", "ctrl+d"]);
-    },
+    keyBindings: ["ctrl+s", "ctrl+z", "ctrl+d"],
     add: function(obj) {
         var itemToAdd = this.get('add'),
             missing = false;
