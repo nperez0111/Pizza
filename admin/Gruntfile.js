@@ -358,7 +358,13 @@ module.exports = function(grunt) {
                 exclusions: ['dist/**/Thumbs.db']
             }
         },
-
+uncss: {
+            dist: {
+                files: {
+                    'dist/css/tidy.css': ['dist/folder.html']
+                }
+            }
+        },
         // Run some tasks in parallel to speed up build process
         concurrent: {
             server: [
@@ -374,7 +380,89 @@ module.exports = function(grunt) {
                 'imagemin',
                 'svgmin'
             ]
+        },
+        "file-creator": {
+            options: {
+                openFlags: 'w'
+            },
+            folder: {
+                "dist/folder.html": function(fs, fd, done) {
+                    var glob = grunt.file.glob;
+                    var _ = grunt.util._;
+                    var Ractive = require('ractive/ractive.js');
+                    Ractive.DEBUG = false;
+                    fs.writeSync(fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.db1aae18.css> <link rel=stylesheet href=styles/main.fd730bbf.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>');
+                    glob('app/views/**/*.html', function(err, files) {
+                        var i = 0;
+                        _.each(files, function(file) {
+
+                            fs.readFile(file, "utf8", function(err, data) {
+                                if (err) {
+                                    throw (err);
+                                }
+                                var r = new Ractive({
+                                    template: data,
+                                    data: {
+                                        cols: 2,
+                                        queue: [],
+                                        headings: [],
+                                        types: [
+                                            []
+                                        ],
+                                        rows: ['Some', 'Error', 'Occurred'],
+                                        add: [],
+                                        editing: {
+                                            cur: -1,
+                                            past: {},
+                                            notAllowed: [false, false, false]
+                                        },
+                                        data: [
+                                            ["Check", "If", "Connected"],
+                                            ["To", "The", "Internet"]
+                                        ],
+                                        table: "users",
+                                        tables: ["users"],
+                                        orders: [],
+                                        type: [{
+                                            name: "Pizza",
+                                            quickOrders: ["Large eperoni"],
+                                            buildYourOwn: true
+                                        }, {
+                                            name: "Wings",
+                                            quickOrders: ["Spicy buffalo"],
+                                            buildYourOwn: true
+                                        }, {
+                                            name: "Salad",
+                                            quickOrders: ["Regular", "Lechuga"],
+                                            buildYourOwn: true
+                                        }, {
+                                            name: "Drink",
+                                            quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
+                                            buildYourOwn: false,
+                                            images: ["sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg"]
+                                        }],
+                                        currentChoices: [
+                                            []
+                                        ],
+                                        sizes: [45, 37.5, 30],
+                                        svg: {
+                                            radius: 0
+                                        },
+                                    }
+                                });
+                                fs.writeSync(fd, r.toHTML());
+                                if (i + 1 == files.length) {
+                                    done();
+                                }
+                                i++;
+                            });
+                        });
+
+                    });
+                }
+            }
         }
+
     });
 
 
@@ -438,7 +526,13 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy', function(argue) {
         grunt.loadNpmTasks('grunt-ftp-deploy');
         grunt.option('force', true);
-        grunt.task.run(['build','ftp-deploy:build']);
+        grunt.task.run(['build', 'ftp-deploy:build']);
+
+    });
+
+    grunt.registerTask('tidy', function(argue) {
+        grunt.loadNpmTasks("grunt-uncss");
+        grunt.task.run([ "file-creator", "uncss"]);
 
     });
 };
