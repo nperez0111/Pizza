@@ -361,7 +361,7 @@ module.exports = function(grunt) {
 uncss: {
             dist: {
                 files: {
-                    'dist/css/tidy.css': ['dist/folder.html']
+                    'dist/css/tidy.css': ['dist/compressed.html']
                 }
             }
         },
@@ -386,12 +386,12 @@ uncss: {
                 openFlags: 'w'
             },
             folder: {
-                "dist/folder.html": function(fs, fd, done) {
+                "dist/compressed.html": function(fs, fd, done) {
                     var glob = grunt.file.glob;
                     var _ = grunt.util._;
                     var Ractive = require('ractive/ractive.js');
                     Ractive.DEBUG = false;
-                    fs.writeSync(fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.db1aae18.css> <link rel=stylesheet href=styles/main.fd730bbf.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>');
+                    fs.writeSync(fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.css> <link rel=stylesheet href=styles/main.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>');
                     glob('app/views/**/*.html', function(err, files) {
                         var i = 0;
                         _.each(files, function(file) {
@@ -452,6 +452,7 @@ uncss: {
                                 });
                                 fs.writeSync(fd, r.toHTML());
                                 if (i + 1 == files.length) {
+                                    fs.writeSync(fd,'<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>');
                                     done();
                                 }
                                 i++;
@@ -512,7 +513,6 @@ uncss: {
         'cssmin',
         'uglify',
         'copy:dist',
-        'filerev',
         'usemin',
         'htmlmin'
     ]);
