@@ -21,7 +21,11 @@ module.exports = function(grunt) {
     // Configurable paths
     var config = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        auth: {
+            host: 'ftp.nickthesick.com',
+            authKey: 'main'
+        }
     };
 
     // Define the configuration for all the tasks
@@ -349,13 +353,22 @@ module.exports = function(grunt) {
         },
         'ftp-deploy': {
             build: {
-                auth: {
-                    host: 'ftp.nickthesick.com',
-                    authKey: 'main'
-                },
+                auth: config.auth,
                 src: 'dist/',
                 dest: '/public_html/admin/',
-                exclusions: ['dist/**/Thumbs.db']
+                exclusions: ['*.md', 'dist/**/Thumbs.db']
+            },
+            api: {
+                auth: config.auth,
+                src: '../api/v1/',
+                dest: '/public_html/api/v1/',
+                exclusions: ['*.md']
+            },
+            includes: {
+                auth: config.auth,
+                src: '../includes/',
+                dest: '/public_html/includes/',
+                exclusions: ['*.md']
             }
         },
         uncss: {
@@ -446,7 +459,7 @@ module.exports = function(grunt) {
                                         ],
                                         sizes: [45, 37.5, 30],
                                         svg: {
-                                            radius: 0
+                                            radius: 30
                                         },
                                     }
                                 });
@@ -526,7 +539,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy', function(argue) {
         grunt.loadNpmTasks('grunt-ftp-deploy');
         grunt.option('force', true);
-        grunt.task.run(['build', 'ftp-deploy:build']);
+        grunt.task.run(['build', 'ftp-deploy:build', 'ftp-deploy:api', 'ftp-deploy:includes']);
 
     });
 
