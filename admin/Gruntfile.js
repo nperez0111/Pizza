@@ -208,7 +208,7 @@ module.exports = function(grunt) {
         // Automatically inject Bower components into the HTML file
         wiredep: {
             app: {
-                src: ['<%= config.app %>/index.html'],
+                src: ['<%= config.app %>/index.html', 'test/index.html'],
                 exclude: ['bootstrap.js'],
                 ignorePath: /^(\.\.\/)*\.\./
             },
@@ -358,7 +358,7 @@ module.exports = function(grunt) {
                 exclusions: ['dist/**/Thumbs.db']
             }
         },
-uncss: {
+        uncss: {
             dist: {
                 files: {
                     'dist/css/tidy.css': ['dist/compressed.html']
@@ -452,7 +452,7 @@ uncss: {
                                 });
                                 fs.writeSync(fd, r.toHTML());
                                 if (i + 1 == files.length) {
-                                    fs.writeSync(fd,'<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>');
+                                    fs.writeSync(fd, '<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>');
                                     done();
                                 }
                                 i++;
@@ -532,7 +532,7 @@ uncss: {
 
     grunt.registerTask('tidy', function(argue) {
         grunt.loadNpmTasks("grunt-uncss");
-        grunt.task.run([ "file-creator", "uncss"]);
+        grunt.task.run(["file-creator", "uncss"]);
 
     });
 };
