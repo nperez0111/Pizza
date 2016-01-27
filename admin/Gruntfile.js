@@ -368,7 +368,7 @@ module.exports = function(grunt) {
                 auth: config.auth,
                 src: '../includes/',
                 dest: '/public_html/includes/',
-                exclusions: ['*.md']
+                exclusions: ['*.md', 'database.php']
             }
         },
         uncss: {
@@ -425,7 +425,7 @@ module.exports = function(grunt) {
                                         rows: ['Some', 'Error', 'Occurred'],
                                         add: [],
                                         editing: {
-                                            cur: -1,
+                                            cur: 1,
                                             past: {},
                                             notAllowed: [false, false, false]
                                         },
@@ -539,7 +539,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy', function(argue) {
         grunt.loadNpmTasks('grunt-ftp-deploy');
         grunt.option('force', true);
-        grunt.task.run(['build', 'ftp-deploy:build', 'ftp-deploy:api', 'ftp-deploy:includes']);
+        grunt.task.run(['build', 'ftp-deploy']);
 
     });
 
