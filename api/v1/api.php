@@ -47,7 +47,6 @@ else {
 
 // curl "http://localhost/api/v1/users" -X OPTIONS -i
 if ( isset( $_SERVER['HTTP_ORIGIN'] ) ) {
-    header( "Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}" );
     header( 'Access-Control-Allow-Credentials: true' );
     header( 'Access-Control-Max-Age: 86400' );    // cache for 1 day
     header( "Access-Control-Allow-Headers: *" );
@@ -56,12 +55,13 @@ if ( isset( $_SERVER['HTTP_ORIGIN'] ) ) {
 // Access-Control headers are received during OPTIONS requests
 if ( $_SERVER['REQUEST_METHOD'] == 'OPTIONS' ) {
 
-    if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] ) )
+    if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] ) ){
         header( "Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, ADD, LOGIN, DELETE, LOGOUT" );
+    }
 
-    if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ) )
+    if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ) ){
         header( "Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}" );
-    header( "Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}" );
+    }
     http_response_code( 204 );
     exit( 0 );
 }
@@ -75,7 +75,10 @@ if ( ( isset( $_SESSION['loggedin'] )&&$_SESSION['loggedin']==true )||( loginWJs
     die;
 }
 if ( isset( $_SERVER['SCRIPT_URL'] ) ) {
-    $_SERVER['PATH_INFO']=str_replace( '/pizza/api/v1', '', $_SERVER['SCRIPT_URL'] );
+    $_SERVER['PATH_INFO']=str_replace( '/api/v1', '', $_SERVER['SCRIPT_URL'] );
+}
+else{
+    $_SERVER['PATH_INFO']=str_replace( '/pizza/api/v1', '', $_SERVER['REDIRECT_URL'] );
 }
 if ( @$_SERVER['PATH_INFO']==null ) {
     rest_error( "You are requesting an empty set.", 400 );
