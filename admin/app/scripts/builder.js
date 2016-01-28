@@ -13,13 +13,14 @@ var Builder = Base.extend({
             }).reduce(function(a, b) {
                 return a.concat(b);
             }).filter(function(val) {
-                return val;
+                return val !== false;
             }));
         });
+
         this.inits(this);
     },
-    inits:function(that){
-        this.getData("pizzaHeadings");
+    inits: function(that) {
+        that.getData("pizzaHeadings");
     },
     data: function() {
         return {
