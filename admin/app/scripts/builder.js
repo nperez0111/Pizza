@@ -1,6 +1,5 @@
 var Builder = Base.extend({
     oninit: function() {
-        this.getData("pizzaHeadings");
         this.observe("currentChoices", function(newVal, oldVal, obj) {
             var currentSize = this.size();
             var that = this;
@@ -17,6 +16,10 @@ var Builder = Base.extend({
                 return val;
             }));
         });
+        this.inits(this);
+    },
+    inits:function(that){
+        this.getData("pizzaHeadings");
     },
     data: function() {
         return {

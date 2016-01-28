@@ -1,20 +1,20 @@
 var Base = Ractive.extend({
-    url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
-    //url: "http://api.nickthesick.com/",
-    alerter: function(str, moreInfo) {
+    //url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
+    url: "http://api.nickthesick.com/",
+    alerter: function (str, moreInfo) {
         var other = (str.str || str) + "";
         moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
         if (!str.el && ($('#alert').length === 0)) {
             $('#container').prepend('<div id="alert" style="display:none" class="alert alert-danger"></div>');
         }
-        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or Contact Support.</p>").fadeIn().slideDown();
-        $("a[data-dismiss='alert']").click(function() {
+        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>").fadeIn().slideDown();
+        $("a[data-dismiss='alert']").click(function () {
             $("#alert").alert("close");
         });
         return true;
     },
     notifications: [],
-    notify: function(title, message, time, typely) {
+    notify: function (title, message, time, typely) {
         var that = this,
             not = $.notify({
                 title: (typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span> ' + title : title),
@@ -35,7 +35,7 @@ var Base = Ractive.extend({
         this.notifications.push(not);
         return not;
     },
-    sendToDataBase: function(obj, urlEx) {
+    sendToDataBase: function (obj, urlEx) {
         obj = $.extend({
             type: "GET",
             dataType: "json",
@@ -54,10 +54,10 @@ var Base = Ractive.extend({
             obj.data = JSON.stringify(obj.data);
         }
         var that = this;
-        return new Promise(function(resolve, reject) {
-            $.ajax(obj).then(function(r) {
+        return new Promise(function (resolve, reject) {
+            $.ajax(obj).then(function (r) {
                 resolve((r.message));
-            }, function(err) {
+            }, function (err) {
                 console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
                 that.logger(err.responseText ? err.responseText : err, true);
                 that.logger(obj, true);
@@ -67,7 +67,7 @@ var Base = Ractive.extend({
         });
     },
     cache: {},
-    getCache: function(prop, func, isPromise) {
+    getCache: function (prop, func, isPromise) {
         if (prop in this.cache || (localStorage.getItem(prop))) {
             if (localStorage && localStorage.getItem(prop)) {
                 this.cache[prop] = JSON.parse(localStorage.getItem(prop));
@@ -79,33 +79,33 @@ var Base = Ractive.extend({
             that.logger(prop + " not cached yet!");
             return Promise.reject(prop);
         }
-        return func().then(function(obj) {
+        return func().then(function (obj) {
             that.cache[prop] = JSON.parse(obj);
             if (false && localStorage) {
                 localStorage.setItem(prop, obj);
             }
             return JSON.parse(obj);
-        }, function(err) {
+        }, function (err) {
             that.logger(err, true);
             that.notify("Error occured", err, 1000, "error");
         });
 
     },
-    onClose: function() {
+    onClose: function () {
         return this;
     },
     keyBindings: [],
-    unrender: function(apply) {
+    unrender: function (apply) {
         $("#alert").alert('close');
         var that = this.onClose();
-        that.notifications.forEach(function(a) {
+        that.notifications.forEach(function (a) {
             a.close();
         });
         that.notifications = [];
         Mousetrap.unbind(that.keyBindings);
     },
     verbose: true,
-    logger: function(a, warning) {
+    logger: function (a, warning) {
         if (this.verbose) {
             if (warning) {
                 console.warn(a);

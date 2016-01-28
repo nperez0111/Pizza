@@ -8,8 +8,7 @@ var Tele = Base.extend({
             this.rmvqueue(event);
         });
         this.on('build', function(event) {
-            this.build(this.get("type")[event.index.cur + (event.index.i * this.get("cols"))].name);
-
+            this.build(this.get("type")[event.index.cur].name);
         });
         this.on('show', function(event) {
             $($(event.node).data('target')).modal("show");
@@ -199,8 +198,8 @@ var Tele = Base.extend({
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#modal',
                 template: template,
-                oninit: function() {
-                    this.getData(name + "Headings");
+                inits: function(that) {
+                    that.getData(name + "Headings");
                 },
                 // Here, we're passing in some initial data
                 data: {
