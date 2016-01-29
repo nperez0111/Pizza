@@ -2,7 +2,7 @@ $pizzaFill:#f7c740;
 $pizzaBorder:#000;
 $pizzaShadow:#CCC;
 $animationSpeed:1.75s;
-@import "mixins.scss";
+@import "_mixins.scss";
 @import "bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss";
 #pizza {
     display: flex;

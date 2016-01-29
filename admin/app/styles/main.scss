@@ -4,7 +4,7 @@ $brand-primary:#456;
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
 @import "svg.scss";
-@import "mixins.scss";
+@import "_mixins.scss";
 
 .center {
     text-align: center;
@@ -163,6 +163,7 @@ footer p {
 .checkbox-inline {
     padding: 0 !important;
     flex-basis: ((100/3)*1%);
+    user-select: none;
     @include bp(med) {
         text-align: center;
     }
