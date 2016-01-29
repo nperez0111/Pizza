@@ -65,15 +65,15 @@ if ( $_SERVER['REQUEST_METHOD'] == 'OPTIONS' ) {
     http_response_code( 204 );
     exit( 0 );
 }
+
 include '../../includes/database.php';
-if ( ( isset( $_SESSION['loggedin'] )&&$_SESSION['loggedin']==true )||( loginWJson() )||( checkUser( @$_SERVER["PHP_AUTH_USER"], @$_SERVER["PHP_AUTH_PW"] ) ) ) {
 
-
-}else {
+if ( !( ( isset( $_SESSION['loggedin'] )&&$_SESSION['loggedin']==true )||( loginWJson() )||( checkUser( @$_SERVER["PHP_AUTH_USER"], @$_SERVER["PHP_AUTH_PW"] ) ) ) ) {
     rest_error( "You must be logged in to use this API.", 401 );
     exit;
     die;
 }
+
 if ( isset( $_SERVER['SCRIPT_URL'] ) ) {
     $_SERVER['PATH_INFO']=str_replace( '/api/v1', '', $_SERVER['SCRIPT_URL'] );
 }

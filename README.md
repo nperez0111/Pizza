@@ -19,6 +19,8 @@ Currently the API is built out using a REST API made by yours truly,
 /tableName/sortBy/identifierRow | GET | List rows sorted ascending by identifierRow
 /tableName/sortBy/identifierRow/SORT[ASC OR DESC] | GET | Same as above but, allows specifying order
 /join | GET | allows JOIN Syntax based upon JSON Request
+/columns | GET | select multiple columns
+/placeOrder | PUT | place an order
 /tableName/identifier | POST | Update identifier's row with JSON data
 /tableName/identifierRow/value | POST | Update identifierRow with provided value
 /tableName | PUT | Add JSON data to tableName
@@ -27,11 +29,18 @@ Currently the API is built out using a REST API made by yours truly,
 /logout | LOGIN | Obviously to Logout
 
 ## Install Steps
+
 1. Get Nodejs
-2. Save this Repository somehow
+2. Save this Repository
 3. Open Command line 
 4. Get into the admin folder ````cd admin````
 5. Install all the dependencies ````npm install````
 6. Install bower and grunt command line ````npm install grunt-cli bower````
 7. Install bower's dependencies ````bower install````
 8. Run the Web Server ````grunt serve````
+
+## As for the API
+
+1. Run the API on a domain
+2. Link to the directory of where the api is stored in the ``Base.js`` file
+3. Enjoy
