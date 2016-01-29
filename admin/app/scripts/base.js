@@ -84,7 +84,7 @@ var Base = Ractive.extend( {
             if ( false && localStorage ) {
                 localStorage.setItem( prop, obj );
             }
-            return JSON.parse( obj );
+            return that.cache[ prop ];
         }, function ( err ) {
             that.logger( err, true );
             that.notify( "Error occured", err, 1000, "error" );
