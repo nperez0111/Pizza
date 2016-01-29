@@ -80,6 +80,7 @@ if ( isset( $_SERVER['SCRIPT_URL'] ) ) {
 else{
     $_SERVER['PATH_INFO']=str_replace( '/pizza/api/v1', '', $_SERVER['REDIRECT_URL'] );
 }
+
 if ( @$_SERVER['PATH_INFO']==null ) {
     rest_error( "You are requesting an empty set.", 400 );
     exit;
@@ -87,7 +88,6 @@ if ( @$_SERVER['PATH_INFO']==null ) {
 }
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode( "/", substr( @$_SERVER['PATH_INFO'], 1 ) );
-//echo json_encode($response);
 
 switch ( $method ) {
 case 'PUT':
@@ -681,8 +681,7 @@ function sql_GET_COLUMNS() {
     global $JSON;
     $arr=[];
     foreach ( $JSON as $table=>$val ) {
-        if ( $table!=="login" ) {
-
+        if ( $table!=="login" && $table !=="/columns" ) {
             if ( is_array( $val ) ) {
                 //array_push($arr,"IS Array");
                 $arr[$table]=[];
