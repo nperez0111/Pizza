@@ -8,15 +8,15 @@
 // If you want to recursively match all subfolders, use:
 // 'test/spec/**/*.js'
 
-module.exports = function(grunt) {
+module.exports = function ( grunt ) {
 
     // Time how long tasks take. Can help when optimizing build times
-    require('time-grunt')(grunt);
+    require( 'time-grunt' )( grunt );
 
     // Automatically load required grunt tasks
-    require('jit-grunt')(grunt, {
+    require( 'jit-grunt' )( grunt, {
         useminPrepare: 'grunt-usemin'
-    });
+    } );
 
     // Configurable paths
     var config = {
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
     };
 
     // Define the configuration for all the tasks
-    grunt.initConfig({
+    grunt.initConfig( {
 
         // Project settings
         config: config,
@@ -37,27 +37,27 @@ module.exports = function(grunt) {
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             bower: {
-                files: ['bower.json'],
-                tasks: ['wiredep']
+                files: [ 'bower.json' ],
+                tasks: [ 'wiredep' ]
             },
             babel: {
-                files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                tasks: ['babel:dist']
+                files: [ '<%= config.app %>/scripts/{,*/}*.js' ],
+                tasks: [ 'babel:dist' ]
             },
             babelTest: {
-                files: ['test/spec/{,*/}*.js'],
-                tasks: ['babel:test', 'test:watch']
+                files: [ 'test/spec/{,*/}*.js' ],
+                tasks: [ 'babel:test', 'test:watch' ]
             },
             gruntfile: {
-                files: ['Gruntfile.js']
+                files: [ 'Gruntfile.js' ]
             },
             sass: {
-                files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['sass', 'postcss']
+                files: [ '<%= config.app %>/styles/{,*/}*.{scss,sass}' ],
+                tasks: [ 'sass', 'postcss' ]
             },
             styles: {
-                files: ['<%= config.app %>/styles/{,*/}*.css'],
-                tasks: ['newer:copy:styles', 'postcss']
+                files: [ '<%= config.app %>/styles/{,*/}*.css' ],
+                tasks: [ 'newer:copy:styles', 'postcss' ]
             }
         },
 
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
                     ],
                     port: 9000,
                     server: {
-                        baseDir: ['.tmp', config.app],
+                        baseDir: [ '.tmp', config.app ],
                         routes: {
                             '/bower_components': './bower_components'
                         }
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
                     logLevel: 'silent',
                     host: 'localhost',
                     server: {
-                        baseDir: ['.tmp', './test', config.app],
+                        baseDir: [ '.tmp', './test', config.app ],
                         routes: {
                             '/bower_components': './bower_components',
                             '/app': './app'
@@ -113,14 +113,14 @@ module.exports = function(grunt) {
         // Empties folders to start fresh
         clean: {
             dist: {
-                files: [{
+                files: [ {
                     dot: true,
                     src: [
                         '.tmp',
                         '<%= config.dist %>/*',
                         '!<%= config.dist %>/.git*'
                     ]
-                }]
+                } ]
             },
             server: '.tmp'
         },
@@ -140,7 +140,7 @@ module.exports = function(grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://<%= browserSync.test.options.host %>:<%= browserSync.test.options.port %>/index.html']
+                    urls: [ 'http://<%= browserSync.test.options.host %>:<%= browserSync.test.options.port %>/index.html' ]
                 }
             }
         },
@@ -151,22 +151,22 @@ module.exports = function(grunt) {
                 sourceMap: true
             },
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/scripts',
                     src: '{,*/}*.js',
                     dest: '.tmp/scripts',
                     ext: '.js'
-                }]
+                } ]
             },
             test: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: 'test/spec',
                     src: '{,*/}*.js',
                     dest: '.tmp/spec',
                     ext: '.js'
-                }]
+                } ]
             }
         },
 
@@ -176,16 +176,16 @@ module.exports = function(grunt) {
                 sourceMap: true,
                 sourceMapEmbed: true,
                 sourceMapContents: true,
-                includePaths: ['.']
+                includePaths: [ '.' ]
             },
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/styles',
-                    src: ['*.{scss,sass}'],
+                    src: [ '*.{scss,sass}' ],
                     dest: '.tmp/styles',
                     ext: '.css'
-                }]
+                } ]
             }
         },
 
@@ -194,30 +194,30 @@ module.exports = function(grunt) {
                 map: true,
                 processors: [
                     // Add vendor prefixed styles
-                    require('autoprefixer')({
-                        browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']
-                    })
+                    require( 'autoprefixer' )( {
+                        browsers: [ '> 1%', 'last 2 versions', 'Firefox ESR' ]
+                    } )
                 ]
             },
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '.tmp/styles/',
                     src: '{,*/}*.css',
                     dest: '.tmp/styles/'
-                }]
+                } ]
             }
         },
 
         // Automatically inject Bower components into the HTML file
         wiredep: {
             app: {
-                src: ['<%= config.app %>/index.html', 'test/index.html'],
-                exclude: ['bootstrap.js'],
+                src: [ '<%= config.app %>/index.html', 'test/index.html' ],
+                exclude: [ 'bootstrap.js' ],
                 ignorePath: /^(\.\.\/)*\.\./
             },
             sass: {
-                src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
+                src: [ '<%= config.app %>/styles/{,*/}*.{scss,sass}' ],
                 ignorePath: /^(\.\.\/)+/
             }
         },
@@ -252,30 +252,30 @@ module.exports = function(grunt) {
                     '<%= config.dist %>/styles'
                 ]
             },
-            html: ['<%= config.dist %>/*.html'],
-            css: ['<%= config.dist %>/styles/{,*/}*.css']
+            html: [ '<%= config.dist %>/*.html' ],
+            css: [ '<%= config.dist %>/styles/{,*/}*.css' ]
         },
 
         // The following *-min tasks produce minified files in the dist folder
         imagemin: {
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/images',
                     src: '{,*/}*.{gif,jpeg,jpg,png}',
                     dest: '<%= config.dist %>/images'
-                }]
+                } ]
             }
         },
 
         svgmin: {
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/images',
                     src: '{,*/}*.svg',
                     dest: '<%= config.dist %>/images'
-                }]
+                } ]
             }
         },
 
@@ -293,12 +293,12 @@ module.exports = function(grunt) {
                     removeRedundantAttributes: false,
                     useShortDoctype: true
                 },
-                files: [{
+                files: [ {
                     expand: true,
                     cwd: '<%= config.dist %>',
                     src: '*.html',
                     dest: '<%= config.dist %>'
-                }]
+                } ]
             }
         },
 
@@ -331,7 +331,7 @@ module.exports = function(grunt) {
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
-                files: [{
+                files: [ {
                     expand: true,
                     dot: true,
                     cwd: '<%= config.app %>',
@@ -348,7 +348,7 @@ module.exports = function(grunt) {
                     cwd: '.',
                     src: 'bower_components/bootstrap-sass/assets/fonts/bootstrap/*',
                     dest: '<%= config.dist %>'
-                }]
+                } ]
             }
         },
         'ftp-deploy': {
@@ -356,25 +356,25 @@ module.exports = function(grunt) {
                 auth: config.auth,
                 src: 'dist/',
                 dest: '/public_html/admin/',
-                exclusions: ['*.md', 'dist/**/Thumbs.db']
+                exclusions: [ '*.md', 'dist/**/Thumbs.db' ]
             },
             api: {
                 auth: config.auth,
                 src: '../api/v1/',
                 dest: '/public_html/api/v1/',
-                exclusions: ['*.md']
+                exclusions: [ '*.md' ]
             },
             includes: {
                 auth: config.auth,
                 src: '../includes/',
                 dest: '/public_html/includes/',
-                exclusions: ['*.md', 'database.php']
+                exclusions: [ '*.md', 'database.php' ]
             }
         },
         uncss: {
             dist: {
                 files: {
-                    'dist/css/tidy.css': ['dist/compressed.html']
+                    'dist/css/tidy.css': [ 'dist/compressed.html' ]
                 }
             }
         },
@@ -399,21 +399,21 @@ module.exports = function(grunt) {
                 openFlags: 'w'
             },
             folder: {
-                "dist/compressed.html": function(fs, fd, done) {
+                "dist/compressed.html": function ( fs, fd, done ) {
                     var glob = grunt.file.glob;
                     var _ = grunt.util._;
-                    var Ractive = require('ractive/ractive.js');
+                    var Ractive = require( 'ractive/ractive.js' );
                     Ractive.DEBUG = false;
-                    fs.writeSync(fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.css> <link rel=stylesheet href=styles/main.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>');
-                    glob('app/views/**/*.html', function(err, files) {
+                    fs.writeSync( fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.css> <link rel=stylesheet href=styles/main.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>' );
+                    glob( 'app/views/**/*.html', function ( err, files ) {
                         var i = 0;
-                        _.each(files, function(file) {
+                        _.each( files, function ( file ) {
 
-                            fs.readFile(file, "utf8", function(err, data) {
-                                if (err) {
-                                    throw (err);
+                            fs.readFile( file, "utf8", function ( err, data ) {
+                                if ( err ) {
+                                    throw ( err );
                                 }
-                                var r = new Ractive({
+                                var r = new Ractive( {
                                     template: data,
                                     data: {
                                         cols: 2,
@@ -422,101 +422,101 @@ module.exports = function(grunt) {
                                         types: [
                                             []
                                         ],
-                                        rows: ['Some', 'Error', 'Occurred'],
+                                        rows: [ 'Some', 'Error', 'Occurred' ],
                                         add: [],
                                         editing: {
                                             cur: 1,
                                             past: {},
-                                            notAllowed: [false, false, false]
+                                            notAllowed: [ false, false, false ]
                                         },
                                         data: [
-                                            ["Check", "If", "Connected"],
-                                            ["To", "The", "Internet"]
+                                            [ "Check", "If", "Connected" ],
+                                            [ "To", "The", "Internet" ]
                                         ],
                                         table: "users",
-                                        tables: ["users"],
+                                        tables: [ "users" ],
                                         orders: [],
-                                        type: [{
+                                        type: [ {
                                             name: "Pizza",
-                                            quickOrders: ["Large eperoni"],
+                                            quickOrders: [ "Large eperoni" ],
                                             buildYourOwn: true
                                         }, {
                                             name: "Wings",
-                                            quickOrders: ["Spicy buffalo"],
+                                            quickOrders: [ "Spicy buffalo" ],
                                             buildYourOwn: true
                                         }, {
                                             name: "Salad",
-                                            quickOrders: ["Regular", "Lechuga"],
+                                            quickOrders: [ "Regular", "Lechuga" ],
                                             buildYourOwn: true
                                         }, {
                                             name: "Drink",
-                                            quickOrders: ["Sprite", "Coke", "Diet Coke", "Materva", "Water"],
+                                            quickOrders: [ "Sprite", "Coke", "Diet Coke", "Materva", "Water" ],
                                             buildYourOwn: false,
-                                            images: ["sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg"]
-                                        }],
+                                            images: [ "sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg" ]
+                                        } ],
                                         currentChoices: [
                                             []
                                         ],
-                                        sizes: [45, 37.5, 30],
+                                        sizes: [ 45, 37.5, 30 ],
                                         svg: {
                                             radius: 30
                                         },
                                     }
-                                });
-                                fs.writeSync(fd, r.toHTML());
-                                if (i + 1 == files.length) {
-                                    fs.writeSync(fd, '<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>');
+                                } );
+                                fs.writeSync( fd, r.toHTML() );
+                                if ( i + 1 == files.length ) {
+                                    fs.writeSync( fd, '<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>' );
                                     done();
                                 }
                                 i++;
-                            });
-                        });
+                            } );
+                        } );
 
-                    });
+                    } );
                 }
             }
         }
 
-    });
+    } );
 
 
-    grunt.registerTask('serve', 'start the server and preview your app', function(target) {
+    grunt.registerTask( 'serve', 'start the server and preview your app', function ( target ) {
 
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'browserSync:dist']);
+        if ( target === 'dist' ) {
+            return grunt.task.run( [ 'build', 'browserSync:dist' ] );
         }
 
-        grunt.task.run([
+        grunt.task.run( [
             'clean:server',
             'wiredep',
             'concurrent:server',
             'postcss',
             'browserSync:livereload',
             'watch'
-        ]);
-    });
+        ] );
+    } );
 
-    grunt.registerTask('server', function(target) {
-        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-        grunt.task.run([target ? ('serve:' + target) : 'serve']);
-    });
+    grunt.registerTask( 'server', function ( target ) {
+        grunt.log.warn( 'The `server` task has been deprecated. Use `grunt serve` to start a server.' );
+        grunt.task.run( [ target ? ( 'serve:' + target ) : 'serve' ] );
+    } );
 
-    grunt.registerTask('test', function(target) {
-        if (target !== 'watch') {
-            grunt.task.run([
+    grunt.registerTask( 'test', function ( target ) {
+        if ( target !== 'watch' ) {
+            grunt.task.run( [
                 'clean:server',
                 'concurrent:test',
                 'postcss'
-            ]);
+            ] );
         }
 
-        grunt.task.run([
+        grunt.task.run( [
             'browserSync:test',
             'mocha'
-        ]);
-    });
+        ] );
+    } );
 
-    grunt.registerTask('build', [
+    grunt.registerTask( 'build', [
         'clean:dist',
         'wiredep',
         'useminPrepare',
@@ -528,24 +528,24 @@ module.exports = function(grunt) {
         'copy:dist',
         'usemin',
         'htmlmin'
-    ]);
+    ] );
 
-    grunt.registerTask('default', [
+    grunt.registerTask( 'default', [
         'newer:eslint',
         'test',
         'build'
-    ]);
+    ] );
 
-    grunt.registerTask('deploy', function(argue) {
-        grunt.loadNpmTasks('grunt-ftp-deploy');
-        grunt.option('force', true);
-        grunt.task.run(['build', 'ftp-deploy']);
+    grunt.registerTask( 'deploy', function ( argue ) {
+        grunt.loadNpmTasks( 'grunt-ftp-deploy' );
+        grunt.option( 'force', true );
+        grunt.task.run( [ 'build', 'ftp-deploy' ] );
 
-    });
+    } );
 
-    grunt.registerTask('tidy', function(argue) {
-        grunt.loadNpmTasks("grunt-uncss");
-        grunt.task.run(["file-creator", "uncss"]);
+    grunt.registerTask( 'tidy', function ( argue ) {
+        grunt.loadNpmTasks( "grunt-uncss" );
+        grunt.task.run( [ "file-creator", "uncss" ] );
 
-    });
+    } );
 };

@@ -1,181 +1,181 @@
-var Tele = Base.extend({
-    oninit: function() {
+var Tele = Base.extend( {
+    oninit: function () {
         this.getQuickOrders();
-        this.on('order', function(event) {
-            this.order(event);
-        });
-        this.on('rmvqueue', function(event) {
-            this.rmvqueue(event);
-        });
-        this.on('build', function(event) {
-            this.build(this.get("type")[event.index.cur].name);
-        });
-        this.on('show', function(event) {
-            $($(event.node).data('target')).modal("show");
-        });
-        this.on('checkout', function(event) {
-            if (this.get("queue").length === 0) {
+        this.on( 'order', function ( event ) {
+            this.order( event );
+        } );
+        this.on( 'rmvqueue', function ( event ) {
+            this.rmvqueue( event );
+        } );
+        this.on( 'build', function ( event ) {
+            this.build( this.get( "type" )[ event.index.cur ].name );
+        } );
+        this.on( 'show', function ( event ) {
+            $( $( event.node ).data( 'target' ) ).modal( "show" );
+        } );
+        this.on( 'checkout', function ( event ) {
+            if ( this.get( "queue" ).length === 0 ) {
                 //nothing in queue to order
                 return false;
             }
 
-            this.placeOrder(this.get("queue"));
-        });
+            this.placeOrder( this.get( "queue" ) );
+        } );
         var that = this;
-        Mousetrap.bind(this.keyBindings[0], function() {
-            that.placeOrder(that.get("queue"));
-        });
+        Mousetrap.bind( this.keyBindings[ 0 ], function () {
+            that.placeOrder( that.get( "queue" ) );
+        } );
 
-        this.getCache("priorities", function() {
-            return new Promise(function(resolve, reject) {
-                that.sendToDataBase({
+        this.getCache( "priorities", function () {
+            return new Promise( function ( resolve, reject ) {
+                that.sendToDataBase( {
                     type: "GET",
                     data: {
-                        tables: ["symbols"],
+                        tables: [ "symbols" ],
                         from: "ingredients",
                         relations: [
-                            ["symbols.Name", "ingredients.Symbol"]
+                            [ "symbols.Name", "ingredients.Symbol" ]
                         ],
-                        select: ["symbols.Symbol", "symbols.Name", "ingredients.Priority"]
+                        select: [ "symbols.Symbol", "symbols.Name", "ingredients.Priority" ]
                     }
-                }, "join").then(function(a) {
-                    resolve(JSON.stringify(JSON.parse(a).map(function(cur) {
-                        cur.Priority = parseInt(cur.Priority, 10);
+                }, "join" ).then( function ( a ) {
+                    resolve( JSON.stringify( JSON.parse( a ).map( function ( cur ) {
+                        cur.Priority = parseInt( cur.Priority, 10 );
                         return cur;
-                    })));
-                }, function(a) {
-                    reject(a);
-                });
-            });
-        });
-        this.getCache("settings", function() {
-            return new Promise(function(resolve, reject) {
-                that.sendToDataBase({
+                    } ) ) );
+                }, function ( a ) {
+                    reject( a );
+                } );
+            } );
+        } );
+        this.getCache( "settings", function () {
+            return new Promise( function ( resolve, reject ) {
+                that.sendToDataBase( {
                     type: "GET"
-                }, "settings").then(function(ob) {
-                    ob = JSON.parse(ob);
-                    resolve(JSON.stringify(ob.map(function(cur) {
+                }, "settings" ).then( function ( ob ) {
+                    ob = JSON.parse( ob );
+                    resolve( JSON.stringify( ob.map( function ( cur ) {
                         var ret = {};
-                        ret[cur.keyKey] = cur.val;
+                        ret[ cur.keyKey ] = cur.val;
                         return ret;
-                    }).reduce(function(prev, cur, index, arr) {
-                        $.extend(cur, prev);
+                    } ).reduce( function ( prev, cur, index, arr ) {
+                        $.extend( cur, prev );
                         return cur;
-                    })));
-                }, reject);
-            });
-        }, true).then(function(a) {
-            that.set("cols", parseInt(a.columns, 10));
+                    } ) ) );
+                }, reject );
+            } );
+        }, true ).then( function ( a ) {
+            that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
-        });
+        } );
     },
-    keyBindings: ['shift+a'],
-    data: function() {
+    keyBindings: [ 'shift+a' ],
+    data: function () {
         return {
             cols: 2,
             queue: []
         };
         //TODO implement the default types with their settings
     },
-    types: ["Pizza", "Wings", "Salad", "Drink"],
-    getQuickOrders: function() {
+    types: [ "Pizza", "Wings", "Salad", "Drink" ],
+    getQuickOrders: function () {
         var obj = {},
             that = this,
-            arr = this.types.filter(function(a) {
+            arr = this.types.filter( function ( a ) {
                 return a.toLowerCase() !== 'drink'
-            });
-        arr.forEach(function(title) {
-            obj["quickOrders" + title] = ["Name"];
-        });
+            } );
+        arr.forEach( function ( title ) {
+            obj[ "quickOrders" + title ] = [ "Name" ];
+        } );
 
-        this.getCache("types", function() {
-            return that.sendToDataBase({
+        this.getCache( "types", function () {
+            return that.sendToDataBase( {
                     type: "GET",
                     data: obj,
                 },
-                "columns");
-        }, true).then(function(ret) {
-            for (var i = 0, l = arr.length; i < l; i++) {
-                that.set("type[" + i + "].quickOrders", ret["quickOrders" + arr[i]][0]);
+                "columns" );
+        }, true ).then( function ( ret ) {
+            for ( var i = 0, l = arr.length; i < l; i++ ) {
+                that.set( "type[" + i + "].quickOrders", ret[ "quickOrders" + arr[ i ] ][ 0 ] );
             }
             return arr;
-        });
+        } );
     },
-    order: function(obj) {
-        var param = this.get(obj.keypath),
+    order: function ( obj ) {
+        var param = this.get( obj.keypath ),
             that = this,
             arry = this.types;
-        this.sendToDataBase({
+        this.sendToDataBase( {
             type: "GET"
-        }, "quickOrders" + arry[parseInt(obj.keypath.split(".")[1], 10)] + "/search/Name/" + param).then(function(object) {
-            var ob = JSON.parse(object)[0];
-            that.getPrice(ob.Name).then(function(pri) {
-                that.stageOrder($.extend(ob, {
+        }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( function ( object ) {
+            var ob = JSON.parse( object )[ 0 ];
+            that.getPrice( ob.Name ).then( function ( pri ) {
+                that.stageOrder( $.extend( ob, {
                     Price: pri
-                }));
-            });
+                } ) );
+            } );
 
-        });
+        } );
     },
-    placeOrder: function(order) {
-        if (this.get("queue").length === 0) {
-            this.notify("Nothing to Order", "Queue is empty :<", 0, "error");
+    placeOrder: function ( order ) {
+        if ( this.get( "queue" ).length === 0 ) {
+            this.notify( "Nothing to Order", "Queue is empty :<", 0, "error" );
             return false;
         }
         var that = this;
-        return that.sendToDataBase({
+        return that.sendToDataBase( {
             type: "PUT",
             data: {
-                OrderSymbols: order.map(function(obj) {
-                    return that.sortOrder(obj.OrderName);
-                }).join(that.cache.settings.splitter)
+                OrderSymbols: order.map( function ( obj ) {
+                    return that.sortOrder( obj.OrderName );
+                } ).join( that.cache.settings.splitter )
             }
-        }, "placeOrder").then(function(message) {
-            that.notify(message, "Order Fulfilled : >");
-            that.set("queue", []);
-        }, function(message) {
-            that.notify("Order Unsuccessful", "No Worries just retry to send the order, Check internet connection.");
-        });
+        }, "placeOrder" ).then( function ( message ) {
+            that.notify( message, "Order Fulfilled : >" );
+            that.set( "queue", [] );
+        }, function ( message ) {
+            that.notify( "Order Unsuccessful", "No Worries just retry to send the order, Check internet connection." );
+        } );
 
 
     },
-    getPrice: function(order) {
-        return new Promise(function(resolve, reject) {
-            resolve(order.length);
-        });
+    getPrice: function ( order ) {
+        return new Promise( function ( resolve, reject ) {
+            resolve( order.length );
+        } );
     },
-    stageOrder: function(order) {
-        var not = this.notify('Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>'),
+    stageOrder: function ( order ) {
+        var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
             that = this;
-        $('.rmv').click(function() {
+        $( '.rmv' ).click( function () {
 
-            that.get("queue").every(function(obj, index, arr) {
-                if (obj.Name === order.Name) {
-                    arr.splice(index, 1);
+            that.get( "queue" ).every( function ( obj, index, arr ) {
+                if ( obj.Name === order.Name ) {
+                    arr.splice( index, 1 );
                     not.close();
                     return false;
                 }
                 return true;
-            });
-        });
-        return this.get('queue').push(order);
+            } );
+        } );
+        return this.get( 'queue' ).push( order );
     },
-    rmvqueue: function(obj) {
-        return this.get("queue").splice(obj.index.i, 1);
+    rmvqueue: function ( obj ) {
+        return this.get( "queue" ).splice( obj.index.i, 1 );
     },
-    sortOrder: function(order) {
+    sortOrder: function ( order ) {
         //return order;
-        var special = ["SM", "MD", "LG"];
+        var special = [ "SM", "MD", "LG" ];
         //console.log(this.cache.priorities);
-        var arr = order.split(this.cache.settings.dbdelimiter).sort(function(a, b) {
-            if (special.indexOf(a) > -1) {
+        var arr = order.split( this.cache.settings.dbdelimiter ).sort( function ( a, b ) {
+            if ( special.indexOf( a ) > -1 ) {
                 return -1;
             } else {
                 return 1;
             }
-        });
-        this.logger(arr);
-        return arr.join(this.cache.settings.dbdelimiter);
+        } );
+        this.logger( arr );
+        return arr.join( this.cache.settings.dbdelimiter );
         //console.log(arr);
         /*/returns the order sorted correctly
         database = this.settings().delimiter;
@@ -187,33 +187,33 @@ var Tele = Base.extend({
         });*/
     },
     builder: {},
-    build: function(name) {
+    build: function ( name ) {
         name = name.toLowerCase();
         var buildy, that = this;
-        return $.ajax({
+        return $.ajax( {
             url: "views/builder.html",
             dataType: "html"
-        }).then(function(template) {
-            buildy = new Builder({
+        } ).then( function ( template ) {
+            buildy = new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#modal',
                 template: template,
-                inits: function(that) {
-                    that.getData(name + "Headings");
+                inits: function ( that ) {
+                    that.getData( name + "Headings" );
                 },
                 // Here, we're passing in some initial data
                 data: {
 
                 }
-            });
+            } );
             return buildy;
-        }, function(err) {
-            that.alerter("Sorry, Issues loading template file...");
-            return Error(JSON.stringify(err));
-        }).then(function(build) {
+        }, function ( err ) {
+            that.alerter( "Sorry, Issues loading template file..." );
+            return Error( JSON.stringify( err ) );
+        } ).then( function ( build ) {
             that.builder = build;
-            $('#moduler').modal('show');
+            $( '#moduler' ).modal( 'show' );
             return build;
-        });
+        } );
     }
-});
+} );

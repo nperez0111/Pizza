@@ -1,27 +1,27 @@
-var Base = Ractive.extend({
-    url: 'http://' + ((window.location.hostname.split(".").length) === 2 ? "api." + (window.location.hostname) + "/" : (window.location.hostname.split(".").length) === 3 ? ("api." + window.location.hostname.split(".").splice(1, 2).join(".") + "/") : (window.location.hostname + ':80' + '/pizza/api/v1/')),
+var Base = Ractive.extend( {
+    url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
     //url: "http://api.nickthesick.com/",
-    alerter: function(str, moreInfo) {
-        var other = (str.str || str) + "";
-        moreInfo = ((moreInfo) ? (moreInfo.join ? moreInfo.join("</p><p>") : moreInfo) : "undefined") + "";
-        if (!str.el && ($('#alert').length === 0)) {
-            $('#container').prepend('<div id="alert" style="display:none" class="alert alert-danger"></div>');
+    alerter: function ( str, moreInfo ) {
+        var other = ( str.str || str ) + "";
+        moreInfo = ( ( moreInfo ) ? ( moreInfo.join ? moreInfo.join( "</p><p>" ) : moreInfo ) : "undefined" ) + "";
+        if ( !str.el && ( $( '#alert' ).length === 0 ) ) {
+            $( '#container' ).prepend( '<div id="alert" style="display:none" class="alert alert-danger"></div>' );
         }
-        $(str.el || '#alert').html("<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + (other ? other : "") + "</h3>" + (moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>") + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>").fadeIn().slideDown();
-        $("a[data-dismiss='alert']").click(function() {
-            $("#alert").alert("close");
-        });
+        $( str.el || '#alert' ).html( "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + ( other ? other : "" ) + "</h3>" + ( moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>" ) + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>" ).fadeIn().slideDown();
+        $( "a[data-dismiss='alert']" ).click( function () {
+            $( "#alert" ).alert( "close" );
+        } );
         return true;
     },
     notifications: [],
-    notify: function(title, message, time, typely) {
+    notify: function ( title, message, time, typely ) {
         var that = this,
-            not = $.notify({
-                title: (typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span> ' + title : title),
+            not = $.notify( {
+                title: ( typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span> ' + title : title ),
                 message: message
             }, {
                 type: typely || '',
-                delay: (time || 0) + 4000,
+                delay: ( time || 0 ) + 4000,
                 placement: {
                     from: "bottom",
                     align: "right"
@@ -31,88 +31,88 @@ var Base = Ractive.extend({
                     '<span data-notify="title">{1}</span>' +
                     '<span data-notify="message">{2}</span>' +
                     '</div>'
-            });
-        this.notifications.push(not);
+            } );
+        this.notifications.push( not );
         return not;
     },
-    sendToDataBase: function(obj, urlEx) {
-        obj = $.extend({
+    sendToDataBase: function ( obj, urlEx ) {
+        obj = $.extend( {
             type: "GET",
             dataType: "json",
-            url: this.url + (urlEx ? urlEx : ""),
+            url: this.url + ( urlEx ? urlEx : "" ),
             headers: {
-                Authorization: "Basic " + btoa("nick@nickthesick.com" + ':' + "0046788285")
+                Authorization: "Basic " + btoa( "nick@nickthesick.com" + ':' + "0046788285" )
             }
-        }, obj);
-        obj.data = $.extend({
+        }, obj );
+        obj.data = $.extend( {
             login: {
                 Email: "nick@nickthesick.com",
                 password: "0046788285"
             }
-        }, obj.data);
-        if (obj.type.valueOf() === "POST") {
-            obj.data = JSON.stringify(obj.data);
+        }, obj.data );
+        if ( obj.type.valueOf() === "POST" ) {
+            obj.data = JSON.stringify( obj.data );
         }
         var that = this;
-        return new Promise(function(resolve, reject) {
-            $.ajax(obj).then(function(r) {
-                resolve((r.message));
-            }, function(err) {
-                console.group("DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx);
-                that.logger(err.responseText ? err.responseText : err, true);
-                that.logger(obj, true);
+        return new Promise( function ( resolve, reject ) {
+            $.ajax( obj ).then( function ( r ) {
+                resolve( ( r.message ) );
+            }, function ( err ) {
+                console.group( "DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx );
+                that.logger( err.responseText ? err.responseText : err, true );
+                that.logger( obj, true );
                 console.groupEnd();
-                reject(err.responseText ? JSON.parse(err.responseText).data : JSON.stringify(err));
-            });
-        });
+                reject( err.responseText ? JSON.parse( err.responseText ).data : JSON.stringify( err ) );
+            } );
+        } );
     },
     cache: {},
-    getCache: function(prop, func, isPromise) {
-        if (prop in this.cache || (localStorage.getItem(prop))) {
-            if (localStorage && localStorage.getItem(prop)) {
-                this.cache[prop] = JSON.parse(localStorage.getItem(prop));
+    getCache: function ( prop, func, isPromise ) {
+        if ( prop in this.cache || ( localStorage.getItem( prop ) ) ) {
+            if ( localStorage && localStorage.getItem( prop ) ) {
+                this.cache[ prop ] = JSON.parse( localStorage.getItem( prop ) );
             }
-            return isPromise ? Promise.resolve(this.cache[prop]) : this.cache[prop];
+            return isPromise ? Promise.resolve( this.cache[ prop ] ) : this.cache[ prop ];
         }
         var that = this;
-        if (!(func instanceof Function)) {
-            that.logger(prop + " not cached yet!");
-            return Promise.reject(prop);
+        if ( !( func instanceof Function ) ) {
+            that.logger( prop + " not cached yet!" );
+            return Promise.reject( prop );
         }
-        return func().then(function(obj) {
-            that.cache[prop] = JSON.parse(obj);
-            if (false && localStorage) {
-                localStorage.setItem(prop, obj);
+        return func().then( function ( obj ) {
+            that.cache[ prop ] = JSON.parse( obj );
+            if ( false && localStorage ) {
+                localStorage.setItem( prop, obj );
             }
-            return JSON.parse(obj);
-        }, function(err) {
-            that.logger(err, true);
-            that.notify("Error occured", err, 1000, "error");
-        });
+            return JSON.parse( obj );
+        }, function ( err ) {
+            that.logger( err, true );
+            that.notify( "Error occured", err, 1000, "error" );
+        } );
 
     },
-    onClose: function() {
+    onClose: function () {
         return this;
     },
     keyBindings: [],
-    unrender: function(apply) {
-        $("#alert").alert('close');
+    unrender: function ( apply ) {
+        $( "#alert" ).alert( 'close' );
         var that = this.onClose();
-        that.notifications.forEach(function(a) {
+        that.notifications.forEach( function ( a ) {
             a.close();
-        });
+        } );
         that.notifications = [];
-        Mousetrap.unbind(that.keyBindings);
+        Mousetrap.unbind( that.keyBindings );
     },
     verbose: true,
-    logger: function(a, warning) {
-        if (this.verbose) {
-            if (warning) {
-                console.warn(a);
+    logger: function ( a, warning ) {
+        if ( this.verbose ) {
+            if ( warning ) {
+                console.warn( a );
             } else {
-                console.log(a);
+                console.log( a );
             }
         }
         return a;
     }
-});
+} );
