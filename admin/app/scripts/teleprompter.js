@@ -52,8 +52,7 @@ var Tele = Base.extend( {
             return new Promise( function ( resolve, reject ) {
                 that.sendToDataBase( {
                     type: "GET"
-                }, "settings" ).then( function ( ob ) {
-                    ob = JSON.parse( ob );
+                }, "settings" ).then( JSON.parse, reject ).then( function ( ob ) {
                     resolve( JSON.stringify( ob.map( function ( cur ) {
                         var ret = {};
                         ret[ cur.keyKey ] = cur.val;
@@ -62,11 +61,27 @@ var Tele = Base.extend( {
                         $.extend( cur, prev );
                         return cur;
                     } ) ) );
-                }, reject );
+                } );
             } );
         }, true ).then( function ( a ) {
             that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
+        } );
+        this.getCache( "symbols", function () {
+            return new Promise( function ( resolve, reject ) {
+                that.sendToDataBase( {
+                    type: "GET"
+                }, "symbols" ).then( JSON.parse, reject ).then( function ( ret ) {
+                    resolve( JSON.stringify( ret.map( function ( cur ) {
+                        var ret = {};
+                        ret[ cur.Name ] = cur.Symbol;
+                        return ret;
+                    } ).reduce( function ( prev, cur, index, arr ) {
+                        $.extend( cur, prev );
+                        return cur;
+                    } ) ) );
+                } );
+            } );
         } );
     },
     keyBindings: [ 'shift+a' ],
@@ -185,6 +200,16 @@ var Tele = Base.extend( {
             //this is totally just an I think ...
             return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
         });*/
+    },
+    mapNameToSymbols: function ( name ) {
+        //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
+        if ( typeof name === 'string' || name instanceof String ) {
+            name = name.split( that.settings.dbdelimiter );
+        }
+        var that = this;
+        return name.map( function ( cur ) {
+            return that.cache.symbols[ cur ] || false;
+        } );
     },
     builder: {},
     build: function ( name ) {
