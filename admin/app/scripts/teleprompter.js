@@ -199,7 +199,7 @@ var Tele = Base.extend( {
                 el: '#modal',
                 template: template,
                 inits: function ( that ) {
-                    that.getData( name + "Headings" );
+                    that.getLabels( name + "Headings" );
                 },
                 // Here, we're passing in some initial data
                 data: {

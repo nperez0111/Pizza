@@ -16,11 +16,13 @@ var Builder = Base.extend( {
                 return val !== false;
             } ) );
         } );
+        this.on( "checkout", function ( event ) {
 
+        } );
         this.inits( this );
     },
     inits: function ( that ) {
-        that.getData( "pizzaHeadings" );
+        that.getLabels( "pizzaHeadings" );
     },
     data: function () {
         return {
@@ -46,7 +48,7 @@ var Builder = Base.extend( {
         this.animate( "svg.radius", currentSize > -1 ? possibleSizes[ currentSize ] : 0 );
         return currentSize;
     },
-    getData: function ( urlEx ) {
+    getLabels: function ( urlEx ) {
         var that = this;
         this.getCache( "headings", function () {
             return that.sendToDataBase( {
