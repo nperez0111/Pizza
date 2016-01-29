@@ -198,8 +198,18 @@ var Tele = Base.extend( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#modal',
                 template: template,
-                inits: function ( that ) {
-                    that.getLabels( name + "Headings" );
+                inits: function ( tha ) {
+                    tha.getLabels( name + "Headings" );
+                    tha.on( "checkout", function ( queue ) {
+                        $( '#moduler' ).modal( 'hide' );
+                        that.getPrice( queue.join( that.cache.settings.dbdelimiter ) ).then( function ( p ) {
+                            that.stageOrder( {
+                                Name: queue.join( that.cache.settings.dbdelimiter ),
+                                OrderName: that.mapNameToSymbols( queue ),
+                                Price: p
+                            } );
+                        } );
+                    } );
                 },
                 // Here, we're passing in some initial data
                 data: {

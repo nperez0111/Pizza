@@ -16,8 +16,11 @@ var Builder = Base.extend( {
                 return val !== false;
             } ) );
         } );
-        this.on( "checkout", function ( event ) {
-
+        var that = this;
+        this.on( "staged", function ( event ) {
+            that.queue = that.get( "toppingsSelected" ).slice( 0 );
+            that.queue.unshift( that.get( "types" )[ 0 ][ that.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
+            that.fire( "checkout", that.queue );
         } );
         this.inits( this );
     },
@@ -42,6 +45,7 @@ var Builder = Base.extend( {
             toppingsSelected: []
         };
     },
+    queue: [],
     size: function () {
         var currentSize = this.get( "currentChoices[0]" ).indexOf( true ),
             possibleSizes = this.get( "sizes" );
