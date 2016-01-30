@@ -39,7 +39,7 @@ var Base = Ractive.extend( {
         obj = $.extend( {
             type: "GET",
             dataType: "json",
-            url: this.url + ( urlEx ? urlEx : "" ),
+            url: this.url + ( urlEx || "" ),
             headers: {
                 Authorization: "Basic " + btoa( "nick@nickthesick.com" + ':' + "0046788285" )
             }
