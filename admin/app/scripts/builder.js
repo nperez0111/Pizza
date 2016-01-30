@@ -63,14 +63,14 @@ var Builder = Base.extend( {
                 types = [
                     []
                 ];
-            obj.forEach( function ( obj, i, arr ) {
+            obj.forEach( function ( obj ) {
                 if ( titles.indexOf( obj.Title ) === -1 ) {
                     if ( obj.Title === "Size" ) {
                         titles.unshift( obj.Title );
                         types.unshift( [ obj.Name ] );
                     } else {
                         titles.push( obj.Title );
-                        types[ titles.length - 1 ] = [ ( obj.Name ) ];
+                        types.push( [ ( obj.Name ) ] );
                     }
                 } else {
                     types[ titles.indexOf( obj.Title ) ].push( obj.Name );
