@@ -70,7 +70,7 @@ var Builder = Base.extend( {
                         types.unshift( [ obj.Name ] );
                     } else {
                         titles.push( obj.Title );
-                        types.push( [ ( obj.Name ) ] );
+                        types[ titles.length - 1 ] = [ ( obj.Name ) ];
                     }
                 } else {
                     types[ titles.indexOf( obj.Title ) ].push( obj.Name );
