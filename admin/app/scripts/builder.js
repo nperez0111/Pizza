@@ -78,9 +78,7 @@ var Builder = Base.extend( {
             } );
             that.set( "headings", titles );
             that.set( "currentChoices", types.map( function ( obj ) {
-                return obj.map( function ( a ) {
-                    return false;
-                } );
+                return obj.slice( 0 ).fill( false );
             } ) );
             that.set( "types", types );
 
