@@ -22,10 +22,10 @@ var Builder = Base.extend( {
             that.queue.unshift( that.get( "types" )[ 0 ][ that.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
             that.fire( "checkout", that.queue );
         } );
-        this.inits( this );
+        this.inits.call( this );
     },
-    inits: function ( that ) {
-        that.getLabels( "pizzaHeadings" );
+    inits: function () {
+        this.getLabels( "pizzaHeadings" );
     },
     data: function () {
         return {

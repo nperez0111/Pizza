@@ -104,9 +104,8 @@ var Base = Ractive.extend( {
         that.notifications = [];
         Mousetrap.unbind( that.keyBindings );
     },
-    verbose: true,
     logger: function ( a, warning ) {
-        if ( this.verbose ) {
+        if ( true ) {
             if ( warning ) {
                 console.warn( a );
             } else {
