@@ -18,7 +18,7 @@ define( "HASH_ITERATION_INDEX", 1 );
 define( "HASH_SALT_INDEX", 2 );
 define( "HASH_PBKDF2_INDEX", 3 );
 $adminRequired=["users"];
-$keyRoutes=["columns", "join", "placeOrder"];
+$keyRoutes=["columns", "join", "placeOrder","getPrice"];
 include '../../includes/routes.php';
 global $possibleRoutes;
 $routes=$possibleRoutes;
@@ -293,6 +293,9 @@ function rest_get( $req ) {
     case 7:
         $response=sql_GET_JOIN();
         break;
+    case 8:
+        $response=getPrice();
+        break;
     case 0:
     default:
         rest_error( "Mal-Formed request, check url params", 400 );
@@ -406,6 +409,10 @@ function reqRouter( $req, $http ) {
             else if ( $req[0]=="columns" ) {
                     return 6;
                     //user is requesting to retrieve multiple columns
+                }
+            else if($req[0]=="getPrice"){
+                    return 8;
+                    //user is requesting price of an order
                 }
             else if ( $req[0]=="join" ) {
                     $required=["from", "tables", "relations", "select"];
@@ -787,7 +794,24 @@ function sql_PUT( $table ) {
 
     return $str;
 }
+function getPrice(){
+    include '../../includes/database.php';
+    global $JSON;
+    //json should contain: order(s) to be priced
+    $orderName="orderName";
+    if(isset($JSON[$orderName])==false){
+        //return empty array to throw error
+        return [];
+    }
 
+    $order=explode(sql_GET(["settings","search","keyKey","dbdelimiter"])[0]["val"],$JSON[$orderName]);
+    foreach ($order as $i => $ingrediant) {
+        if(count(sql_GET(["symbols","search","symbol",$ingrediant]))==0){
+            return [];
+        }
+    }
+    return $order;
+}
 //true for props in array format false for comma delimited string
 function buildProps( $table, $bool ) {
     global $routes;
