@@ -1,23 +1,23 @@
 var Builder = Base.extend( {
     oninit: function () {
-        this.observe( "currentChoices", function ( newVal, oldVal, obj ) {
+        this.observe( "currentChoices", ( newVal, oldVal, obj ) => {
             var currentSize = this.size();
             var that = this;
 
             this.set( "toppingsSelected", that.get( "currentChoices" ).length < 2 ? [] : that.get( "currentChoices" ).filter( function ( cur, i, arr ) {
                 return i !== 0;
-            } ).map( function ( arr, r ) {
-                return arr.map( function ( val, c ) {
+            } ).map( ( arr, r ) => {
+                return arr.map( ( val, c ) => {
                     return val ? that.get( "types" )[ r + 1 ][ c ] : false;
                 } );
-            } ).reduce( function ( a, b ) {
+            } ).reduce( ( a, b ) => {
                 return a.concat( b );
-            } ).filter( function ( val ) {
+            } ).filter( ( val ) => {
                 return val !== false;
             } ) );
         } );
         var that = this;
-        this.on( "staged", function ( event ) {
+        this.on( "staged", ( event ) => {
             that.queue = that.get( "toppingsSelected" ).slice( 0 );
             that.queue.unshift( that.get( "types" )[ 0 ][ that.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
             that.fire( "checkout", that.queue );
@@ -54,16 +54,16 @@ var Builder = Base.extend( {
     },
     getLabels: function ( urlEx ) {
         var that = this;
-        this.getCache( "headings", function () {
+        this.getCache( "headings", () => {
             return that.sendToDataBase( {
                 type: "GET"
             }, urlEx + "/sortBy/Name" );
-        }, true ).then( function ( obj ) {
+        }, true ).then( ( obj ) => {
             var titles = [],
                 types = [
                     []
                 ];
-            obj.forEach( function ( obj ) {
+            obj.forEach( ( obj ) => {
                 if ( titles.indexOf( obj.Title ) === -1 ) {
                     if ( obj.Title === "Size" ) {
                         titles.unshift( obj.Title );
@@ -77,12 +77,12 @@ var Builder = Base.extend( {
                 }
             } );
             that.set( "headings", titles );
-            that.set( "currentChoices", types.map( function ( obj ) {
+            that.set( "currentChoices", types.map( ( obj ) => {
                 return obj.slice( 0 ).fill( false );
             } ) );
             that.set( "types", types );
 
-        }, function ( err ) {
+        }, ( err ) => {
             that.notify( "Error occured", err, 5000, "error" );
         } );
     }

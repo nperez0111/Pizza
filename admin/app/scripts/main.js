@@ -29,14 +29,14 @@ function viewBuilder( evente, el, url, callback ) {
     return $.ajax( {
         url: "views/" + url + ".html",
         dataType: "html"
-    } ).then( function ( template ) {
+    } ).then( ( template ) => {
         callback( template );
         return template;
-    }, function ( err ) {
+    }, ( err ) => {
         var base = new Base();
         base.alerter( "Sorry, Issues loading template file..." );
         return Error( JSON.stringify( err ) );
-    } ).then( function ( template ) {
+    } ).then( ( template ) => {
         cache[ url ] = template;
     } );
 
@@ -44,9 +44,9 @@ function viewBuilder( evente, el, url, callback ) {
 
 
 
-$( document ).ready( function () {
-    $( '#tele' ).click( function ( e ) {
-        viewBuilder( e, "#tele", "teleprompter", function ( template ) {
+$( document ).ready( () => {
+    $( '#tele' ).click( ( e ) => {
+        viewBuilder( e, "#tele", "teleprompter", ( template ) => {
             tele = new Tele( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -76,7 +76,7 @@ $( document ).ready( function () {
         } );
     } );
     $( '#home' ).click( function ( e ) {
-        viewBuilder( e, "#home", "table", function ( template ) {
+        viewBuilder( e, "#home", "table", ( template ) => {
             table = new Table( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -98,11 +98,11 @@ $( document ).ready( function () {
                     tables: [ "users", "other", "orders", "transactions", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients" ]
                 }
             } );
-        } ).then( function () {
+        } ).then( ( resp ) => {
             var func = function () {
                 table.switchTable( {
                     type: 'GET'
-                }, table.get( "table" ) ).then( function () {}, function ( err ) {
+                }, table.get( "table" ) ).then( function () {}, ( err ) => {
                     clearInterval( interval );
                     table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
                     $( '#click' ).click( function () {
@@ -121,7 +121,7 @@ $( document ).ready( function () {
         } );
     } );
     $( '#build' ).click( function ( e ) {
-        viewBuilder( e, "#build", "builder", function ( template ) {
+        viewBuilder( e, "#build", "builder", ( template ) => {
             build = new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',

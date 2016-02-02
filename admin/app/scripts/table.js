@@ -2,22 +2,22 @@ var Table = Base.extend( {
 
     oninit: function ( options ) {
         //add the on handlers
-        this.on( 'add', function ( event ) {
+        this.on( 'add', ( event ) => {
             this.add( event );
         } );
-        this.on( 'edit', function ( event ) {
+        this.on( 'edit', ( event ) => {
             this.edit( event );
         } );
-        this.on( 'revert', function ( event ) {
+        this.on( 'revert', ( event ) => {
             this.revert( event );
         } );
-        this.on( 'delete', function ( event ) {
+        this.on( 'delete', ( event ) => {
             this.delete( event );
         } );
-        this.on( 'save', function ( event ) {
+        this.on( 'save', ( event ) => {
             this.save( event );
         } );
-        this.observe( "table", function ( newVal, oldVal, obj ) {
+        this.observe( "table", ( newVal, oldVal, obj ) => {
             this.switchTable( {
                 type: 'GET',
             }, newVal );
@@ -26,7 +26,7 @@ var Table = Base.extend( {
         var that = this,
             list = this.keyBindings,
             functions = [ "save", "revert", "delete" ];
-        Mousetrap.bind( list, function ( e, combo ) {
+        Mousetrap.bind( list, ( e, combo ) => {
             if ( e.preventDefault ) {
                 e.preventDefault();
             } else {
@@ -50,7 +50,7 @@ var Table = Base.extend( {
 
         $( obj.node ).html( "<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Loading..." );
 
-        $( obj.el || 'th .input-group' ).each( function ( i ) {
+        $( obj.el || 'th .input-group' ).each( ( i ) => {
             if ( itemToAdd.length < i || !itemToAdd[ i ] ) {
                 $( this ).addClass( "has-error" );
                 $( this ).find( 'input' ).focus();
@@ -72,17 +72,17 @@ var Table = Base.extend( {
         return this.sendToDataBase( {
             type: "PUT",
             data: this.makeObj( itemToAdd )
-        }, this.get( "table" ) + '/' ).then( function ( o ) {
+        }, this.get( "table" ) + '/' ).then( ( o ) => {
 
             $( obj.node ).html( '<span class="glyphicon glyphicon-floppy-saved"></span> Add' );
             return o;
-        }, function ( a ) {
+        }, ( a ) => {
             that.get( 'data' ).splice( that.get( 'data' ).length - 1, 1 );
             $( obj.node ).html( '<span class="glyphicon glyphicon-floppy-saved"></span> Add' );
             return a;
-        } ).then( function ( message ) {
+        } ).then( ( message ) => {
             that.notify( message, "Table Row added!" );
-        }, function ( err ) {
+        }, ( err ) => {
             that.notify( "Error occured", err, 5000, "error" );
         } );
     },
@@ -108,7 +108,7 @@ var Table = Base.extend( {
 
         delete prev[ row ];
         this.set( "editing.past", prev );
-        cur.each( function ( i ) {
+        cur.each( ( i ) => {
             if ( $( this ).text() !== ( to[ i ] + "" ) ) {
                 $( this ).text( to[ i ] );
             }
@@ -124,7 +124,7 @@ var Table = Base.extend( {
             type: "DELETE"
         }, this.get( 'table' ) + "/" + rowOfDeletion[ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( function ( message ) {
             that.notify( "Delete went well!", message );
-        }, function ( err ) {
+        }, ( err ) => {
             that.notify( "Error occured", err, 5000, "error" );
         } );
         return rowOfDeletion;
@@ -138,7 +138,7 @@ var Table = Base.extend( {
             arr = [],
             flag = true; //assume they are the same
 
-        cur.each( function ( i ) {
+        cur.each( ( i ) => {
             if ( i < previous[ row ].length ) {
                 arr.push( $( this ).text() );
                 if ( $( this ).text() !== ( previous[ row ][ i ] ) + "" ) {
@@ -162,10 +162,10 @@ var Table = Base.extend( {
             this.sendToDataBase( {
                 type: "POST",
                 data: this.makeObj( arr )
-            }, this.get( "table" ) + "/" + previous[ row ][ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( function ( message ) {
+            }, this.get( "table" ) + "/" + previous[ row ][ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( ( message ) => {
                 that.notify( "Changes Saved!", message );
                 return message;
-            }, function ( err ) {
+            }, ( err ) => {
                 that.notify( "Error occured", err, 5000, "error" );
                 return err;
             } );
@@ -206,14 +206,10 @@ var Table = Base.extend( {
     switchTable: function ( obj, str ) {
         var that = this;
 
-        return this.sendToDataBase( obj, str ).then( function ( r ) {
-
-            return ( JSON.parse( r ) );
-
-        }, function ( err ) {
+        return this.sendToDataBase( obj, str ).then( JSON.parse, ( err ) => {
             that.alerter( "Sorry, Issues loading Table Data from API.." );
             return Error( JSON.stringify( err ) );
-        } ).then( function ( objs ) {
+        } ).then( ( objs ) => {
 
             var arr = [],
                 arry = [],
@@ -235,20 +231,20 @@ var Table = Base.extend( {
             that.set( "data", arr );
             that.set( "rows", arry );
             return arr;
-        } ).then( function ( data ) {
+        } ).then( ( data ) => {
             var tabler = that.get( "table" ),
-                val = that.getCache( "tablesInfo" + tabler, function () {
-                    return new Promise( function ( resolve, reject ) {
+                val = that.getCache( "tablesInfo" + tabler, () => {
+                    return new Promise( ( resolve, reject ) => {
                         that.sendToDataBase( {
                             type: "GET"
-                        }, ( "tablesInfo/search/tableName/" + tabler ) ).then( function ( response ) {
+                        }, ( "tablesInfo/search/tableName/" + tabler ) ).then( ( response ) => {
                             return JSON.parse( response )[ 0 ];
-                        }, function ( err ) {
+                        }, ( err ) => {
                             that.notify( "Table Missing", "This may not be a valid table according to DataBase!" );
                             reject( err );
                             return ( err );
 
-                        } ).then( function ( response ) {
+                        } ).then( ( response ) => {
                             that.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
                             that.set( "description", response.description );
                             resolve( JSON.stringify( response ) );

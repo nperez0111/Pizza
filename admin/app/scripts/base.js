@@ -8,7 +8,7 @@ var Base = Ractive.extend( {
             $( '#container' ).prepend( '<div id="alert" style="display:none" class="alert alert-danger"></div>' );
         }
         $( str.el || '#alert' ).html( "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + ( other ? other : "" ) + "</h3>" + ( moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>" ) + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>" ).fadeIn().slideDown();
-        $( "a[data-dismiss='alert']" ).click( function () {
+        $( "a[data-dismiss='alert']" ).click( () => {
             $( "#alert" ).alert( "close" );
         } );
         return true;
@@ -54,10 +54,10 @@ var Base = Ractive.extend( {
             obj.data = JSON.stringify( obj.data );
         }
         var that = this;
-        return new Promise( function ( resolve, reject ) {
-            $.ajax( obj ).then( function ( r ) {
+        return new Promise( ( resolve, reject ) => {
+            $.ajax( obj ).then( ( r ) => {
                 resolve( ( r.message ) );
-            }, function ( err ) {
+            }, ( err ) => {
                 console.group( "DataBase Error, '%s'ing '%s'", obj.type.toLowerCase(), urlEx );
                 that.logger( err.responseText ? err.responseText : err, true );
                 that.logger( obj, true );
@@ -79,13 +79,13 @@ var Base = Ractive.extend( {
             that.logger( prop + " not cached yet!" );
             return Promise.reject( prop );
         }
-        return func().then( function ( obj ) {
+        return func().then( ( obj ) => {
             that.cache[ prop ] = JSON.parse( obj );
             if ( false && localStorage ) {
                 localStorage.setItem( prop, obj );
             }
             return that.cache[ prop ];
-        }, function ( err ) {
+        }, ( err ) => {
             that.logger( err, true );
             that.notify( "Error occured", err, 1000, "error" );
         } );
@@ -98,7 +98,7 @@ var Base = Ractive.extend( {
     unrender: function ( apply ) {
         $( "#alert" ).alert( 'close' );
         var that = this.onClose();
-        that.notifications.forEach( function ( a ) {
+        that.notifications.forEach( ( a ) => {
             a.close();
         } );
         that.notifications = [];

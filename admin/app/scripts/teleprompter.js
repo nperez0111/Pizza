@@ -1,19 +1,19 @@
 var Tele = Base.extend( {
     oninit: function () {
         this.getQuickOrders();
-        this.on( 'order', function ( event ) {
+        this.on( 'order', ( event ) => {
             this.order( event );
         } );
-        this.on( 'rmvqueue', function ( event ) {
+        this.on( 'rmvqueue', ( event ) => {
             this.rmvqueue( event );
         } );
-        this.on( 'build', function ( event ) {
+        this.on( 'build', ( event ) => {
             this.build( this.get( "type" )[ event.index.cur ].name );
         } );
-        this.on( 'show', function ( event ) {
+        this.on( 'show', ( event ) => {
             $( $( event.node ).data( 'target' ) ).modal( "show" );
         } );
-        this.on( 'checkout', function ( event ) {
+        this.on( 'checkout', ( event ) => {
             if ( this.get( "queue" ).length === 0 ) {
                 //nothing in queue to order
                 return false;
@@ -22,12 +22,12 @@ var Tele = Base.extend( {
             this.placeOrder( this.get( "queue" ) );
         } );
         var that = this;
-        Mousetrap.bind( this.keyBindings[ 0 ], function () {
+        Mousetrap.bind( this.keyBindings[ 0 ], () => {
             that.placeOrder( that.get( "queue" ) );
         } );
 
-        this.getCache( "priorities", function () {
-            return new Promise( function ( resolve, reject ) {
+        this.getCache( "priorities", () => {
+            return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET",
                     data: {
@@ -38,45 +38,45 @@ var Tele = Base.extend( {
                         ],
                         select: [ "symbols.Symbol", "symbols.Name", "ingredients.Priority" ]
                     }
-                }, "join" ).then( function ( a ) {
-                    resolve( JSON.stringify( JSON.parse( a ).map( function ( cur ) {
+                }, "join" ).then( ( a ) => {
+                    resolve( JSON.stringify( JSON.parse( a ).map( ( cur ) => {
                         cur.Priority = parseInt( cur.Priority, 10 );
                         return cur;
                     } ) ) );
-                }, function ( a ) {
+                }, ( a ) => {
                     reject( a );
                 } );
             } );
         } );
-        this.getCache( "settings", function () {
-            return new Promise( function ( resolve, reject ) {
+        this.getCache( "settings", () => {
+            return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET"
-                }, "settings" ).then( JSON.parse, reject ).then( function ( ob ) {
-                    resolve( JSON.stringify( ob.map( function ( cur ) {
+                }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
+                    resolve( JSON.stringify( ob.map( ( cur ) => {
                         var ret = {};
                         ret[ cur.keyKey ] = cur.val;
                         return ret;
-                    } ).reduce( function ( prev, cur, index, arr ) {
+                    } ).reduce( ( prev, cur, index, arr ) => {
                         $.extend( cur, prev );
                         return cur;
                     } ) ) );
                 } );
             } );
-        }, true ).then( function ( a ) {
+        }, true ).then( ( a ) => {
             that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
         } );
-        this.getCache( "symbols", function () {
-            return new Promise( function ( resolve, reject ) {
+        this.getCache( "symbols", () => {
+            return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET"
-                }, "symbols" ).then( JSON.parse, reject ).then( function ( ret ) {
-                    resolve( JSON.stringify( ret.map( function ( cur ) {
+                }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
+                    resolve( JSON.stringify( ret.map( ( cur ) => {
                         var ret = {};
                         ret[ cur.Name ] = cur.Symbol;
                         return ret;
-                    } ).reduce( function ( prev, cur, index, arr ) {
+                    } ).reduce( ( prev, cur, index, arr ) => {
                         $.extend( cur, prev );
                         return cur;
                     } ) ) );
@@ -96,20 +96,20 @@ var Tele = Base.extend( {
     getQuickOrders: function () {
         var obj = {},
             that = this,
-            arr = this.types.filter( function ( a ) {
+            arr = this.types.filter( ( a ) => {
                 return a.toLowerCase() !== 'drink'
             } );
-        arr.forEach( function ( title ) {
+        arr.forEach( ( title ) => {
             obj[ "quickOrders" + title ] = [ "Name" ];
         } );
 
-        this.getCache( "types", function () {
+        this.getCache( "types", () => {
             return that.sendToDataBase( {
                     type: "GET",
                     data: obj,
                 },
                 "columns" );
-        }, true ).then( function ( ret ) {
+        }, true ).then( ( ret ) => {
             for ( var i = 0, l = arr.length; i < l; i++ ) {
                 that.set( "type[" + i + "].quickOrders", ret[ "quickOrders" + arr[ i ] ][ 0 ] );
             }
@@ -124,7 +124,7 @@ var Tele = Base.extend( {
             type: "GET"
         }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( function ( object ) {
             var ob = JSON.parse( object )[ 0 ];
-            that.getPrice( ob.Name ).then( function ( pri ) {
+            that.getPrice( ob.Name ).then( ( pri ) => {
                 that.stageOrder( $.extend( ob, {
                     Price: pri
                 } ) );
@@ -141,30 +141,30 @@ var Tele = Base.extend( {
         return that.sendToDataBase( {
             type: "PUT",
             data: {
-                OrderSymbols: order.map( function ( obj ) {
+                OrderSymbols: order.map( ( obj ) => {
                     return that.sortOrder( obj.OrderName );
                 } ).join( that.cache.settings.splitter )
             }
-        }, "placeOrder" ).then( function ( message ) {
+        }, "placeOrder" ).then( ( message ) => {
             that.notify( message, "Order Fulfilled : >" );
             that.set( "queue", [] );
-        }, function ( message ) {
+        }, ( message ) => {
             that.notify( "Order Unsuccessful", "No Worries just retry to send the order, Check internet connection." );
         } );
 
 
     },
     getPrice: function ( order ) {
-        return new Promise( function ( resolve, reject ) {
+        return new Promise( ( resolve, reject ) => {
             resolve( order.length );
         } );
     },
     stageOrder: function ( order ) {
         var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
             that = this;
-        $( '.rmv' ).click( function () {
+        $( '.rmv' ).click( () => {
 
-            that.get( "queue" ).every( function ( obj, index, arr ) {
+            that.get( "queue" ).every( ( obj, index, arr ) => {
                 if ( obj.Name === order.Name ) {
                     arr.splice( index, 1 );
                     not.close();
@@ -182,7 +182,7 @@ var Tele = Base.extend( {
         //return order;
         var special = [ "SM", "MD", "LG" ];
         //console.log(this.cache.priorities);
-        var arr = order.split( this.cache.settings.dbdelimiter ).sort( function ( a, b ) {
+        var arr = order.split( this.cache.settings.dbdelimiter ).sort( ( a, b ) => {
             if ( special.indexOf( a ) > -1 ) {
                 return -1;
             } else {
@@ -207,7 +207,7 @@ var Tele = Base.extend( {
             name = name.split( that.settings.dbdelimiter );
         }
         var that = this;
-        return name.map( function ( cur ) {
+        return name.map( ( cur ) => {
             return that.cache.symbols[ cur ] || false;
         } );
     },
@@ -218,14 +218,14 @@ var Tele = Base.extend( {
         return $.ajax( {
             url: "views/builder.html",
             dataType: "html"
-        } ).then( function ( template ) {
+        } ).then( ( template ) => {
             buildy = new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#modal',
                 template: template,
                 inits: function () {
                     this.getLabels( name + "Headings" );
-                    this.on( "checkout", function ( queue ) {
+                    this.on( "checkout", ( queue ) => {
                         $( '#moduler' ).modal( 'hide' );
                         that.getPrice( queue.join( that.cache.settings.dbdelimiter ) ).then( function ( p ) {
                             that.stageOrder( {
@@ -242,10 +242,10 @@ var Tele = Base.extend( {
                 }
             } );
             return buildy;
-        }, function ( err ) {
+        }, ( err ) => {
             that.alerter( "Sorry, Issues loading template file..." );
             return Error( JSON.stringify( err ) );
-        } ).then( function ( build ) {
+        } ).then( ( build ) => {
             that.builder = build;
             $( '#moduler' ).modal( 'show' );
             return build;
