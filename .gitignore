@@ -1,6 +1,7 @@
 node_modules
 dist
 .tmp
+admin/*.bat
 bower_components
 *.DS_Store
 .ftppass
