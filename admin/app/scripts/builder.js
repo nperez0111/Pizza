@@ -2,13 +2,12 @@ var Builder = Base.extend( {
     oninit: function () {
         this.observe( "currentChoices", ( newVal, oldVal, obj ) => {
             var currentSize = this.size();
-            var that = this;
 
-            this.set( "toppingsSelected", that.get( "currentChoices" ).length < 2 ? [] : that.get( "currentChoices" ).filter( function ( cur, i, arr ) {
+            this.set( "toppingsSelected", this.get( "currentChoices" ).length < 2 ? [] : this.get( "currentChoices" ).filter( ( cur, i, arr ) => {
                 return i !== 0;
             } ).map( ( arr, r ) => {
                 return arr.map( ( val, c ) => {
-                    return val ? that.get( "types" )[ r + 1 ][ c ] : false;
+                    return val ? this.get( "types" )[ r + 1 ][ c ] : false;
                 } );
             } ).reduce( ( a, b ) => {
                 return a.concat( b );
@@ -16,11 +15,10 @@ var Builder = Base.extend( {
                 return val !== false;
             } ) );
         } );
-        var that = this;
         this.on( "staged", ( event ) => {
-            that.queue = that.get( "toppingsSelected" ).slice( 0 );
-            that.queue.unshift( that.get( "types" )[ 0 ][ that.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
-            that.fire( "checkout", that.queue );
+            this.queue = this.get( "toppingsSelected" ).slice( 0 );
+            this.queue.unshift( this.get( "types" )[ 0 ][ this.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
+            this.fire( "checkout", this.queue );
         } );
         this.inits.call( this );
     },

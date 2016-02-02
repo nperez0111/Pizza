@@ -111,21 +111,20 @@ var Tele = Base.extend( {
                 "columns" );
         }, true ).then( ( ret ) => {
             for ( var i = 0, l = arr.length; i < l; i++ ) {
-                that.set( "type[" + i + "].quickOrders", ret[ "quickOrders" + arr[ i ] ][ 0 ] );
+                this.set( "type[" + i + "].quickOrders", ret[ "quickOrders" + arr[ i ] ][ 0 ] );
             }
             return arr;
         } );
     },
     order: function ( obj ) {
         var param = this.get( obj.keypath ),
-            that = this,
             arry = this.types;
         this.sendToDataBase( {
             type: "GET"
-        }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( function ( object ) {
+        }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( ( object ) => {
             var ob = JSON.parse( object )[ 0 ];
-            that.getPrice( ob.Name ).then( ( pri ) => {
-                that.stageOrder( $.extend( ob, {
+            this.getPrice( ob.Name ).then( ( pri ) => {
+                this.stageOrder( $.extend( ob, {
                     Price: pri
                 } ) );
             } );
@@ -137,19 +136,18 @@ var Tele = Base.extend( {
             this.notify( "Nothing to Order", "Queue is empty :<", 0, "error" );
             return false;
         }
-        var that = this;
-        return that.sendToDataBase( {
+        return this.sendToDataBase( {
             type: "PUT",
             data: {
                 OrderSymbols: order.map( ( obj ) => {
-                    return that.sortOrder( obj.OrderName );
-                } ).join( that.cache.settings.splitter )
+                    return this.sortOrder( obj.OrderName );
+                } ).join( this.cache.settings.splitter )
             }
         }, "placeOrder" ).then( ( message ) => {
-            that.notify( message, "Order Fulfilled : >" );
-            that.set( "queue", [] );
+            this.notify( message, "Order Fulfilled : >" );
+            this.set( "queue", [] );
         }, ( message ) => {
-            that.notify( "Order Unsuccessful", "No Worries just retry to send the order, Check internet connection." );
+            this.notify( "Order Unsuccessful", "No Worries just retry to send the order, Check internet connection." );
         } );
 
 
@@ -206,9 +204,8 @@ var Tele = Base.extend( {
         if ( typeof name === 'string' || name instanceof String ) {
             name = name.split( that.settings.dbdelimiter );
         }
-        var that = this;
         return name.map( ( cur ) => {
-            return that.cache.symbols[ cur ] || false;
+            return this.cache.symbols[ cur ] || false;
         } );
     },
     builder: {},
