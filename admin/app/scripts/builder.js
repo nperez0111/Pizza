@@ -54,7 +54,7 @@ var Builder = Base.extend( {
     },
     getLabels: function ( urlEx ) {
         var that = this;
-        this.getCache( "headings", () => {
+        this.getCache( "headings", function () {
             return that.sendToDataBase( {
                 type: "GET"
             }, urlEx + "/sortBy/Name" );

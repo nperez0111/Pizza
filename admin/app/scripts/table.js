@@ -233,7 +233,7 @@ var Table = Base.extend( {
             return arr;
         } ).then( ( data ) => {
             var tabler = that.get( "table" ),
-                val = that.getCache( "tablesInfo" + tabler, () => {
+                val = that.getCache( "tablesInfo" + tabler, function () {
                     return new Promise( ( resolve, reject ) => {
                         that.sendToDataBase( {
                             type: "GET"

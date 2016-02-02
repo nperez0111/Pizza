@@ -8,7 +8,7 @@ var Base = Ractive.extend( {
             $( '#container' ).prepend( '<div id="alert" style="display:none" class="alert alert-danger"></div>' );
         }
         $( str.el || '#alert' ).html( "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + ( other ? other : "" ) + "</h3>" + ( moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>" ) + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>" ).fadeIn().slideDown();
-        $( "a[data-dismiss='alert']" ).click( () => {
+        $( "a[data-dismiss='alert']" ).click( function () {
             $( "#alert" ).alert( "close" );
         } );
         return true;

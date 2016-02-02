@@ -44,7 +44,7 @@ function viewBuilder( evente, el, url, callback ) {
 
 
 
-$( document ).ready( () => {
+$( document ).ready( ( a ) => {
     $( '#tele' ).click( ( e ) => {
         viewBuilder( e, "#tele", "teleprompter", ( template ) => {
             tele = new Tele( {

@@ -22,11 +22,11 @@ var Tele = Base.extend( {
             this.placeOrder( this.get( "queue" ) );
         } );
         var that = this;
-        Mousetrap.bind( this.keyBindings[ 0 ], () => {
+        Mousetrap.bind( this.keyBindings[ 0 ], function () {
             that.placeOrder( that.get( "queue" ) );
         } );
 
-        this.getCache( "priorities", () => {
+        this.getCache( "priorities", function () {
             return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET",
@@ -48,7 +48,7 @@ var Tele = Base.extend( {
                 } );
             } );
         } );
-        this.getCache( "settings", () => {
+        this.getCache( "settings", function () {
             return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET"
@@ -67,7 +67,7 @@ var Tele = Base.extend( {
             that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
         } );
-        this.getCache( "symbols", () => {
+        this.getCache( "symbols", function () {
             return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET"
@@ -103,7 +103,7 @@ var Tele = Base.extend( {
             obj[ "quickOrders" + title ] = [ "Name" ];
         } );
 
-        this.getCache( "types", () => {
+        this.getCache( "types", function () {
             return that.sendToDataBase( {
                     type: "GET",
                     data: obj,
@@ -162,7 +162,7 @@ var Tele = Base.extend( {
     stageOrder: function ( order ) {
         var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
             that = this;
-        $( '.rmv' ).click( () => {
+        $( '.rmv' ).click( function () {
 
             that.get( "queue" ).every( ( obj, index, arr ) => {
                 if ( obj.Name === order.Name ) {
