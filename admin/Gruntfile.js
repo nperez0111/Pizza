@@ -506,7 +506,9 @@ module.exports = function ( grunt ) {
             grunt.task.run( [
                 'clean:server',
                 'concurrent:test',
-                'postcss'
+                'postcss',
+                'babel:test',
+                'babel:dist'
             ] );
         }
 

@@ -76,7 +76,7 @@ var Tele = Base.extend( {
                         var ret = {};
                         ret[ cur.Name ] = cur.Symbol;
                         return ret;
-                    } ).reduce( ( prev, cur, index, arr ) => {
+                    } ).reduce( ( prev, cur ) => {
                         $.extend( cur, prev );
                         return cur;
                     } ) ) );
@@ -97,7 +97,7 @@ var Tele = Base.extend( {
         var obj = {},
             that = this,
             arr = this.types.filter( ( a ) => {
-                return a.toLowerCase() !== 'drink'
+                return a.toLowerCase() !== 'drink';
             } );
         arr.forEach( ( title ) => {
             obj[ "quickOrders" + title ] = [ "Name" ];

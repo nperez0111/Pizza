@@ -50,7 +50,7 @@ var Table = Base.extend( {
 
         $( obj.node ).html( "<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Loading..." );
 
-        $( obj.el || 'th .input-group' ).each( ( i ) => {
+        $( obj.el || 'th .input-group' ).each( function ( i ) {
             if ( itemToAdd.length < i || !itemToAdd[ i ] ) {
                 $( this ).addClass( "has-error" );
                 $( this ).find( 'input' ).focus();
@@ -108,7 +108,7 @@ var Table = Base.extend( {
 
         delete prev[ row ];
         this.set( "editing.past", prev );
-        cur.each( ( i ) => {
+        cur.each( function ( i ) {
             if ( $( this ).text() !== ( to[ i ] + "" ) ) {
                 $( this ).text( to[ i ] );
             }
@@ -138,7 +138,7 @@ var Table = Base.extend( {
             arr = [],
             flag = true; //assume they are the same
 
-        cur.each( ( i ) => {
+        cur.each( function ( i ) {
             if ( i < previous[ row ].length ) {
                 arr.push( $( this ).text() );
                 if ( $( this ).text() !== ( previous[ row ][ i ] ) + "" ) {
