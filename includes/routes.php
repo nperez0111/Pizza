@@ -75,9 +75,9 @@ $possibleRoutes=[
         'orderBy'=>'Title'
     ],
     'ingredients'=>[
-        'identifiers'=>['ID','Symbol','Priority','Price','Units'],
+        'identifiers'=>['ID','Symbol','Priority','Price','Units','unitLabel'],
         'methods'=>[1,0,0,0],
-        'props'=>['Symbol','Priority','Price','Units'],
+        'props'=>['Symbol','Priority','Price','Units','unitLabel'],
         'identifier'=>'ID'
     ],
     'settings'=>[

@@ -259,6 +259,7 @@ function rest_put( $req ) {
 
 */
 function rest_get( $req ) {
+    global $JSON;
     if ( checkPrivileges( $req[0] )==false ) {
         return;
     }
@@ -291,7 +292,7 @@ function rest_get( $req ) {
         $response=sql_GET_COLUMNS();
         break;
     case 7:
-        $response=sql_GET_JOIN();
+        $response=sql_GET_JOIN($JSON);
         break;
     case 8:
         $response=getPrice();
@@ -711,8 +712,7 @@ function sql_GET_COLUMNS() {
     }
     return $arr;
 }
-function sql_GET_JOIN() {
-    global $JSON;
+function sql_GET_JOIN($JSON) {
     include '../../includes/database.php';
     $required=["from", "tables", "relations", "select"];
     $STR="SELECT ";
@@ -803,14 +803,38 @@ function getPrice(){
         //return empty array to throw error
         return [];
     }
-
+    $arr=[];
+    $places=pow(10,5);
+    $allPossibles=sql_GET_JOIN([
+            "tables"=> ["symbols"],
+            "from"=> "ingredients",
+            "relations"=> [
+                ["symbols.Name", "ingredients.Symbol"],
+            ],
+            "select"=> ["symbols.Symbol","ingredients.Price", "ingredients.Units"]
+            ]);
     $order=explode(sql_GET(["settings","search","keyKey","dbdelimiter"])[0]["val"],$JSON[$orderName]);
     foreach ($order as $i => $ingrediant) {
-        if(count(sql_GET(["symbols","search","symbol",$ingrediant]))==0){
+        $num=isInside($allPossibles,"Symbol",$ingrediant);
+        if($num==-1){
             return [];
         }
+        $cur=$allPossibles[$num];
+        array_push($arr,floor(($cur["Price"]*$places)/$cur["Units"])/$places);
     }
-    return $order;
+    return [array_reduce($arr,"add")];
+}
+
+function add($a,$b){
+    return $a+$b;
+}
+function isInside($arr,$val,$searchFor){
+    for($x=0;$x<count($arr);$x++){
+            if($arr[$x][$val]==$searchFor){
+                return $x;
+            }
+        }
+        return -1;
 }
 //true for props in array format false for comma delimited string
 function buildProps( $table, $bool ) {
