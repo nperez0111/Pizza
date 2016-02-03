@@ -803,6 +803,9 @@ function getPrice(){
         //return empty array to throw error
         return [];
     }
+
+    $price=isset($JSON["actual"])?"Cost":"Price";
+
     $arr=[];
     $places=pow(10,5);
     $allPossibles=sql_GET_JOIN([
@@ -811,7 +814,7 @@ function getPrice(){
             "relations"=> [
                 ["symbols.Name", "ingredients.Symbol"],
             ],
-            "select"=> ["symbols.Symbol","ingredients.Price", "ingredients.Units"]
+            "select"=> ["symbols.Symbol","ingredients.".$price, "ingredients.Units"]
             ]);
     $order=explode(sql_GET(["settings","search","keyKey","dbdelimiter"])[0]["val"],$JSON[$orderName]);
     foreach ($order as $i => $ingrediant) {
@@ -820,7 +823,7 @@ function getPrice(){
             return [];
         }
         $cur=$allPossibles[$num];
-        array_push($arr,$cur["Price"]/$cur["Units"]);
+        array_push($arr,$cur[$price]/$cur["Units"]);
     }
     return [floor(array_reduce($arr,"add")*$places)/$places];
 }
