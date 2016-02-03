@@ -820,9 +820,9 @@ function getPrice(){
             return [];
         }
         $cur=$allPossibles[$num];
-        array_push($arr,floor(($cur["Price"]*$places)/$cur["Units"])/$places);
+        array_push($arr,$cur["Price"]/$cur["Units"]);
     }
-    return [array_reduce($arr,"add")];
+    return [floor(array_reduce($arr,"add")*$places)/$places];
 }
 
 function add($a,$b){
