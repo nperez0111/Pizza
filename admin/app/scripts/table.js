@@ -136,7 +136,8 @@ var Table = Base.extend( {
             data = this.get( "data" ),
             cur = $( $( $( obj.el || "tbody tr" ).get( row ) ).find( "td" ) ),
             arr = [],
-            flag = true; //assume they are the same
+            flag = true,
+            that = this; //assume they are the same
 
         cur.each( function ( i ) {
             if ( i < previous[ row ].length ) {
@@ -228,7 +229,11 @@ var Table = Base.extend( {
             for ( key in objs[ 0 ] ) {
                 arry.push( key );
             }
-            that.set( "data", arr );
+            that.set( "data", arr.map( ( row ) => {
+                return row.map( ( col ) => {
+                    return col == "" ? " " : col;
+                } );
+            } ) );
             that.set( "rows", arry );
             return arr;
         } ).then( ( data ) => {
