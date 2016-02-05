@@ -190,7 +190,7 @@ function rest_put( $req ) {
     global $JSON;
     include '../../includes/database.php';
     $table=$req[0];
-    if ( checkPrivileges( $req[0] )==false||checkTableReqs( $req[0], $JSON )==false ) {
+    if ( checkPrivileges( $table )==false||checkTableReqs( $table, $JSON )==false ) {
         rest_error( "Insufficient Priveleges OR incorrect JSON Requirements", 401 );
         return;
     }
@@ -206,18 +206,33 @@ function rest_put( $req ) {
             $list=$JSON["OrderSymbols"];
             $orders=explode(" , ",$list);
             $arr=[];
+            $allPossibles=sql_GET_JOIN([
+            "tables"=> ["symbols"],
+            "from"=> "ingredients",
+            "relations"=> [
+                ["symbols.Name", "ingredients.Symbol"],
+            ],
+            "select"=> ["symbols.Symbol"]
+            ]);
             for($i=0;$i<count($orders);$i++){
                 $ingredients=explode(" ",$orders[$i]);
-                array_push($arr,$ingredients);
                 //from here we need to check that each ingrediant is valid and available?
+                for($x=0;$x<count($ingredients);$x++){
+                    $ingrediant=$ingredients[$x];
+                    $num=isInside($allPossibles,"Symbol",$ingrediant);
+                    if($num==-1){
+                        rest_error($ingrediant." is not a valid ingredient!",406);
+                        return;
+                    }
+                    $cur=$allPossibles[$num];
+                }
+                
             }
-            /*print_r($list);
-            echo "\n";
-            print_r($orders);
-            echo "\n";
-            print_r($arr);*/
-            rest_error("Order fulfilled!",400);
-            return;
+            $table="orders";
+
+            $JSON["TransactionID"]=getTransaction();
+
+
         }
 
     if ( $req[0]=="users" ) {
@@ -295,7 +310,7 @@ function rest_get( $req ) {
         $response=sql_GET_JOIN($JSON);
         break;
     case 8:
-        $response=getPrice();
+        $response=getPrice($JSON);
         break;
     case 0:
     default:
@@ -598,6 +613,7 @@ function reqRouter( $req, $http ) {
         array_push( $keys, $routes[$table]['identifier'] );
         for ( $i=0;$i<count( $keys );$i++ ) {
             if ( !isset( $JSON[$keys[$i]] ) ) {
+                echo $keys[$i];
                 return 0;
             }
         }
@@ -794,9 +810,8 @@ function sql_PUT( $table ) {
 
     return $str;
 }
-function getPrice(){
+function getPrice($JSON){
     include '../../includes/database.php';
-    global $JSON;
     //json should contain: order(s) to be priced
     $orderName="orderName";
     if(isset($JSON[$orderName])==false){
@@ -871,6 +886,15 @@ function buildJSONInputWProps( $table, $JSON ) {
         $arr[":".$keys[$i]]=$JSON[$keys[$i]];
     }
     return $arr;
+}
+function getTransaction(){
+    $table="transactions";
+    $num=sql_GET_ALL($table,["ID","DESC"])[0]["ID"]+1;
+    
+    $stmt=$db->prepare( sql_PUT( $table ) );
+    $ex=buildJSONInputWProps( $table, ["Amount"=>4.5,"Type"=>1,"ID"=>$num] );
+    $stmt->execute( $ex );
+    return $num;
 }
 
 /*

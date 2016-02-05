@@ -1,6 +1,20 @@
 var Tele = Base.extend({
     oninit: function() {
         this.getQuickOrders();
+        this.observe('type', debounce(function() {
+            console.log("going the distance");
+            var abc = [1, 3];
+            abc.forEach((cur) => {
+                console.log(cur);
+                var b = $($('.panel-body')[cur - 1]);
+                var c = $($('.panel-body')[cur]);
+                if (b.height() > c.height()) {
+                    c.height(b.height());
+                } else {
+                    b.height(c.height());
+                }
+            });
+        }, 100));
         this.on('order', (event) => {
             this.order(event);
         });
@@ -186,26 +200,17 @@ var Tele = Base.extend({
     },
     sortOrder: function(order) {
         //return order;
-        var special = ["SM", "MD", "LG"];
-        //console.log(this.cache.priorities);
         var arr = order.split(this.cache.settings.dbdelimiter).sort((a, b) => {
-            if (special.indexOf(a) > -1) {
-                return -1;
-            } else {
-                return this.cache.priorities.indexOf(a) - this.cache.priorities.indexOf(b);
-            }
+
+            return this.cache.priorities.indexOf(a) - this.cache.priorities.indexOf(b);
+
         });
         this.logger(arr);
         return arr.join(this.cache.settings.dbdelimiter);
-        //console.log(arr);
-        /*/returns the order sorted correctly
-        database = this.settings().delimiter;
+        //returns the order sorted correctly
         //the sort should be accessed from the database within the init method
         //this should access wherever that is stored and properly sort it correctly
-        return order.split(database.delimiter).sort(function(a, b) {
-            //this is totally just an I think ...
-            return this.getPriority().indexOf(a) - this.getPriority().indexOf(b);
-        });*/
+
     },
     mapNameToSymbols: function(name) {
         //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
