@@ -5,11 +5,14 @@ $brand-primary:#456;
 // endbower
 @import "svg.scss";
 @import "_mixins.scss";
-
 .center {
     text-align: center;
     margin: 0 auto;
     display: block;
+}
+
+.big {
+    font-size: 150%;
 }
 
 .text-center {
