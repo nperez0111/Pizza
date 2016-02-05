@@ -888,6 +888,7 @@ function buildJSONInputWProps( $table, $JSON ) {
     return $arr;
 }
 function getTransaction(){
+    include '../../includes/database.php';
     $table="transactions";
     $num=sql_GET_ALL($table,["ID","DESC"])[0]["ID"]+1;
     
