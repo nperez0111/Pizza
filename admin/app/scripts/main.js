@@ -74,7 +74,7 @@ $(document).ready((a) => {
                 }
             });
         });
-    });
+    }).trigger("click");
     $('#home').click(function(e) {
         viewBuilder(e, "#home", "table", (template) => {
             table = new Table({
@@ -139,12 +139,10 @@ $(document).ready((a) => {
             stats = new Stats({
                 el: '#container',
                 template,
-                data: {
-                    data: "well ok."
-                }
+                data: {}
             });
         });
-    }).trigger("click");
+    });
 
 
 });
