@@ -1,4 +1,4 @@
-var table, tele, build, interval, cache = {};
+var table, tele, build, interval,stats, cache = {};
 Ractive.DEBUG = false;
 
 function viewBuilder( evente, el, url, callback ) {
@@ -132,7 +132,17 @@ $( document ).ready( ( a ) => {
                 }
             } );
         } );
-    } ).trigger( "click" );
+    } );
+
+    $('#stats').click((e)=>{
+        viewBuilder(e,'#stats','stats',(template)=>{
+            stats=new Stats({
+                el:'#container',
+                template,
+                data:{data:"well ok."}
+            });
+        });
+    }).trigger( "click" );
 
 
 } );
