@@ -113,5 +113,15 @@ var Base = Ractive.extend( {
             }
         }
         return a;
+    },
+    debounce: ( t, r ) => {
+        var e = null;
+        return function () {
+            var n = this,
+                o = arguments;
+            clearTimeout( e ), e = setTimeout( function () {
+                t.apply( n, o )
+            }, r )
+        }
     }
 } );
