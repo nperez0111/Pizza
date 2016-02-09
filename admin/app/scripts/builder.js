@@ -16,13 +16,19 @@ var Builder = Base.extend( {
             } ) );
         } );
         this.observe( "toppingsSelected", ( newVal ) => {
-            this.getCache( "toppingsSVG", function () {
+            this.getCache( "toppingsSVG", ( a ) => {
                 return new Promise( ( resolve, reject ) => {
                     this.sendToDataBase( {
                         type: "GET"
                     }, "toppingsSVG" ).then( JSON.parse, reject ).then( resolve );
                 } );
-            }, true, true ).then( this.logger, this.logger );
+            }, true, true ).then( ( resp ) => {
+                var obj = {};
+                resp.forEach( ( cur ) => {
+                    obj[ cur.title ] = cur.svg;
+                } );
+                return obj;
+            }, this.logger ).then( this.logger );
         } );
         this.on( "staged", ( event ) => {
             this.queue = this.get( "toppingsSelected" ).slice( 0 );
@@ -49,7 +55,8 @@ var Builder = Base.extend( {
             svg: {
                 radius: 0
             },
-            toppingsSelected: []
+            toppingsSelected: [],
+            toppingsSVG: []
         };
     },
     queue: [],
