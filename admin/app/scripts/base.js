@@ -67,27 +67,26 @@ var Base = Ractive.extend( {
         } );
     },
     cache: {},
-    getCache: function ( prop, func, isPromise ) {
+    getCache: function ( prop, func, isPromise, isNotJSON ) {
         if ( prop in this.cache || ( localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
-                this.cache[ prop ] = JSON.parse( localStorage.getItem( prop ) );
+                this.cache[ prop ] = isNotJSON ? localStorage.getItem( prop ) : JSON.parse( localStorage.getItem( prop ) );
             }
             return isPromise ? Promise.resolve( this.cache[ prop ] ) : this.cache[ prop ];
         }
-        var that = this;
         if ( !( func instanceof Function ) ) {
-            that.logger( prop + " not cached yet!" );
+            this.logger( prop + " not cached yet!" );
             return Promise.reject( prop );
         }
-        return func().then( ( obj ) => {
-            that.cache[ prop ] = JSON.parse( obj );
+        return func.call( this ).then( ( obj ) => {
+            this.cache[ prop ] = isNotJSON ? obj : JSON.parse( obj );
             if ( false && localStorage ) {
                 localStorage.setItem( prop, obj );
             }
-            return that.cache[ prop ];
+            return this.cache[ prop ];
         }, ( err ) => {
-            that.logger( err, true );
-            that.notify( "Error occured", err, 1000, "error" );
+            this.logger( err, true );
+            this.notify( "Error occured", err, 1000, "error" );
         } );
 
     },
@@ -113,5 +112,15 @@ var Base = Ractive.extend( {
             }
         }
         return a;
+    },
+    debounce: ( t, r ) => {
+        var e = null;
+        return function () {
+            var n = this,
+                o = arguments;
+            clearTimeout( e ), e = setTimeout( function () {
+                t.apply( n, o )
+            }, r )
+        }
     }
 } );

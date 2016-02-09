@@ -205,10 +205,10 @@ var Table = Base.extend( {
         return true;
     },
     switchTable: function ( obj, str ) {
-        var that = this;
+
 
         return this.sendToDataBase( obj, str ).then( JSON.parse, ( err ) => {
-            that.alerter( "Sorry, Issues loading Table Data from API.." );
+            this.alerter( "Sorry, Issues loading Table Data from API.." );
             return Error( JSON.stringify( err ) );
         } ).then( ( objs ) => {
 
@@ -229,36 +229,36 @@ var Table = Base.extend( {
             for ( key in objs[ 0 ] ) {
                 arry.push( key );
             }
-            that.set( "data", arr.map( ( row ) => {
+            this.set( "data", arr.map( ( row ) => {
                 return row.map( ( col ) => {
                     return col == "" ? " " : col;
                 } );
             } ) );
-            that.set( "rows", arry );
+            this.set( "rows", arry );
             return arr;
         } ).then( ( data ) => {
-            var tabler = that.get( "table" ),
-                val = that.getCache( "tablesInfo" + tabler, function () {
+            var tabler = this.get( "table" ),
+                val = this.getCache( "tablesInfo" + tabler, ( a ) => {
                     return new Promise( ( resolve, reject ) => {
-                        that.sendToDataBase( {
+                        this.sendToDataBase( {
                             type: "GET"
                         }, ( "tablesInfo/search/tableName/" + tabler ) ).then( ( response ) => {
                             return JSON.parse( response )[ 0 ];
                         }, ( err ) => {
-                            that.notify( "Table Missing", "This may not be a valid table according to DataBase!" );
+                            this.notify( "Table Missing", "This may not be a valid table according to DataBase!" );
                             reject( err );
                             return ( err );
 
                         } ).then( ( response ) => {
-                            that.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
-                            that.set( "description", response.description );
+                            this.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
+                            this.set( "description", response.description );
                             resolve( JSON.stringify( response ) );
                             return response;
                         } );
                     } );
                 } );
-            that.set( "editing.notAllowed", JSON.parse( val.primaryKeyArr || "[]" ) );
-            that.set( "description", val.description );
+            this.set( "editing.notAllowed", JSON.parse( val.primaryKeyArr || "[]" ) );
+            this.set( "description", val.description );
 
             return data;
         } );

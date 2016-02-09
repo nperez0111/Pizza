@@ -85,6 +85,12 @@ $possibleRoutes=[
         'methods'=>[1,0,0,0],
         'props'=>['keyKey','val'],
         'identifier'=>'keyKey'
+    ],
+    'toppingsSVG'=>[
+        'identifiers'=>['title','svg'],
+        'methods'=>[1,0,0,0],
+        'props'=>['title','svg'],
+        'identifier'=>'title'
     ]
 ];
 //methods refer to [get,post,put,delete]

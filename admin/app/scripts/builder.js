@@ -15,6 +15,21 @@ var Builder = Base.extend( {
                 return val !== false;
             } ) );
         } );
+        this.observe( "toppingsSelected", ( newVal ) => {
+            this.getCache( "toppingsSVG", ( a ) => {
+                return new Promise( ( resolve, reject ) => {
+                    this.sendToDataBase( {
+                        type: "GET"
+                    }, "toppingsSVG" ).then( JSON.parse, reject ).then( resolve );
+                } );
+            }, true, true ).then( ( resp ) => {
+                var obj = {};
+                resp.forEach( ( cur ) => {
+                    obj[ cur.title ] = cur.svg;
+                } );
+                return obj;
+            }, this.logger ).then( this.logger );
+        } );
         this.on( "staged", ( event ) => {
             this.queue = this.get( "toppingsSelected" ).slice( 0 );
             this.queue.unshift( this.get( "types" )[ 0 ][ this.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
@@ -40,7 +55,8 @@ var Builder = Base.extend( {
             svg: {
                 radius: 0
             },
-            toppingsSelected: []
+            toppingsSelected: [],
+            toppingsSVG: []
         };
     },
     queue: [],
@@ -52,7 +68,7 @@ var Builder = Base.extend( {
     },
     getLabels: function ( urlEx ) {
         var that = this;
-        this.getCache( "headings", function () {
+        this.getCache( urlEx, function () {
             return that.sendToDataBase( {
                 type: "GET"
             }, urlEx + "/sortBy/Name" );

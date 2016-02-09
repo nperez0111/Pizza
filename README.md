@@ -1,4 +1,4 @@
-# Pizza [![Build Status](https://travis-ci.org/nperez0111/Pizza.svg?branch=master)](https://magnum.travis-ci.com/nperez0111/Pizza) [![Stories in Ready](https://badge.waffle.io/nperez0111/Pizza.svg?label=ready&title=Ready)](http://waffle.io/nperez0111/Pizza)
+# Pizza [![Build Status](https://travis-ci.org/nperez0111/Pizza.svg?branch=master)](https://magnum.travis-ci.org/nperez0111/Pizza) [![Stories in Ready](https://badge.waffle.io/nperez0111/Pizza.svg?label=ready&title=Ready)](http://waffle.io/nperez0111/Pizza)
 
 Pizza Web App, Point of Sale and API
 ## Pizza Admin Page
