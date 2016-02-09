@@ -74,20 +74,19 @@ var Base = Ractive.extend( {
             }
             return isPromise ? Promise.resolve( this.cache[ prop ] ) : this.cache[ prop ];
         }
-        var that = this;
         if ( !( func instanceof Function ) ) {
-            that.logger( prop + " not cached yet!" );
+            this.logger( prop + " not cached yet!" );
             return Promise.reject( prop );
         }
-        return func().then( ( obj ) => {
-            that.cache[ prop ] = isNotJSON ? obj : JSON.parse( obj );
+        return func.call( this ).then( ( obj ) => {
+            this.cache[ prop ] = isNotJSON ? obj : JSON.parse( obj );
             if ( false && localStorage ) {
                 localStorage.setItem( prop, obj );
             }
-            return that.cache[ prop ];
+            return this.cache[ prop ];
         }, ( err ) => {
-            that.logger( err, true );
-            that.notify( "Error occured", err, 1000, "error" );
+            this.logger( err, true );
+            this.notify( "Error occured", err, 1000, "error" );
         } );
 
     },
