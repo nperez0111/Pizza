@@ -7,7 +7,7 @@
 
                 <g id="crustAndShadow">
 
-                    <title>{{ types[0][ (currentChoices || [[true]])[0].indexOf(true) || 0 ] }} Pizza {{'with '+toppingsSelected.join(" , ")}}</title>
+                    <title>{{ curSize }} Pizza {{ 'with ' + toppingsSelected.join(" , ")}}</title>
 
                     <desc>This handles the outer crust of the pizza and it's shadow</desc>
 
@@ -22,9 +22,19 @@
                     <circle r="{{radius}}%" cx="50%" cy="50%" /> {{/if}}
 
                 </g>
-                {{#each toppingsSelected:i}} {{#if toppingsSelected[i] in toppingsSVG}}
-                <g id="{{toppingsSelected[i]}}">{{{toppingsSVG[toppingsSelected[i]]}}}</g>
-                {{/if}} {{/each}}
+                {{#each toppingsSelected:i}}
+                   
+                    {{#if toppingsSelected[i] + curSize in toppingsSVG}}
+                       
+                        <g id="{{toppingsSelected[i]}}">
+                           
+                            {{{toppingsSVG[toppingsSelected[i] + curSize]}}}
+                            
+                        </g>
+                        
+                    {{/if}}
+                    
+                {{/each}}
 
             </svg>
             {{/with}}

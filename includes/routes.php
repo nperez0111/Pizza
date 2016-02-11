@@ -87,9 +87,9 @@ $possibleRoutes=[
         'identifier'=>'keyKey'
     ],
     'toppingsSVG'=>[
-        'identifiers'=>['title','svg'],
+        'identifiers'=>['title','svg','size'],
         'methods'=>[1,0,0,0],
-        'props'=>['title','svg'],
+        'props'=>['title','svg','size'],
         'identifier'=>'title'
     ]
 ];
