@@ -27,7 +27,7 @@ var Builder = Base.extend( {
             }, true, true ).then( ( resp ) => {
                 var obj = {};
                 resp.forEach( ( cur ) => {
-                    obj[ cur.title + cur.size ] = cur.svg;
+                    obj[ cur.title + cur.size ] = Ractive.parse( cur.svg );
                 } );
                 return obj;
             }, this.logger ).then( resp => {
