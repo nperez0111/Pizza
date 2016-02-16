@@ -18,7 +18,7 @@ var Tele = Base.extend( {
                     b.height( c.height() );
                 }
             } );
-        }, 100 ) );
+        }, 300 ) );
         this.on( 'order', ( event ) => {
             this.order( event );
         } );
