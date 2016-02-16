@@ -2,9 +2,7 @@ var Tele = Base.extend( {
     oninit: function () {
         this.getQuickOrders();
         this.observe( 'type', this.debounce( ( newVal ) => {
-            var abc = new Array( parseInt( newVal.length / 2 ) ).fill( ( cur ) => {
-                return 0;
-            } );
+            var abc = new Array( parseInt( newVal.length / 2 ) ).fill( 0 );
 
             abc = abc.map( ( cur, index ) => {
                 return 2 * index + 1;
