@@ -18,7 +18,7 @@ define( "HASH_ITERATION_INDEX", 1 );
 define( "HASH_SALT_INDEX", 2 );
 define( "HASH_PBKDF2_INDEX", 3 );
 $adminRequired=["users"];
-$keyRoutes=["columns", "join", "placeOrder","getPrice"];
+$keyRoutes=["columns", "join", "placeOrder","getPrice","getOrdersByTime"];
 include '../../includes/routes.php';
 global $possibleRoutes;
 $routes=$possibleRoutes;
@@ -312,6 +312,9 @@ function rest_get( $req ) {
     case 8:
         $response=getPrice($JSON);
         break;
+    case 9:
+        $response=getOrdersByTime($req,$JSON);
+        break;
     case 0:
     default:
         rest_error( "Mal-Formed request, check url params", 400 );
@@ -430,6 +433,10 @@ function reqRouter( $req, $http ) {
                     return 8;
                     //user is requesting price of an order
                 }
+            else if($req[0]=="getByTime"){
+                return 9;
+                    //user is requesting a table between a given time
+            }
             else if ( $req[0]=="join" ) {
                     $required=["from", "tables", "relations", "select"];
 
@@ -896,6 +903,30 @@ function getTransaction(){
     $ex=buildJSONInputWProps( $table, ["Amount"=>4.5,"Type"=>1,"ID"=>$num] );
     $stmt->execute( $ex );
     return $num;
+}
+function getOrdersByTime($req,$JSON){
+    include '../../includes/database.php';
+    global $routes;
+    $table=$req[1];
+    $row=$req[2];
+    $from=@$JSON['from'];
+    $to=@$JSON['to'];
+    if(!isset($routes[$table])||!isIdentifier($table,$row)||!isset($from)||($routes[$table]['time']==$row)==false||strtotime($from)==false||isset($to)?strtotime($to)==false:false){
+        return [];
+    }
+    $arr=[];
+    $STR="SELECT ".implode( ",", $routes[$table]['identifiers'] )." FROM `".$table."` WHERE ".$routes[$table]['time']." between ".$from." and ".$to;
+    $stmt=$db->prepare( $STR );
+    $resul=$stmt->execute();
+    while ( $currow = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
+        $data=[];
+        for ( $i=0;$i<count( $routes[$table]['identifiers'] );$i++ ) {
+            $data[$routes[$table]['identifiers'][$i]]=$currow[$routes[$table]['identifiers'][$i]];
+        }
+        array_push( $arr, $data );
+    }
+    return $arr;
+
 }
 
 /*
