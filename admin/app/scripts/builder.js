@@ -25,9 +25,14 @@ var Builder = Base.extend( {
                     }, "toppingsSVG" ).then( JSON.parse, reject ).then( resolve );
                 } );
             }, true, true ).then( ( resp ) => {
-                var obj = {};
+                var obj = {},
+                    data = this.get( "svg" );
                 resp.forEach( ( cur ) => {
-                    obj[ cur.title + cur.size ] = Ractive.parse( cur.svg );
+                    var temp = new Ractive( {
+                        data: data,
+                        template: cur.svg
+                    } );
+                    obj[ cur.title + cur.size ] = temp.toHTML();
                 } );
                 return obj;
             }, this.logger ).then( resp => {
