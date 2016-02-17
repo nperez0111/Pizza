@@ -3,6 +3,7 @@ var Tele = Base.extend( {
         this.getQuickOrders();
         this.observe( 'type', this.debounce( ( newVal ) => {
             var abc = new Array( parseInt( newVal.length / 2 ) ).fill( 0 );
+            //Filled with bugs, what about changing the columns? checking multiple columns?
 
             abc = abc.map( ( cur, index ) => {
                 return 2 * index + 1;
@@ -99,6 +100,11 @@ var Tele = Base.extend( {
                 } );
             } );
         } );
+        /*this.sendToDataBase( {
+            type: "GET"
+        }, "unavailableItems" ).then( ( resp ) => {
+            //do something if these items are not available
+        } );*/
     },
     keyBindings: [ 'shift+a' ],
     data: function () {
@@ -138,6 +144,7 @@ var Tele = Base.extend( {
         this.sendToDataBase( {
             type: "GET"
         }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( ( object ) => {
+            this.logger( ob );
             var ob = JSON.parse( object )[ 0 ];
             this.getPrice( ob.Name ).then( ( pri ) => {
                 this.stageOrder( $.extend( ob, {

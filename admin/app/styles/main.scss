@@ -109,6 +109,11 @@ footer p {
     }
 }
 
+.inactive{
+    pointer-events: none;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+}
 
 /* Custom page footer */
 
