@@ -915,6 +915,7 @@ function getOrdersByTime($req,$JSON){
         return [];
     }
     $arr=[];
+    //http://stackoverflow.com/questions/5125076/sql-query-to-select-dates-between-two-dates
     $STR="SELECT ".implode( ",", $routes[$table]['identifiers'] )." FROM `".$table."` WHERE ".$routes[$table]['time']." between ".$from." and ".$to;
     $stmt=$db->prepare( $STR );
     $resul=$stmt->execute();
