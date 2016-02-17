@@ -122,7 +122,7 @@ var Tele = Base.extend( {
                 return a.toLowerCase() !== 'drink';
             } );
         arr.forEach( ( title ) => {
-            obj[ "quickOrders" + title ] = [ "Name" ];
+            obj[ "quickOrders" + title ] = [ "Name", "OrderName" ];
         } );
 
         this.getCache( "types", function () {
@@ -132,26 +132,33 @@ var Tele = Base.extend( {
                 },
                 "columns" );
         }, true ).then( ( ret ) => {
-            for ( var i = 0, l = arr.length; i < l; i++ ) {
-                this.set( "type[" + i + "].quickOrders", ret[ "quickOrders" + arr[ i ] ][ 0 ] );
-            }
-            return arr;
+
+            return Object.keys( ret ).map( ( quickOrders, r ) => {
+                return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
+                    return {
+                        Name: cur,
+                        OrderName: ret[ quickOrders ][ 1 ][ i ]
+                    };
+                } );
+            } );
+
+        } ).then( ( resp ) => {
+
+            resp.forEach( ( cur, i ) => {
+                this.set( "type." + i + ".quickOrders", cur );
+            } );
+
+            return resp;
         } );
     },
     order: function ( obj ) {
         var param = this.get( obj.keypath ),
             arry = this.types;
-        this.sendToDataBase( {
-            type: "GET"
-        }, "quickOrders" + arry[ parseInt( obj.keypath.split( "." )[ 1 ], 10 ) ] + "/search/Name/" + param ).then( ( object ) => {
-            this.logger( ob );
-            var ob = JSON.parse( object )[ 0 ];
-            this.getPrice( ob.Name ).then( ( pri ) => {
-                this.stageOrder( $.extend( ob, {
-                    Price: pri
-                } ) );
-            } );
 
+        this.getPrice( param.OrderName, true ).then( ( pri ) => {
+            this.stageOrder( $.extend( param, {
+                Price: pri
+            } ) );
         } );
     },
     placeOrder: function ( order ) {
@@ -175,8 +182,8 @@ var Tele = Base.extend( {
 
 
     },
-    getPrice: function ( order ) {
-        var symboled = this.mapNameToSymbols( order );
+    getPrice: function ( order, isSymbol ) {
+        var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
         return new Promise( ( resolve, reject ) => {
             this.sendToDataBase( {

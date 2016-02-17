@@ -31,7 +31,7 @@
 
                                 {{#if type[cur].images}}
 
-                                <img src="images/{{type[cur].images[q]}}" title="{{type[cur].quickOrders[q]}}" alt="{{type[cur].quickOrders[q]}} Logo, Click to order"> {{else}} {{type[cur].quickOrders[q]}} {{/if}}
+                                <img src="images/{{type[cur].images[q]}}" title="{{type[cur].quickOrders[q].Name}}" alt="{{type[cur].quickOrders[q].Name}} Logo, Click to order"> {{else}} {{type[cur].quickOrders[q].Name}} {{/if}}
 
                             </button>
 
