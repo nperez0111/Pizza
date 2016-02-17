@@ -18,7 +18,7 @@ define( "HASH_ITERATION_INDEX", 1 );
 define( "HASH_SALT_INDEX", 2 );
 define( "HASH_PBKDF2_INDEX", 3 );
 $adminRequired=["users"];
-$keyRoutes=["columns", "join", "placeOrder","getPrice","getOrdersByTime"];
+$keyRoutes=["columns", "join", "placeOrder","getPrice","getByTime"];
 include '../../includes/routes.php';
 global $possibleRoutes;
 $routes=$possibleRoutes;
@@ -313,7 +313,7 @@ function rest_get( $req ) {
         $response=getPrice($JSON);
         break;
     case 9:
-        $response=getOrdersByTime($req,$JSON);
+        $response=getByTime($req,$JSON);
         break;
     case 0:
     default:
@@ -411,6 +411,7 @@ function reqRouter( $req, $http ) {
     global $keyRoutes;
     global $routes;
     global $JSON;
+
     if ( isset( $req )&&( array_search( $req[0], $keyRoutes )!==false ) ) {
 
     }
@@ -421,6 +422,7 @@ function reqRouter( $req, $http ) {
         }
     if ( $http=="GET" ) {
         if ( count( $req )==1 ) {
+            
             if ( isset( $routes[$req[0]] ) ) {
                 //the users is requesting an entire table
                 return 1;
@@ -433,10 +435,6 @@ function reqRouter( $req, $http ) {
                     return 8;
                     //user is requesting price of an order
                 }
-            else if($req[0]=="getByTime"){
-                return 9;
-                    //user is requesting a table between a given time
-            }
             else if ( $req[0]=="join" ) {
                     $required=["from", "tables", "relations", "select"];
 
@@ -513,6 +511,10 @@ function reqRouter( $req, $http ) {
             }
         }
         else {
+            if($req[0]=="getByTime"){
+                return 9;
+                    //user is requesting a table between a given time
+            }
             //the user is requesting a search
             //therefore anything after is a parameter to search by
             if ( isset( $req[1] )&&strtolower( $req[1] )=="search" ) {
@@ -904,7 +906,7 @@ function getTransaction(){
     $stmt->execute( $ex );
     return $num;
 }
-function getOrdersByTime($req,$JSON){
+function getByTime($req,$JSON){
     include '../../includes/database.php';
     global $routes;
     $table=$req[1];
@@ -916,9 +918,10 @@ function getOrdersByTime($req,$JSON){
     }
     $arr=[];
     //http://stackoverflow.com/questions/5125076/sql-query-to-select-dates-between-two-dates
-    $STR="SELECT ".implode( ",", $routes[$table]['identifiers'] )." FROM `".$table."` WHERE ".$routes[$table]['time']." between ".$from." and ".$to;
+    $STR="SELECT ".implode( ",", $routes[$table]['identifiers'] )." FROM `".$table."` WHERE ".$routes[$table]['time']." between '".$from."' and '".(isset($to)?$to:date('Y-m-d'))."'";
     $stmt=$db->prepare( $STR );
     $resul=$stmt->execute();
+    
     while ( $currow = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
         $data=[];
         for ( $i=0;$i<count( $routes[$table]['identifiers'] );$i++ ) {

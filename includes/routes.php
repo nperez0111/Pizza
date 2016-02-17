@@ -11,7 +11,8 @@ $possibleRoutes=[
         'identifiers'=>['ID','OrderSymbols','DateOrdered','TransactionID'],
         'methods'=>[0,0,1,0],
         'props'=>['OrderSymbols','TransactionID'],
-        'identifier'=>'ID'
+        'identifier'=>'ID',
+        'time'=>'DateOrdered'
     ],
     'transactions'=>[
         'identifiers'=>['ID','Amount','Type'],
