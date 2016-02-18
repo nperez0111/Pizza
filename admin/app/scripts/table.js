@@ -79,11 +79,10 @@ var Table = Base.extend( {
         }, ( a ) => {
             that.get( 'data' ).splice( that.get( 'data' ).length - 1, 1 );
             $( obj.node ).html( '<span class="glyphicon glyphicon-floppy-saved"></span> Add' );
-            return a;
+            that.errorMessage( a );
+            throw a;
         } ).then( ( message ) => {
             that.notify( message, "Table Row added!" );
-        }, ( err ) => {
-            that.notify( "Error occured", err, 5000, "error" );
         } );
     },
     edit: function ( e ) {
@@ -124,9 +123,7 @@ var Table = Base.extend( {
             type: "DELETE"
         }, this.get( 'table' ) + "/" + rowOfDeletion[ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( function ( message ) {
             that.notify( "Delete went well!", message );
-        }, ( err ) => {
-            that.notify( "Error occured", err, 5000, "error" );
-        } );
+        }, that.errorMessage );
         return rowOfDeletion;
     },
     save: function ( obj ) {
@@ -166,10 +163,7 @@ var Table = Base.extend( {
             }, this.get( "table" ) + "/" + previous[ row ][ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( ( message ) => {
                 that.notify( "Changes Saved!", message );
                 return message;
-            }, ( err ) => {
-                that.notify( "Error occured", err, 5000, "error" );
-                return err;
-            } );
+            }, that.errorMessage );
         } else {
             //are the same do nothing
             return false;

@@ -123,6 +123,12 @@ var Base = Ractive.extend( {
         }
         return obj[ prop ];
     },
+    errorMessage: function ( err ) {
+        console.log( err );
+        console.log( this );
+        this.notify( "Error occured", err, 5000, "error" );
+        return err;
+    },
     debounce: ( t, r ) => {
         var e = null;
         return function () {
