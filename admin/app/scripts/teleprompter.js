@@ -71,9 +71,7 @@ var Tele = Base.extend( {
                     type: "GET"
                 }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
                     resolve( JSON.stringify( ob.map( ( cur ) => {
-                        var ret = {};
-                        ret[ cur.keyKey ] = cur.val;
-                        return ret;
+                        return this.makeObj(cur.keyKey,cur.val);
                     } ).reduce( ( prev, cur, index, arr ) => {
                         $.extend( cur, prev );
                         return cur;
@@ -90,9 +88,7 @@ var Tele = Base.extend( {
                     type: "GET"
                 }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
                     resolve( JSON.stringify( ret.map( ( cur ) => {
-                        var ret = {};
-                        ret[ cur.Name ] = cur.Symbol;
-                        return ret;
+                        return this.makeObj(cur.Name,cur.Symbol);
                     } ).reduce( ( prev, cur ) => {
                         $.extend( cur, prev );
                         return cur;
@@ -135,10 +131,7 @@ var Tele = Base.extend( {
 
             return Object.keys( ret ).map( ( quickOrders, r ) => {
                 return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
-                    return {
-                        Name: cur,
-                        OrderName: ret[ quickOrders ][ 1 ][ i ]
-                    };
+                    return this.makeObj(['Name','OrderName'],[cur,ret[ quickOrders ][ 1 ][ i ]]);
                 } );
             } );
 
@@ -159,6 +152,7 @@ var Tele = Base.extend( {
             this.stageOrder( $.extend( param, {
                 Price: pri
             } ) );
+            return pri;
         } );
     },
     placeOrder: function ( order ) {
@@ -185,7 +179,8 @@ var Tele = Base.extend( {
     getPrice: function ( order, isSymbol ) {
         var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
-        return new Promise( ( resolve, reject ) => {
+        return this.getCache(symboled,()=>{
+            return new Promise( ( resolve, reject ) => {
             this.sendToDataBase( {
                 data: {
                     orderName: symboled
@@ -194,6 +189,7 @@ var Tele = Base.extend( {
                 resolve( o[ 0 ] );
             } );
         } );
+        },false,true);
     },
     stageOrder: function ( order ) {
         var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
