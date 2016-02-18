@@ -123,6 +123,19 @@ var Base = Ractive.extend( {
         }
         return obj[ prop ];
     },
+    makeObj:function(keys,values){
+        var ret={};
+        if(Array.isArray(keys)&&Array.isArray(values)){
+            keys.forEach((cur,i)=>{
+                ret[cur]=values[i];
+            });
+            
+        }
+        else{
+            ret[keys]=values;
+        }
+        return ret;
+    },
     errorMessage: function ( err ) {
         console.log( err );
         console.log( this );
