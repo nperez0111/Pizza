@@ -113,6 +113,16 @@ var Base = Ractive.extend( {
         }
         return a;
     },
+    pick: function ( obj, prop ) {
+        if ( Array.isArray( prop ) ) {
+            var ret = {};
+            prop.forEach( ( cur, i, arr ) => {
+                ret[ prop ] = obj[ prop ];
+            } );
+            return ret;
+        }
+        return obj[ prop ];
+    },
     debounce: ( t, r ) => {
         var e = null;
         return function () {
