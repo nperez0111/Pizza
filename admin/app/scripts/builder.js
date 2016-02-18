@@ -42,7 +42,7 @@ var Builder = Base.extend( {
         } );
         this.on( "staged", ( event ) => {
             this.queue = this.get( "toppingsSelected" ).slice( 0 );
-            this.queue.unshift( this.get( "types" )[ 0 ][ this.get( "currentChoices" )[ 0 ].indexOf( true ) ] );
+            this.queue.unshift( this.get( "curSize" ) );
             this.fire( "checkout", this.queue );
         } );
         this.inits.call( this );
