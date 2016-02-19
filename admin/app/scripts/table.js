@@ -206,30 +206,22 @@ var Table = Base.extend( {
             return Error( JSON.stringify( err ) );
         } ).then( ( objs ) => {
 
-            var arr = [],
-                arry = [],
-                key;
+            var arr = objs.map( ( cur ) => {
+                return Object.keys( cur ).map( ( key ) => {
+                    return ( cur[ key ] );
+                } );
+            } );
 
-            for ( var i in objs ) {
-
-                for ( key in objs[ i ] ) {
-                    arry.push( objs[ i ][ key ] );
-                }
-
-                arr.push( arry );
-                arry = [];
-
-            }
-            for ( key in objs[ 0 ] ) {
-                arry.push( key );
-            }
             this.set( "data", arr.map( ( row ) => {
                 return row.map( ( col ) => {
                     return col == "" ? " " : col;
                 } );
             } ) );
-            this.set( "rows", arry );
+
+            this.set( "rows", Object.keys( objs[ 0 ] ) );
+
             return arr;
+
         } ).then( ( data ) => {
             var tabler = this.get( "table" ),
                 val = this.getCache( "tablesInfo" + tabler, ( a ) => {

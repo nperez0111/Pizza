@@ -289,8 +289,8 @@ var Tele = Base.extend( {
             } );
             return buildy;
         }, ( err ) => {
-            that.alerter( "Sorry, Issues loading template file..." );
-            return Error( JSON.stringify( err ) );
+            that.alerter( "Sorry, Issues loading the builder..." );
+            throw ( JSON.stringify( err ) );
         } ).then( ( build ) => {
             that.builder = build;
             $( '#moduler' ).modal( 'show' );
