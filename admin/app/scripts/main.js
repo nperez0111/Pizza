@@ -50,28 +50,7 @@ $( document ).ready( ( a ) => {
             tele = new Tele( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
-                template: template,
-                // Here, we're passing in some initial data
-                data: {
-                    type: [ {
-                        name: "Pizza",
-                        quickOrders: [ "Large eperoni" ],
-                        buildYourOwn: true
-                    }, {
-                        name: "Wings",
-                        quickOrders: [ "Spicy buffalo" ],
-                        buildYourOwn: true
-                    }, {
-                        name: "Salad",
-                        quickOrders: [ "Regular", "Lechuga" ],
-                        buildYourOwn: true
-                    }, {
-                        name: "Drink",
-                        quickOrders: [ "Sprite", "Coke", "Diet Coke", "Materva", "Water" ],
-                        buildYourOwn: false,
-                        images: [ "sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg" ]
-                    } ]
-                }
+                template: template
             } );
         } );
     } ).trigger( "click" );

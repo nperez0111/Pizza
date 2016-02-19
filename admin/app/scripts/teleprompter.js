@@ -106,7 +106,40 @@ var Tele = Base.extend( {
     data: function () {
         return {
             cols: 2,
-            queue: []
+            queue: [],
+            type: [ {
+                name: "Pizza",
+                quickOrders: [ "Large eperoni" ],
+                buildYourOwn: true
+            }, {
+                name: "Wings",
+                quickOrders: [ "Spicy buffalo" ],
+                buildYourOwn: true
+            }, {
+                name: "Salad",
+                quickOrders: [ "Regular", "Lechuga" ],
+                buildYourOwn: true
+            }, {
+                name: "Drink",
+                quickOrders: [ {
+                    Name: "Sprite",
+                    OrderName: "SP"
+                }, {
+                    Name: "Coke",
+                    OrderName: "CK"
+                }, {
+                    Name: "Diet Coke",
+                    OrderName: "DCK"
+                }, {
+                    Name: "Materva",
+                    OrderName: "MT"
+                }, {
+                    Name: "Water",
+                    OrderName: "W"
+                } ],
+                buildYourOwn: false,
+                images: [ "sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg" ]
+            } ]
         };
         //TODO implement the default types with their settings
     },
@@ -153,6 +186,8 @@ var Tele = Base.extend( {
                 Price: pri
             } ) );
             return pri;
+        }, ( err ) => {
+            this.errorMessage( "'" + param.Name + "' was not added to the checkout." )
         } );
     },
     placeOrder: function ( order ) {
@@ -171,7 +206,8 @@ var Tele = Base.extend( {
             this.notify( message, "Order Fulfilled : >" );
             this.set( "queue", [] );
         }, ( message ) => {
-            this.notify( "Order Unsuccessful", "No Worries just retry to send the order, Check internet connection." );
+            this.notify( "Order Unsuccessful", "No Worries just retry to send the order, Maybe check internet connection." );
+            throw message;
         } );
 
 
