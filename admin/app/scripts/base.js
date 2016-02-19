@@ -86,7 +86,7 @@ var Base = Ractive.extend( {
             return this.cache[ prop ];
         }, ( err ) => {
             this.logger( err, true );
-            this.notify( "Error occured", err, 1000, "error" );
+            throw err;
         } );
 
     },
@@ -123,16 +123,15 @@ var Base = Ractive.extend( {
         }
         return obj[ prop ];
     },
-    makeObj:function(keys,values){
-        var ret={};
-        if(Array.isArray(keys)&&Array.isArray(values)){
-            keys.forEach((cur,i)=>{
-                ret[cur]=values[i];
-            });
-            
-        }
-        else{
-            ret[keys]=values;
+    makeObj: function ( keys, values ) {
+        var ret = {};
+        if ( Array.isArray( keys ) && Array.isArray( values ) ) {
+            keys.forEach( ( cur, i ) => {
+                ret[ cur ] = values[ i ];
+            } );
+
+        } else {
+            ret[ keys ] = values;
         }
         return ret;
     },
