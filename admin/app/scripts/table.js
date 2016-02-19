@@ -235,16 +235,13 @@ var Table = Base.extend( {
                             reject( err );
                             return ( err );
 
-                        } ).then( ( response ) => {
-                            this.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
-                            this.set( "description", response.description );
-                            resolve( JSON.stringify( response ) );
-                            return response;
-                        } );
+                        } ).then( resolve );
                     } );
+                }, true, true ).then( ( response ) => {
+                    this.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
+                    this.set( "description", response.description );
+                    return response;
                 } );
-            this.set( "editing.notAllowed", JSON.parse( val.primaryKeyArr || "[]" ) );
-            this.set( "description", val.description );
 
             return data;
         } );
