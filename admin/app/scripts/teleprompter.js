@@ -71,7 +71,7 @@ var Tele = Base.extend( {
                     type: "GET"
                 }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
                     resolve( JSON.stringify( ob.map( ( cur ) => {
-                        return this.makeObj(cur.keyKey,cur.val);
+                        return this.makeObj( cur.keyKey, cur.val );
                     } ).reduce( ( prev, cur, index, arr ) => {
                         $.extend( cur, prev );
                         return cur;
@@ -88,7 +88,7 @@ var Tele = Base.extend( {
                     type: "GET"
                 }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
                     resolve( JSON.stringify( ret.map( ( cur ) => {
-                        return this.makeObj(cur.Name,cur.Symbol);
+                        return this.makeObj( cur.Name, cur.Symbol );
                     } ).reduce( ( prev, cur ) => {
                         $.extend( cur, prev );
                         return cur;
@@ -131,7 +131,7 @@ var Tele = Base.extend( {
 
             return Object.keys( ret ).map( ( quickOrders, r ) => {
                 return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
-                    return this.makeObj(['Name','OrderName'],[cur,ret[ quickOrders ][ 1 ][ i ]]);
+                    return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
                 } );
             } );
 
@@ -179,17 +179,17 @@ var Tele = Base.extend( {
     getPrice: function ( order, isSymbol ) {
         var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
-        return this.getCache(symboled,()=>{
+        return this.getCache( symboled, () => {
             return new Promise( ( resolve, reject ) => {
-            this.sendToDataBase( {
-                data: {
-                    orderName: symboled
-                }
-            }, "getPrice" ).then( JSON.parse, reject ).then( ( o ) => {
-                resolve( o[ 0 ] );
+                this.sendToDataBase( {
+                    data: {
+                        orderName: symboled
+                    }
+                }, "getPrice" ).then( JSON.parse, reject ).then( ( o ) => {
+                    resolve( o[ 0 ] );
+                } );
             } );
-        } );
-        },false,true);
+        }, false, true );
     },
     stageOrder: function ( order ) {
         var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
@@ -230,7 +230,12 @@ var Tele = Base.extend( {
             name = name.split( this.cache.settings.dbdelimiter );
         }
         return name.map( ( cur ) => {
-            return this.cache.symbols[ cur ] || false;
+            var ingredients = this.cache.symbols[ cur ];
+            if ( ingredients ) {
+                return ingredients;
+            }
+            this.errorMessage( ingredients + ": Was not found" );
+            return false;
         } ).join( this.cache.settings.dbdelimiter );
     },
     builder: {},
