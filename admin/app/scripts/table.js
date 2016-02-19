@@ -71,7 +71,7 @@ var Table = Base.extend( {
         var that = this;
         return this.sendToDataBase( {
             type: "PUT",
-            data: this.makeObj( itemToAdd )
+            data: this.makeObj( this.get( 'rows' ), itemToAdd )
         }, this.get( "table" ) + '/' ).then( ( o ) => {
 
             $( obj.node ).html( '<span class="glyphicon glyphicon-floppy-saved"></span> Add' );
@@ -156,10 +156,10 @@ var Table = Base.extend( {
         if ( !flag ) {
             //send to database to update val
             var that = this;
-            that.logger( this.makeObj( arr ) );
+            that.logger( this.makeObj( this.get( 'rows' ), arr ) );
             this.sendToDataBase( {
                 type: "POST",
-                data: this.makeObj( arr )
+                data: this.makeObj( this.get( 'rows' ), arr )
             }, this.get( "table" ) + "/" + previous[ row ][ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( ( message ) => {
                 that.notify( "Changes Saved!", message );
                 return message;
@@ -172,14 +172,6 @@ var Table = Base.extend( {
         this.set( "editing.past", previous );
         return true;
         //find a way of tracking what has even been edited
-    },
-    makeObj: function ( arr ) {
-        var rows = this.get( 'rows' ),
-            obj = {};
-        for ( var i = 0, l = arr.length; i < l; i++ ) {
-            obj[ rows[ i ] ] = arr[ i ];
-        }
-        return obj;
     },
 
     moveTo: function ( from, to ) {
@@ -238,8 +230,10 @@ var Table = Base.extend( {
                         } ).then( resolve );
                     } );
                 }, true, true ).then( ( response ) => {
+
                     this.set( "editing.notAllowed", JSON.parse( response.primaryKeyArr ) );
                     this.set( "description", response.description );
+
                     return response;
                 } );
 
