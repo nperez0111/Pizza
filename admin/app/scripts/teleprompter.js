@@ -1,23 +1,6 @@
 var Tele = Base.extend( {
     oninit: function () {
         this.getQuickOrders();
-        this.observe( 'type', this.debounce( ( newVal ) => {
-            var abc = new Array( parseInt( newVal.length / 2 ) ).fill( 0 );
-            //Filled with bugs, what about changing the columns? checking multiple columns?
-
-            abc = abc.map( ( cur, index ) => {
-                return 2 * index + 1;
-            } );
-            abc.forEach( ( cur ) => {
-                var b = $( $( '.panel-body' )[ cur - 1 ] );
-                var c = $( $( '.panel-body' )[ cur ] );
-                if ( b.height() > c.height() ) {
-                    c.height( b.height() );
-                } else {
-                    b.height( c.height() );
-                }
-            } );
-        }, 300 ) );
         this.on( 'order', ( event ) => {
             this.order( event );
         } );
