@@ -1,1 +1,5 @@
-{{data}}
+{{#each data:i}}
+{{#data[i]:cur}}
+<li>{{cur}} : {{this}}</li>
+{{/data[i]}}
+{{/each}}
