@@ -229,63 +229,28 @@ var Tele = Base.extend( {
     rmvqueue: function ( obj ) {
         return this.get( "queue" ).splice( obj.index.i, 1 );
     },
-    sortOrder: function ( order ) {
-        //return order;
-        var arr = order.split( this.cache.settings.dbdelimiter ).sort( ( a, b ) => {
-
-            return this.cache.priorities.indexOf( a ) - this.cache.priorities.indexOf( b );
-
-        } );
-        this.logger( arr );
-        return arr.join( this.cache.settings.dbdelimiter );
-        //returns the order sorted correctly
-        //the sort should be accessed from the database within the init method
-        //this should access wherever that is stored and properly sort it correctly
-
-    },
-    mapNameToSymbols: function ( name ) {
-        //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
-        if ( typeof name === 'string' || name instanceof String ) {
-            name = name.split( this.cache.settings.dbdelimiter );
-        }
-        return name.map( ( cur ) => {
-            var ingredients = this.cache.symbols[ cur ];
-            if ( ingredients ) {
-                return ingredients;
-            }
-            this.errorMessage( ingredients + ": Was not found" );
-            return false;
-        } ).join( this.cache.settings.dbdelimiter );
-    },
     builder: {},
     build: function ( name ) {
         name = name.toLowerCase();
         var buildy, that = this;
-        return $.ajax( {
-            url: "views/builder.html",
-            dataType: "html"
-        } ).then( ( template ) => {
+        return viewBuilder( false, false, 'builder', ( template ) => {
             buildy = new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#modal',
                 template: template,
-                inits: function () {
-                    this.getLabels( name + "Headings" );
-                    this.on( "checkout", ( queue ) => {
-                        $( '#moduler' ).modal( 'hide' );
-                        that.getPrice( queue.join( that.cache.settings.dbdelimiter ) ).then( function ( p ) {
-                            that.stageOrder( {
-                                Name: queue.join( that.cache.settings.dbdelimiter ),
-                                OrderName: that.mapNameToSymbols( queue ),
-                                Price: p
-                            } );
-                        } );
-                    } );
-                },
-                // Here, we're passing in some initial data
                 data: {
-
+                    labels: name + "Headings"
                 }
+            } );
+            buildy.on( "checkout", ( queue ) => {
+                $( '#moduler' ).modal( 'hide' );
+                that.getPrice( queue.join( that.cache.settings.dbdelimiter ) ).then( function ( p ) {
+                    that.stageOrder( {
+                        Name: queue.join( that.cache.settings.dbdelimiter ),
+                        OrderName: that.mapNameToSymbols( queue ),
+                        Price: p
+                    } );
+                } );
             } );
             return buildy;
         }, ( err ) => {

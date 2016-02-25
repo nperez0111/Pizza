@@ -40,18 +40,51 @@ var Builder = Base.extend( {
                 return resp;
             } );
         } );
+        this.observe( "labels", ( newVal ) => {
+            if ( !newVal ) {
+                return;
+            }
+            this.getCache( newVal, ( a ) => {
+                return this.sendToDataBase( {
+                    type: "GET"
+                }, newVal + "/sortBy/Name" );
+            }, true ).then( ( obj ) => {
+                var titles = [],
+                    types = [
+                        []
+                    ];
+                obj.forEach( ( obj ) => {
+                    if ( titles.indexOf( obj.Title ) === -1 ) {
+                        if ( obj.Title === "Size" ) {
+                            titles.unshift( obj.Title );
+                            types.unshift( [ obj.Name ] );
+                        } else {
+                            titles.push( obj.Title );
+                            types[ titles.length - 1 ] = [ ( obj.Name ) ];
+                        }
+                    } else {
+                        types[ titles.indexOf( obj.Title ) ].push( obj.Name );
+                    }
+                } );
+                this.set( "headings", titles );
+                this.set( "currentChoices", types.map( ( obj ) => {
+                    return obj.slice( 0 ).fill( false );
+                } ) );
+                this.set( "types", types );
+
+            }, ( err ) => {
+                this.notify( "Error occured", err, 5000, "error" );
+            } );
+        } );
         this.on( "staged", ( event ) => {
             this.queue = this.get( "toppingsSelected" ).slice( 0 );
             this.queue.unshift( this.get( "curSize" ) );
             this.fire( "checkout", this.queue );
         } );
-        this.inits.call( this );
-    },
-    inits: function () {
-        this.getLabels( "pizzaHeadings" );
     },
     data: function () {
         return {
+            labels: "pizzaHeadings",
             headings: [],
             types: [
                 []
@@ -76,39 +109,5 @@ var Builder = Base.extend( {
             possibleSizes = this.get( "sizes" );
         this.animate( "svg.radius", currentSize > -1 ? possibleSizes[ currentSize ] : 0 );
         return currentSize;
-    },
-    getLabels: function ( urlEx ) {
-        var that = this;
-        this.getCache( urlEx, function () {
-            return that.sendToDataBase( {
-                type: "GET"
-            }, urlEx + "/sortBy/Name" );
-        }, true ).then( ( obj ) => {
-            var titles = [],
-                types = [
-                    []
-                ];
-            obj.forEach( ( obj ) => {
-                if ( titles.indexOf( obj.Title ) === -1 ) {
-                    if ( obj.Title === "Size" ) {
-                        titles.unshift( obj.Title );
-                        types.unshift( [ obj.Name ] );
-                    } else {
-                        titles.push( obj.Title );
-                        types[ titles.length - 1 ] = [ ( obj.Name ) ];
-                    }
-                } else {
-                    types[ titles.indexOf( obj.Title ) ].push( obj.Name );
-                }
-            } );
-            that.set( "headings", titles );
-            that.set( "currentChoices", types.map( ( obj ) => {
-                return obj.slice( 0 ).fill( false );
-            } ) );
-            that.set( "types", types );
-
-        }, ( err ) => {
-            that.notify( "Error occured", err, 5000, "error" );
-        } );
     }
 } );
