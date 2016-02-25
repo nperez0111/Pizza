@@ -90,6 +90,34 @@ var Base = Ractive.extend( {
         } );
 
     },
+    sortOrder: function ( order ) {
+        //return order;
+        var arr = order.split( this.cache.settings.dbdelimiter ).sort( ( a, b ) => {
+
+            return this.cache.priorities.indexOf( a ) - this.cache.priorities.indexOf( b );
+
+        } );
+        this.logger( arr );
+        return arr.join( this.cache.settings.dbdelimiter );
+        //returns the order sorted correctly
+        //the sort should be accessed from the database within the init method
+        //this should access wherever that is stored and properly sort it correctly
+
+    },
+    mapNameToSymbols: function ( name ) {
+        //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
+        if ( typeof name === 'string' || name instanceof String ) {
+            name = name.split( this.cache.settings.dbdelimiter );
+        }
+        return name.map( ( cur ) => {
+            var ingredients = this.cache.symbols[ cur ];
+            if ( ingredients ) {
+                return ingredients;
+            }
+            this.errorMessage( ingredients + ": Was not found" );
+            return false;
+        } ).join( this.cache.settings.dbdelimiter );
+    },
     onClose: function () {
         return this;
     },
@@ -139,6 +167,7 @@ var Base = Ractive.extend( {
         console.log( err );
         console.log( this );
         this.notify( "Error occured", err, 5000, "error" );
+        throw err;
         return err;
     },
     debounce: ( t, r ) => {
