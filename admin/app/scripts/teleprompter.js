@@ -8,10 +8,21 @@ var Tele = Base.extend( {
             this.rmvqueue( event );
         } );
         this.on( 'build', ( event ) => {
-            this.build( this.get( "type" )[ event.index.cur ].name );
+            //this.build( this.get( "type" )[ event.index.cur ].name );
+            $( '#moduler' ).modal( 'show' );
         } );
         this.on( 'show', ( event ) => {
             $( $( event.node ).data( 'target' ) ).modal( "show" );
+        } );
+        this.on( "Builder.checkout", ( queue ) => {
+            $( '#moduler' ).modal( 'hide' );
+            this.getPrice( queue.join( this.cache.settings.dbdelimiter ) ).then( function ( p ) {
+                this.stageOrder( {
+                    Name: queue.join( this.cache.settings.dbdelimiter ),
+                    OrderName: this.mapNameToSymbols( queue ),
+                    Price: p
+                } );
+            } );
         } );
         this.on( 'checkout', ( event ) => {
             if ( this.get( "queue" ).length === 0 ) {
@@ -228,38 +239,5 @@ var Tele = Base.extend( {
     },
     rmvqueue: function ( obj ) {
         return this.get( "queue" ).splice( obj.index.i, 1 );
-    },
-    builder: {},
-    build: function ( name ) {
-        name = name.toLowerCase();
-        var buildy, that = this;
-        return viewBuilder( false, false, 'builder', ( template ) => {
-            buildy = new Builder( {
-                // The `el` option can be a node, an ID, or a CSS selector.
-                el: '#modal',
-                template: template,
-                data: {
-                    labels: name + "Headings"
-                }
-            } );
-            buildy.on( "checkout", ( queue ) => {
-                $( '#moduler' ).modal( 'hide' );
-                that.getPrice( queue.join( that.cache.settings.dbdelimiter ) ).then( function ( p ) {
-                    that.stageOrder( {
-                        Name: queue.join( that.cache.settings.dbdelimiter ),
-                        OrderName: that.mapNameToSymbols( queue ),
-                        Price: p
-                    } );
-                } );
-            } );
-            return buildy;
-        }, ( err ) => {
-            that.alerter( "Sorry, Issues loading the builder..." );
-            throw ( JSON.stringify( err ) );
-        } ).then( ( build ) => {
-            that.builder = build;
-            $( '#moduler' ).modal( 'show' );
-            return build;
-        } );
     }
 } );

@@ -7,7 +7,7 @@ function viewBuilder( evente, el, url, callback ) {
         evente.preventDefault();
     }
 
-    if ( $( el ).parent().hasClass( "active" ) ) {
+    if ( el && $( el ).parent().hasClass( "active" ) ) {
         return Promise.reject( "Same Element clicked twice" );
     }
 
@@ -47,11 +47,21 @@ function viewBuilder( evente, el, url, callback ) {
 $( document ).ready( ( a ) => {
     $( '#tele' ).click( ( e ) => {
         viewBuilder( e, "#tele", "teleprompter", ( template ) => {
-            tele = new Tele( {
-                // The `el` option can be a node, an ID, or a CSS selector.
-                el: '#container',
-                template: template
+            viewBuilder( false, false, "builder", ( componentTemp ) => {
+                tele = new Tele( {
+                    el: '#container',
+                    template: template,
+                    components: {
+                        Builder: function () {
+                            return Builder.extend( {
+                                template: componentTemp
+                            } );
+                        }
+                    }
+                } );
             } );
+
+
         } );
     } ).trigger( "click" );
     $( '#home' ).click( function ( e ) {
