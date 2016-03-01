@@ -52,9 +52,12 @@ $( document ).ready( ( a ) => {
                     el: '#container',
                     template: template,
                     components: {
+                        //http://docs.ractivejs.org/latest/components#content
                         Builder: function () {
+                            var that = this;
                             return Builder.extend( {
-                                template: componentTemp
+                                template: componentTemp,
+                                cache: that.cache
                             } );
                         }
                     }
@@ -84,7 +87,7 @@ $( document ).ready( ( a ) => {
                         [ "To", "The", "Internet" ]
                     ],
                     table: "users",
-                    tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients" ]
+                    tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                 }
             } );
         } ).then( ( resp ) => {
