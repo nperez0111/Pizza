@@ -49,14 +49,12 @@ var Tele = Base.extend( {
                         ],
                         select: [ "symbols.Symbol", "symbols.Name", "ingredients.Priority" ]
                     }
-                }, "join" ).then( ( a ) => {
-                    resolve( JSON.stringify( JSON.parse( a ).map( ( cur ) => {
+                }, "join" ).then( JSON.parse, reject ).then( ( resp ) => {
+                    return resp.map( ( cur ) => {
                         cur.Priority = parseInt( cur.Priority, 10 );
                         return cur;
-                    } ) ) );
-                }, ( a ) => {
-                    reject( a );
-                } );
+                    } );
+                } ).then( JSON.stringify ).then( resolve );
             } );
         } );
         this.getCache( "settings", function () {
@@ -64,13 +62,13 @@ var Tele = Base.extend( {
                 that.sendToDataBase( {
                     type: "GET"
                 }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
-                    resolve( JSON.stringify( ob.map( ( cur ) => {
+                    return ob.map( ( cur ) => {
                         return this.makeObj( cur.keyKey, cur.val );
                     } ).reduce( ( prev, cur, index, arr ) => {
                         $.extend( cur, prev );
                         return cur;
-                    } ) ) );
-                } );
+                    } );
+                } ).then( JSON.stringify ).then( resolve );
             } );
         }, true ).then( ( a ) => {
             that.set( "cols", parseInt( a.columns, 10 ) );
