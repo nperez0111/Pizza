@@ -79,20 +79,29 @@ var Tele = Base.extend( {
                 that.sendToDataBase( {
                     type: "GET"
                 }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
-                    resolve( JSON.stringify( ret.map( ( cur ) => {
+                    return ret.map( ( cur ) => {
                         return this.makeObj( cur.Name, cur.Symbol );
                     } ).reduce( ( prev, cur ) => {
                         $.extend( cur, prev );
                         return cur;
-                    } ) ) );
-                } );
+                    } );
+                } ).then( JSON.stringify ).then( resolve );
             } );
         } );
-        /*this.sendToDataBase( {
-            type: "GET"
-        }, "unavailableItems" ).then( ( resp ) => {
-            //do something if these items are not available
-        } );*/
+        this.getCache( "unavailableItems", function () {
+            return new Promise( ( resolve, reject ) => {
+                this.sendToDataBase( {
+                    type: "GET"
+                }, "unavailableItems" ).then( JSON.parse, reject ).then( ( resp ) => {
+                    //do something if these items are not available
+                    resp.forEach( ( cur ) => {
+                        this.logger( cur );
+                    } );
+                    return resp;
+                } ).then( JSON.stringify ).then( resolve );
+            } );
+        } );
+
     },
     keyBindings: [ 'shift+a' ],
     data: function () {

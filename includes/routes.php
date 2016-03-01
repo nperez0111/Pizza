@@ -92,6 +92,12 @@ $possibleRoutes=[
         'methods'=>[1,0,0,0],
         'props'=>['title','svg','size'],
         'identifier'=>'ID'
+    ],
+    'unavailableItems'=>[
+        'identifiers'=>['ingredient'],
+        'methods'=>[1,0,0,0],
+        'props'=>['ingredient'],
+        'identifier'=>'ingredient'
     ]
 ];
 //methods refer to [get,post,put,delete]
