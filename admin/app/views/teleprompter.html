@@ -38,9 +38,9 @@
 
                                     <button type="button" class="btn btn-default btn-block marg-top" on-click="order">
 
-                                        {{#if type[cur].images}}
+                                        {{#if type[cur].quickOrders[q].image}}
 
-                                            <img src="images/{{type[cur].images[q]}}" title="{{type[cur].quickOrders[q].Name}}" alt="{{type[cur].quickOrders[q].Name}} Logo, Click to order">
+                                            <img src="images/{{type[cur].quickOrders[q].image}}" title="{{type[cur].quickOrders[q].Name}}" alt="{{type[cur].quickOrders[q].Name}} Logo, Click to order">
 
                                         {{else}}
 

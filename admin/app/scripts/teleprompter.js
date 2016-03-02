@@ -124,22 +124,26 @@ var Tele = Base.extend( {
                 name: "Drink",
                 quickOrders: [ {
                     Name: "Sprite",
-                    OrderName: "SP"
+                    OrderName: "SP",
+                    image:"sprite.png"
                 }, {
                     Name: "Coke",
-                    OrderName: "CK"
+                    OrderName: "CK",
+                    image:"coke.jpg"
                 }, {
                     Name: "Diet Coke",
-                    OrderName: "DCK"
+                    OrderName: "DCK",
+                    image:"diet_coke.jpg"
                 }, {
                     Name: "Materva",
-                    OrderName: "MT"
+                    OrderName: "MT",
+                    image:"materva.png"
                 }, {
                     Name: "Water",
-                    OrderName: "W"
+                    OrderName: "W",
+                    image:"water.jpg"
                 } ],
-                buildYourOwn: false,
-                images: [ "sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg" ]
+                buildYourOwn: false
             } ]
         };
         //TODO implement the default types with their settings
