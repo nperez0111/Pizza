@@ -39,9 +39,9 @@ $possibleRoutes=[
         'identifier'=>'OrderName'
     ],
     'quickOrdersDrink'=>[
-        'identifiers'=>['Name','OrderName'],
+        'identifiers'=>['Name','OrderName','image'],
         'methods'=>[1,0,0,0],
-        'props'=>['Name','OrderName'],
+        'props'=>['Name','OrderName','image'],
         'identifier'=>'OrderName'
     ],
     'symbols'=>[
@@ -98,6 +98,12 @@ $possibleRoutes=[
         'methods'=>[1,0,0,0],
         'props'=>['ingredient'],
         'identifier'=>'ingredient'
+    ],
+    'teleSettings'=>[
+        'identifiers'=>['suffix','build'],
+        'methods'=>[1,0,0,0],
+        'props'=>['suffix','build'],
+        'identifier'=>'suffix'
     ]
 ];
 //methods refer to [get,post,put,delete]

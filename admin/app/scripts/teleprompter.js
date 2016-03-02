@@ -1,6 +1,5 @@
 var Tele = Base.extend( {
     oninit: function () {
-        this.getQuickOrders();
         this.on( 'order', ( event ) => {
             this.order( event );
         } );
@@ -35,6 +34,22 @@ var Tele = Base.extend( {
         var that = this;
         Mousetrap.bind( this.keyBindings[ 0 ], function () {
             that.placeOrder( that.get( "queue" ) );
+        } );
+        this.getCache( "teleSettings", function () {
+            return that.sendToDataBase( {
+                type: "GET"
+            }, "teleSettings/sortBy/build/DESC" );
+        }, true ).then( ( resp ) => {
+            resp.forEach( ( cur, i ) => {
+                this.set( "type." + i, {
+                    name: cur.suffix,
+                    quickOrders: [],
+                    buildYourOwn: parseInt( cur.build, 10 ) == 1 ? true : false
+                } );
+            } );
+        } ).then( ( resp ) => {
+            this.getQuickOrders();
+            return resp;
         } );
 
         this.getCache( "priorities", function () {
@@ -88,6 +103,7 @@ var Tele = Base.extend( {
                 } ).then( JSON.stringify ).then( resolve );
             } );
         } );
+
         this.getCache( "unavailableItems", function () {
             return new Promise( ( resolve, reject ) => {
                 this.sendToDataBase( {
@@ -108,57 +124,30 @@ var Tele = Base.extend( {
         return {
             cols: 2,
             queue: [],
-            type: [ {
-                name: "Pizza",
-                quickOrders: [ "Large eperoni" ],
-                buildYourOwn: true
-            }, {
-                name: "Wings",
-                quickOrders: [ "Spicy buffalo" ],
-                buildYourOwn: true
-            }, {
-                name: "Salad",
-                quickOrders: [ "Regular", "Lechuga" ],
-                buildYourOwn: true
-            }, {
-                name: "Drink",
-                quickOrders: [ {
-                    Name: "Sprite",
-                    OrderName: "SP",
-                    image:"sprite.png"
-                }, {
-                    Name: "Coke",
-                    OrderName: "CK",
-                    image:"coke.jpg"
-                }, {
-                    Name: "Diet Coke",
-                    OrderName: "DCK",
-                    image:"diet_coke.jpg"
-                }, {
-                    Name: "Materva",
-                    OrderName: "MT",
-                    image:"materva.png"
-                }, {
-                    Name: "Water",
-                    OrderName: "W",
-                    image:"water.jpg"
-                } ],
-                buildYourOwn: false
-            } ]
+            type: []
         };
         //TODO implement the default types with their settings
     },
     types: [ "Pizza", "Wings", "Salad", "Drink" ],
+    buildYourOwn: [ true, true, true, false ],
     getQuickOrders: function () {
         var obj = {},
             that = this,
-            arr = this.types.filter( ( a ) => {
-                return a.toLowerCase() !== 'drink';
+            b = this.buildYourOwn, //this.get( "buildYourOwn" ),
+            arr = this.types.filter( ( a, i ) => {
+                return b[ i ];
             } );
         arr.forEach( ( title ) => {
             obj[ "quickOrders" + title ] = [ "Name", "OrderName" ];
         } );
-
+        this.getCache( "quickOrdersDrink", function () {
+            return that.sendToDataBase( {
+                type: "GET"
+            }, "quickOrdersDrink" );
+        }, true ).then( ( resp ) => {
+            this.set( "type.3.quickOrders", resp );
+            return resp;
+        } )
         this.getCache( "types", function () {
             return that.sendToDataBase( {
                     type: "GET",
