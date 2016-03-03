@@ -102,20 +102,19 @@ var Tele = Base.extend( {
                     } );
                 } ).then( JSON.stringify ).then( resolve );
             } );
-        } );
-
-        this.getCache( "unavailableItems", function () {
-            return new Promise( ( resolve, reject ) => {
-                this.sendToDataBase( {
-                    type: "GET"
-                }, "unavailableItems" ).then( JSON.parse, reject ).then( ( resp ) => {
-                    //do something if these items are not available
-                    resp.forEach( ( cur ) => {
-                        this.logger( cur );
-                    } );
-                    return resp;
-                } ).then( JSON.stringify ).then( resolve );
-            } );
+        }, true ).then( ( symbols ) => {
+            this.getCache( "unavailableItems", function () {
+                return new Promise( ( resolve, reject ) => {
+                    this.sendToDataBase( {
+                        type: "GET"
+                    }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
+                } );
+            }, true ).then( ( resp ) => {
+                //do something if these items are not available
+                return resp.map( ( cur ) => {
+                    return this.makeObj( [ "symbol", "name" ], [ symbols[ cur.ingredient ], cur.ingredient ] );
+                } );
+            } ).then( this.logger );
         } );
 
     },
