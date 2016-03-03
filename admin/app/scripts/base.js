@@ -104,11 +104,13 @@ var Base = Ractive.extend( {
         //this should access wherever that is stored and properly sort it correctly
 
     },
-    mapNameToSymbols: function ( name, reverse ) {
+    toArray: function ( possibleStr ) {
         //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
-        if ( typeof name === 'string' || name instanceof String ) {
-            name = name.split( this.cache.settings.dbdelimiter );
-        }
+        return ( typeof possibleStr === 'string' || possibleStr instanceof String ) ? possibleStr.split( this.cache.settings.dbdelimiter ) : possibleStr;
+
+    },
+    mapNameToSymbols: function ( name, reverse ) {
+        name = this.toArray( name );
         return name.map( ( cur ) => {
             var ingredients = this.cache.symbols[ cur ];
             if ( reverse ) {

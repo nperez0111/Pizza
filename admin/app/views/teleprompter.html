@@ -36,15 +36,15 @@
 
                                 <div class="col-lg-{{cols*2}} col-md-{{cols*2}} col-sm-{{12/cols}} col-xs-6">
 
-                                    <button type="button" class="btn btn-default btn-block marg-top" on-click="order">
+                                    <button type="button" class="btn btn-default btn-block marg-top {{this.isUnavailable?'disabled':'on-click="order"'}}" >
 
-                                        {{#if type[cur].quickOrders[q].image}}
+                                        {{#if this.image}}
 
-                                            <img src="images/{{type[cur].quickOrders[q].image}}" title="{{type[cur].quickOrders[q].Name}}" alt="{{type[cur].quickOrders[q].Name}} Logo, Click to order">
+                                            <img src="images/{{this.image}}" title="{{this.Name}}" alt="{{this.Name}} Logo, Click to order">
 
                                         {{else}}
 
-                                            {{type[cur].quickOrders[q].Name}}
+                                            {{this.Name}}
 
                                         {{/if}}
 

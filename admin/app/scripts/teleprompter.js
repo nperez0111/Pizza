@@ -49,8 +49,60 @@ var Tele = Base.extend( {
                 } );
             } );
         } ).then( ( resp ) => {
-            this.getQuickOrders();
-            return resp;
+            return this.getQuickOrders();
+        } ).then( ( quickOrders ) => {
+            return this.getCache( "symbols", function () {
+                return new Promise( ( resolve, reject ) => {
+                    that.sendToDataBase( {
+                        type: "GET"
+                    }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
+                        return ret.map( ( cur ) => {
+                            return this.makeObj( cur.Name, cur.Symbol );
+                        } ).reduce( ( prev, cur ) => {
+                            $.extend( cur, prev );
+                            return cur;
+                        } );
+                    } ).then( JSON.stringify ).then( resolve );
+                } );
+            }, true ).then( ( symbols ) => {
+                this.getCache( "unavailableItems", function () {
+                    return new Promise( ( resolve, reject ) => {
+                        this.sendToDataBase( {
+                            type: "GET"
+                        }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
+                    } );
+                }, true ).then( ( resp ) => {
+                    return resp.map( ( cur ) => {
+                        return symbols[ cur.ingredient ];
+                    } );
+                } ).then( this.logger ).then( ( unavailableItems ) => {
+                    this.set( "unavailableItems", unavailableItems );
+                    return unavailableItems;
+                } ).then( ( unavailableItems ) => {
+                    var type = this.get( "type" ),
+                        haveInCommon = ( arr, arry ) => {
+                            var bool = false;
+                            arry.forEach( inavail => {
+                                arr.forEach( cur => {
+                                    if ( inavail == cur ) {
+                                        bool = true;
+                                    }
+                                } );
+                            } );
+                            return bool;
+                        };
+                    type.forEach( ( cur, r ) => {
+                        cur.quickOrders.forEach( ( item, c ) => {
+                            if ( haveInCommon( unavailableItems, this.toArray( item.OrderName ) ) ) {
+                                this.set( "type." + r + ".quickOrders." + c, $.extend( item, {
+                                    isUnavailable: true
+                                } ) );
+                            }
+
+                        } );
+                    } );
+                } );
+            } );
         } );
 
         this.getCache( "priorities", function () {
@@ -90,33 +142,7 @@ var Tele = Base.extend( {
             that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
         } );
-        this.getCache( "symbols", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET"
-                }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
-                    return ret.map( ( cur ) => {
-                        return this.makeObj( cur.Name, cur.Symbol );
-                    } ).reduce( ( prev, cur ) => {
-                        $.extend( cur, prev );
-                        return cur;
-                    } );
-                } ).then( JSON.stringify ).then( resolve );
-            } );
-        }, true ).then( ( symbols ) => {
-            this.getCache( "unavailableItems", function () {
-                return new Promise( ( resolve, reject ) => {
-                    this.sendToDataBase( {
-                        type: "GET"
-                    }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
-                } );
-            }, true ).then( ( resp ) => {
-                //do something if these items are not available
-                return resp.map( ( cur ) => {
-                    return this.makeObj( [ "symbol", "name" ], [ symbols[ cur.ingredient ], cur.ingredient ] );
-                } );
-            } ).then( this.logger );
-        } );
+
 
     },
     keyBindings: [ 'shift+a' ],
@@ -125,9 +151,15 @@ var Tele = Base.extend( {
             cols: 2,
             queue: [],
             type: [],
+            unavailableItems: [],
             cur: "pizza"
         };
         //TODO implement the default types with their settings
+    },
+    unavailable: function ( a ) {
+        console.log( this );
+        this.logger( a );
+        return true;
     },
     types: [ "Pizza", "Wings", "Salad", "Drink" ],
     buildYourOwn: [ true, true, true, false ],
@@ -141,35 +173,37 @@ var Tele = Base.extend( {
         arr.forEach( ( title ) => {
             obj[ "quickOrders" + title ] = [ "Name", "OrderName" ];
         } );
-        this.getCache( "quickOrdersDrink", function () {
-            return that.sendToDataBase( {
-                type: "GET"
-            }, "quickOrdersDrink" );
-        }, true ).then( ( resp ) => {
-            this.set( "type.3.quickOrders", resp );
-            return resp;
-        } )
-        this.getCache( "types", function () {
-            return that.sendToDataBase( {
-                    type: "GET",
-                    data: obj,
-                },
-                "columns" );
-        }, true ).then( ( ret ) => {
+        return new Promise( ( resolve, reject ) => {
+            this.getCache( "quickOrdersDrink", function () {
+                return that.sendToDataBase( {
+                    type: "GET"
+                }, "quickOrdersDrink" );
+            }, true ).then( ( resp ) => {
+                this.set( "type.3.quickOrders", resp );
+                return resp;
+            } );
+            this.getCache( "types", function () {
+                return that.sendToDataBase( {
+                        type: "GET",
+                        data: obj,
+                    },
+                    "columns" );
+            }, true ).then( ( ret ) => {
 
-            return Object.keys( ret ).map( ( quickOrders, r ) => {
-                return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
-                    return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
+                return Object.keys( ret ).map( ( quickOrders, r ) => {
+                    return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
+                        return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
+                    } );
                 } );
-            } );
 
-        } ).then( ( resp ) => {
+            }, reject ).then( ( resp ) => {
 
-            resp.forEach( ( cur, i ) => {
-                this.set( "type." + i + ".quickOrders", cur );
-            } );
+                resp.forEach( ( cur, i ) => {
+                    this.set( "type." + i + ".quickOrders", cur );
+                } );
 
-            return resp;
+                return resp;
+            } ).then( resolve );
         } );
     },
     order: function ( obj ) {
