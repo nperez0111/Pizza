@@ -68,28 +68,41 @@ $( document ).ready( ( a ) => {
         } );
     } ).trigger( "click" );
     $( '#home' ).click( function ( e ) {
-        viewBuilder( e, "#home", "table", ( template ) => {
-            table = new Table( {
-                // The `el` option can be a node, an ID, or a CSS selector.
-                el: '#container',
-                template: template,
-                // Here, we're passing in some initial data
-                data: {
-                    rows: [ 'Some', 'Error', 'Occurred' ],
-                    add: [],
-                    editing: {
-                        cur: -1,
-                        past: {},
-                        notAllowed: [ false, false, false ]
+        viewBuilder( e, "#home", "tablePage", ( template ) => {
+            viewBuilder( false, false, "table", ( componentTemp ) => {
+                table = new Table( {
+                    // The `el` option can be a node, an ID, or a CSS selector.
+                    el: '#container',
+                    template: template,
+                    data: {
+                        table: "users",
+                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     },
-                    data: [
-                        [ "Check", "If", "Connected" ],
-                        [ "To", "The", "Internet" ]
-                    ],
-                    table: "users",
-                    tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                }
+                    components: {
+                        Table: function () {
+                            var that = this;
+                            return Table.extend( {
+                                template: componentTemp,
+                                cache: that.cache,
+                                data: {
+                                    rows: [ 'Some', 'Error', 'Occurred' ],
+                                    add: [],
+                                    editing: {
+                                        cur: -1,
+                                        past: {},
+                                        notAllowed: [ false, false, false ]
+                                    },
+                                    data: [
+                                        [ "Check", "If", "Connected" ],
+                                        [ "To", "The", "Internet" ]
+                                    ]
+                                }
+                            } )
+                        }
+                    }
+                } );
             } );
+
         } ).then( ( resp ) => {
             var func = function () {
                 table.switchTable( {
