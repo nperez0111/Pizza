@@ -8,6 +8,7 @@ var Tele = Base.extend( {
         } );
         this.on( 'build', ( event ) => {
             //this.build( this.get( "type" )[ event.index.cur ].name );
+            this.set( "cur", this.get( "type" )[ event.index.cur ].name.toLowerCase() );
             $( '#moduler' ).modal( 'show' );
         } );
         this.on( 'show', ( event ) => {
@@ -123,7 +124,8 @@ var Tele = Base.extend( {
         return {
             cols: 2,
             queue: [],
-            type: []
+            type: [],
+            cur: "pizza"
         };
         //TODO implement the default types with their settings
     },

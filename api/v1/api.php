@@ -661,6 +661,9 @@ function isMethodAllowed( $table, $accessor ) {
 }
 function isIdentifier( $table, $test ) {
     global $routes;
+    if(isset($routes[$table])==false){
+        return false;
+    }
     return array_search( $test, $routes[$table]['identifiers'] )!==false;
 }
 function sql_GET_SORT( $req, $bool ) {
