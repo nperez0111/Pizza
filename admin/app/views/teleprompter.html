@@ -36,7 +36,7 @@
 
                                 <div class="col-lg-{{cols*2}} col-md-{{cols*2}} col-sm-{{12/cols}} col-xs-6">
 
-                                    <button type="button" class="btn btn-default btn-block marg-top {{this.isUnavailable?'disabled':'on-click="order"'}}" >
+                                    <button type="button" class="btn btn-default btn-block marg-top {{this.isUnavailable?'disabled':''}}" on-click="{{this.isUnavailable?'':'order'}}">
 
                                         {{#if this.image}}
 
