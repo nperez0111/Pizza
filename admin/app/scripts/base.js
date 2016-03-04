@@ -66,6 +66,15 @@ var Base = Ractive.extend( {
             } );
         } );
     },
+    parseTime: function ( a ) {
+        return a.split( " " )[ 0 ].split( "-" ).map(
+            function ( q ) {
+                return ( parseInt( q, 10 ) );
+            } ).concat( a.split( " " )[ 1 ].split( ":" ).map(
+            function ( q ) {
+                return ( parseInt( q, 10 ) );
+            } ) );
+    },
     cache: {},
     getCache: function ( prop, func, isPromise, isNotJSON ) {
         if ( prop in this.cache || ( localStorage.getItem( prop ) ) ) {
