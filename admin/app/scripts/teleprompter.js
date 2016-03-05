@@ -71,15 +71,7 @@ var Tele = Base.extend( {
                             } ),
                         },
                         "columns" );
-                }, true ).then( ( ret ) => {
-
-                    return Object.keys( ret ).map( ( quickOrders, r ) => {
-                        return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
-                            return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
-                        } );
-                    } );
-
-                }, reject ).then( ( resp ) => {
+                }, true ).then( ( ret ) => Object.keys( ret ).map( ( quickOrders, r ) => ret[ quickOrders ][ 0 ].map( ( cur, i ) => this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] ) ) ), reject ).then( ( resp ) => {
 
                     resp.forEach( ( cur, i ) => {
                         this.set( "type." + i + ".quickOrders", cur );
@@ -93,14 +85,7 @@ var Tele = Base.extend( {
                 return new Promise( ( resolve, reject ) => {
                     that.sendToDataBase( {
                         type: "GET"
-                    }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => {
-                        return ret.map( ( cur ) => {
-                            return this.makeObj( cur.Name, cur.Symbol );
-                        } ).reduce( ( prev, cur ) => {
-                            $.extend( cur, prev );
-                            return cur;
-                        } );
-                    } ).then( JSON.stringify ).then( resolve );
+                    }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
                 } );
             }, true ).then( ( symbols ) => {
                 this.getCache( "unavailableItems", function () {
@@ -109,11 +94,7 @@ var Tele = Base.extend( {
                             type: "GET"
                         }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
                     } );
-                }, true ).then( ( resp ) => {
-                    return resp.map( ( cur ) => {
-                        return symbols[ cur.ingredient ];
-                    } );
-                } ).then( this.logger ).then( ( unavailableItems ) => {
+                }, true ).then( ( resp ) => resp.map( ( cur ) => symbols[ cur.ingredient ] ) ).then( ( unavailableItems ) => {
                     this.set( "unavailableItems", unavailableItems );
                     return unavailableItems;
                 } ).then( ( unavailableItems ) => {
