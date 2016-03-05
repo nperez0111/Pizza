@@ -48,8 +48,49 @@ var Tele = Base.extend( {
                     buildYourOwn: parseInt( cur.build, 10 ) == 1 ? true : false
                 } );
             } );
+            return resp.map( cur => cur.suffix );
         } ).then( ( resp ) => {
-            return this.getQuickOrders();
+            this.set( "titles", resp );
+            var that = this;
+            return new Promise( ( resolve, reject ) => {
+                this.getCache( "quickOrdersDrink", function () {
+                    return that.sendToDataBase( {
+                        type: "GET"
+                    }, "quickOrdersDrink" );
+                }, true ).then( ( resp ) => {
+                    this.set( "type.3.quickOrders", resp );
+                    return resp;
+                } );
+                this.getCache( "types", function () {
+                    return that.sendToDataBase( {
+                            type: "GET",
+                            data: resp.filter( ( a, i ) => {
+                                return this.buildYourOwn[ i ];
+                            } ).reduce( ( a, b, i ) => {
+                                var c = d => {
+                                    return this.makeObj( "quickOrders" + d, [ "Name", "OrderName" ] )
+                                };
+                                return $.extend( i == 1 ? c( a ) : a, c( b ) );
+                            } ),
+                        },
+                        "columns" );
+                }, true ).then( ( ret ) => {
+
+                    return Object.keys( ret ).map( ( quickOrders, r ) => {
+                        return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
+                            return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
+                        } );
+                    } );
+
+                }, reject ).then( ( resp ) => {
+
+                    resp.forEach( ( cur, i ) => {
+                        this.set( "type." + i + ".quickOrders", cur );
+                    } );
+
+                    return resp;
+                } ).then( resolve );
+            } );
         } ).then( ( quickOrders ) => {
             return this.getCache( "symbols", function () {
                 return new Promise( ( resolve, reject ) => {
@@ -161,54 +202,10 @@ var Tele = Base.extend( {
         this.logger( a );
         return true;
     },
-    types: [ "Pizza", "Wings", "Salad", "Drink" ],
     buildYourOwn: [ true, true, true, false ],
-    getQuickOrders: function () {
-        var obj = {},
-            that = this,
-            b = this.buildYourOwn, //this.get( "buildYourOwn" ),
-            arr = this.types.filter( ( a, i ) => {
-                return b[ i ];
-            } );
-        arr.forEach( ( title ) => {
-            obj[ "quickOrders" + title ] = [ "Name", "OrderName" ];
-        } );
-        return new Promise( ( resolve, reject ) => {
-            this.getCache( "quickOrdersDrink", function () {
-                return that.sendToDataBase( {
-                    type: "GET"
-                }, "quickOrdersDrink" );
-            }, true ).then( ( resp ) => {
-                this.set( "type.3.quickOrders", resp );
-                return resp;
-            } );
-            this.getCache( "types", function () {
-                return that.sendToDataBase( {
-                        type: "GET",
-                        data: obj,
-                    },
-                    "columns" );
-            }, true ).then( ( ret ) => {
-
-                return Object.keys( ret ).map( ( quickOrders, r ) => {
-                    return ret[ quickOrders ][ 0 ].map( ( cur, i ) => {
-                        return this.makeObj( [ 'Name', 'OrderName' ], [ cur, ret[ quickOrders ][ 1 ][ i ] ] );
-                    } );
-                } );
-
-            }, reject ).then( ( resp ) => {
-
-                resp.forEach( ( cur, i ) => {
-                    this.set( "type." + i + ".quickOrders", cur );
-                } );
-
-                return resp;
-            } ).then( resolve );
-        } );
-    },
     order: function ( obj ) {
         var param = this.get( obj.keypath ),
-            arry = this.types;
+            arry = this.get( "titles" );
 
         this.getPrice( param.OrderName, true ).then( ( pri ) => {
             this.stageOrder( $.extend( param, {
