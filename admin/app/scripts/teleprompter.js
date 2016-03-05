@@ -64,7 +64,7 @@ var Tele = Base.extend( {
                 this.getCache( "types", function () {
                     return that.sendToDataBase( {
                             type: "GET",
-                            data: [ false ].concat( resp.filter( ( a, i ) => {
+                            data: [ {} ].concat( resp.filter( ( a, i ) => {
                                 return this.buildYourOwn[ i ];
                             } ) ).reduce( ( a, b, i ) => {
                                 return $.extend( a, this.makeObj( "quickOrders" + b, [ "Name", "OrderName" ] ) );
