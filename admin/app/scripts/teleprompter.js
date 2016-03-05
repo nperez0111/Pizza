@@ -64,13 +64,10 @@ var Tele = Base.extend( {
                 this.getCache( "types", function () {
                     return that.sendToDataBase( {
                             type: "GET",
-                            data: resp.filter( ( a, i ) => {
+                            data: [ false ].concat( resp.filter( ( a, i ) => {
                                 return this.buildYourOwn[ i ];
-                            } ).reduce( ( a, b, i ) => {
-                                var c = d => {
-                                    return this.makeObj( "quickOrders" + d, [ "Name", "OrderName" ] )
-                                };
-                                return $.extend( i == 1 ? c( a ) : a, c( b ) );
+                            } ) ).reduce( ( a, b, i ) => {
+                                return $.extend( a, this.makeObj( "quickOrders" + b, [ "Name", "OrderName" ] ) );
                             } ),
                         },
                         "columns" );
