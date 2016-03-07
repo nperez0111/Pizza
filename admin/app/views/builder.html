@@ -1,10 +1,10 @@
 <div class="row marg-top">
     <div class="col-sm-12 col-md-5 col-lg-4">
-        <h2 class="page-header">Pizza</h2>
+        <h2 class="page-header text-capitalize">{{labels.toLowerCase().split('headings')[0]}}</h2>
         <div id="pizza">
             {{#with svg}}
             <svg>
-
+                {{#if labels=='pizzaHeadings'}}
                 <g id="crustAndShadow">
 
                     <title>{{ curSize }} Pizza {{ 'with ' + toppingsSelected.join(" , ")}}</title>
@@ -22,6 +22,7 @@
                     <circle r="{{radius}}%" cx="50%" cy="50%" /> {{/if}}
 
                 </g>
+                {{/if}}
                 {{#each toppingsSelected:i}}
                    
                     {{#if toppingsSelected[i] + curSize in toppingsSVG}}
