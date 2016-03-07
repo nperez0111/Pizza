@@ -19,7 +19,7 @@
             {{#each data:r}}
             <tr>
                 {{#each data[r]:c}}
-                <td on-click="edit" tabindex="{{(r*data[r].length)+c+1}}" {{editing.notAllowed[c]==false? 'contentEditable="true" class="text-capitalize mousetrap"': 'class="noEdit text-capitalize"'}}>{{data[r][c]}}</td>
+                <td on-click="edit" tabindex="{{(r*data[r].length)+c+1}}" contentEditable="{{!editing.notAllowed[c]}}" class="{{editing.notAllowed[c]?'noEdit':''}} mousetrap text-capitalize">{{data[r][c]}}</td>
                 {{/each}} {{#if (editing.cur!==r)}}
                 <td on-click="delete">
                     <span class="glyphicon glyphicon-remove table-remove center"></span>

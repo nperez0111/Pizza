@@ -25,11 +25,11 @@
                 {{/if}}
                 {{#each toppingsSelected:i}}
                    
-                    {{#if toppingsSelected[i] + curSize in toppingsSVG}}
+                    {{#if this + curSize in toppingsSVG}}
                        
-                        <g id="{{toppingsSelected[i]}}">
+                        <g id="{{this}}">
                            
-                            {{{ toppingsSVG[toppingsSelected[i] + curSize]}}}
+                            {{{ toppingsSVG[this + curSize]}}}
                             
                         </g>
                         
@@ -52,7 +52,7 @@
 
                     <label class="checkbox-inline" for="option.{{i}}.{{r}}">
                         <input type="{{headings[i]=='Size'?'radio':'checkbox'}}" id="option.{{i+'.'+r}}" name="group{{i}}" checked="{{currentChoices[i][r]}}" class="option-input">
-                        <span>{{types[i][r]}}</span>
+                        <span>{{this}}</span>
                     </label>
 
                     {{/each}}
