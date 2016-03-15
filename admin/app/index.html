@@ -33,6 +33,34 @@
     <div class="container">
         <div class="header">
             <ul class="nav nav-pills pull-right">
+                <li>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class='glyphicon glyphicon-cog'></span> Settings <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="#">Quick Order editors</a>
+                                <ul class="dropdown-menu" id="quickOrder">
+                                    <li><a tabindex="-1" href="#">Second level</a></li>
+                                    <li class="dropdown-submenu">
+                                        <a href="#">Even More..</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">3rd level</a></li>
+                                            <li><a href="#">3rd level</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="views/quickOrderEditor.html">Pizza</a></li>
+                                    <li><a href="views/quickOrderEditor.html">Wings</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="active"><a href="#" id="home">Home</a></li>
                 <li><a href="views/teleprompter.html" id="tele">Tele-Prompter</a></li>
                 <li><a href="views/builder.html" id="build">Builder</a></li>
@@ -58,6 +86,7 @@
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
     <script src="/bower_components/ractive/ractive.js"></script>
     <script src="/bower_components/jquery-mockjax/dist/jquery.mockjax.js"></script>
@@ -76,7 +105,7 @@
     <script src="scripts/base.js"></script>
     <script src="scripts/table.js"></script>
     <script src="scripts/builder.js"></script>
-    <script src="scripts/teleprompter.js"></script>    
+    <script src="scripts/teleprompter.js"></script>
     <script src="scripts/stats.js"></script>
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
