@@ -149,5 +149,12 @@ $( document ).ready( ( a ) => {
         } );
     } );
 
+    $('#quickOrder a').click(function( e ){
+        console.log($(this).text());
+        e.preventDefault();
+        /*viewBuilder( e, '#', 'quickOrderEditor', ( template ) => {
+            console.log($(this).text());
+        } );*/
+    });
 
 } );
