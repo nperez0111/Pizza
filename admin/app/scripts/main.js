@@ -130,7 +130,7 @@ $( document ).ready( ( a ) => {
             build = new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
-                template: template,
+                template,
                 // Here, we're passing in some initial data
                 data: {
 
@@ -150,11 +150,10 @@ $( document ).ready( ( a ) => {
     } );
 
     $('#quickOrder a').click(function( e ){
-        console.log($(this).text());
-        e.preventDefault();
-        /*viewBuilder( e, '#', 'quickOrderEditor', ( template ) => {
+        viewBuilder( e, '#', 'quickOrderEditor', ( template ) => {
             console.log($(this).text());
-        } );*/
+            
+        } );
     });
 
 } );
