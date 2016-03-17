@@ -190,6 +190,21 @@ var Table = Base.extend( {
         data.splice( to, 0, x[ 0 ] );
         return true;
     },
+    data: function () {
+        return {
+            rows: [ 'Some', 'Error', 'Occurred' ],
+            add: [],
+            editing: {
+                cur: -1,
+                past: {},
+                notAllowed: [ false, false, false ]
+            },
+            data: [
+                [ "Check", "If", "Connected" ],
+                [ "To", "The", "Internet" ]
+            ]
+        };
+    },
     switchTable: function ( obj, str ) {
 
 

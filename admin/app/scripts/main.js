@@ -83,20 +83,7 @@ $( document ).ready( ( a ) => {
                             var that = this;
                             return Table.extend( {
                                 template: componentTemp,
-                                cache: that.cache,
-                                data: {
-                                    rows: [ 'Some', 'Error', 'Occurred' ],
-                                    add: [],
-                                    editing: {
-                                        cur: -1,
-                                        past: {},
-                                        notAllowed: [ false, false, false ]
-                                    },
-                                    data: [
-                                        [ "Check", "If", "Connected" ],
-                                        [ "To", "The", "Internet" ]
-                                    ]
-                                }
+                                cache: that.cache
                             } )
                         }
                     }
