@@ -16,7 +16,8 @@
                 "assets/fonts/bootstrap/*",
                 "assets/javascripts/bootstrap.js",
                 "assets/javascripts/bootstrap/alert.js",
-                "assets/javascripts/bootstrap/modal.js"
+                "assets/javascripts/bootstrap/modal.js",
+                "assets/javascripts/bootstrap/dropdown.js"
             ]
         }
     },
