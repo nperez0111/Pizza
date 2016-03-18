@@ -1,4 +1,4 @@
-var table, tele, build, interval, stats, cache = {},
+var table, tele, build, interval, stats, cur, cache = {},
     quickOrder = {};
 Ractive.DEBUG = false;
 
@@ -49,7 +49,11 @@ $( document ).ready( ( a ) => {
     $( '#tele' ).click( ( e ) => {
         viewBuilder( e, "#tele", "teleprompter", ( template ) => {
             viewBuilder( false, false, "builder", ( componentTemp ) => {
-                tele = new Tele( {
+                if ( tele ) {
+                    tele.insert( tele.el );
+                    cur.detach();
+                }
+                tele = tele || new Tele( {
                     el: '#container',
                     template: template,
                     components: {
@@ -63,6 +67,7 @@ $( document ).ready( ( a ) => {
                         }
                     }
                 } );
+                cur = tele;
             } );
 
 
@@ -71,7 +76,12 @@ $( document ).ready( ( a ) => {
     $( '#home' ).click( function ( e ) {
         viewBuilder( e, "#home", "tablePage", ( template ) => {
             viewBuilder( false, false, "table", ( componentTemp ) => {
-                table = new Table( {
+                if ( table ) {
+                    table.insert( table.el );
+                    cur.detach();
+
+                }
+                table = table || new Table( {
                     // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template: template,
@@ -89,6 +99,7 @@ $( document ).ready( ( a ) => {
                         }
                     }
                 } );
+                cur = table;
             } );
 
         } ).then( ( resp ) => {
@@ -115,7 +126,12 @@ $( document ).ready( ( a ) => {
     } );
     $( '#build' ).click( function ( e ) {
         viewBuilder( e, "#build", "builder", ( template ) => {
-            build = new Builder( {
+            if ( build ) {
+                build.insert( build.el );
+                cur.detach();
+
+            }
+            build = build || new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
                 template,
@@ -124,16 +140,23 @@ $( document ).ready( ( a ) => {
 
                 }
             } );
+            cur = build;
         } );
     } );
 
     $( '#stats' ).click( ( e ) => {
         viewBuilder( e, '#stats', 'stats', ( template ) => {
-            stats = new Stats( {
+            if ( stats ) {
+                stats.insert( stats.el );
+                cur.detach();
+
+            }
+            stats = stats || new Stats( {
                 el: '#container',
                 template,
                 data: {}
             } );
+            cur = stats;
         } );
     } );
 
@@ -142,7 +165,11 @@ $( document ).ready( ( a ) => {
         viewBuilder( e, false, 'quickOrderEditor', ( template ) => {
             viewBuilder( false, false, "table", ( tableComponent ) => {
                 viewBuilder( false, false, "builder", ( builderComponent ) => {
-                    quickOrder[ current ] = new Base( {
+                    if ( quickOrder[ current ] ) {
+                        quickOrder[ current ].insert( quickOrder[ current ].el );
+                        cur.detach();
+                    }
+                    quickOrder[ current ] = quickOrder[ current ] || new Base( {
                         el: '#container',
                         template,
                         data: {
@@ -187,6 +214,7 @@ $( document ).ready( ( a ) => {
                             }
                         }
                     } );
+                    cur = quickOrder[ current ];
                 } );
             } );
         } );
