@@ -1,1 +1,18 @@
-ok
+<Table table="{{'quickOrders'+itemType}}"/>
+<button on-click="buildMe" class="btn btn-default">Add Specific {{itemType}}</button>
+<div class="modal fade" id="quickOrder{{itemType}}" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Builder</h3>
+            </div>
+            <div class="modal-body" id="modal">
+                <Builder labels="{{itemType.charAt(0).toLowerCase()+itemType.slice(1)}}Headings" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

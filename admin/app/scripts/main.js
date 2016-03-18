@@ -1,4 +1,5 @@
-var table, tele, build, interval, stats, cache = {};
+var table, tele, build, interval, stats, cache = {},
+    quickOrder = {};
 Ractive.DEBUG = false;
 
 function viewBuilder( evente, el, url, callback ) {
@@ -66,7 +67,7 @@ $( document ).ready( ( a ) => {
 
 
         } );
-    } ).trigger( "click" );
+    } );
     $( '#home' ).click( function ( e ) {
         viewBuilder( e, "#home", "tablePage", ( template ) => {
             viewBuilder( false, false, "table", ( componentTemp ) => {
@@ -136,11 +137,56 @@ $( document ).ready( ( a ) => {
         } );
     } );
 
-    $('#quickOrder a').click(function( e ){
-        viewBuilder( e, '#', 'quickOrderEditor', ( template ) => {
-            console.log($(this).text());
-            
+    $( $( '#quickOrder a' ).click( function ( e ) {
+        var current = $( this ).text();
+        viewBuilder( e, false, 'quickOrderEditor', ( template ) => {
+            viewBuilder( false, false, "table", ( tableComponent ) => {
+                viewBuilder( false, false, "builder", ( builderComponent ) => {
+                    quickOrder[ current ] = new Base( {
+                        el: '#container',
+                        template,
+                        data: {
+                            itemType: current
+                        },
+                        oninit: function () {
+                            var that = this;
+                            this.on( 'buildMe', event => {
+                                this.buildMe( event );
+                            } );
+                            this.loadDeps();
+                            this.on( 'Builder.checkout', queue => {
+                                console.log( queue );
+                                $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
+                                var tabl = this.findComponent( "Table" );
+                                tabl.set( "add.1", this.mapNameToSymbols( queue ) );
+                            } );
+                        },
+                        buildMe: function ( a ) {
+                            console.log( $( '#quickOrder' + this.get( 'itemType' ) ) );
+
+                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
+                        },
+                        components: {
+                            Table: function () {
+                                var that = this;
+                                return Table.extend( {
+                                    template: tableComponent,
+                                    cache: that.cache
+                                } )
+
+                            },
+                            Builder: function () {
+                                var that = this;
+                                return Builder.extend( {
+                                    template: builderComponent,
+                                    cache: that.cache
+                                } )
+                            }
+                        }
+                    } );
+                } );
+            } );
         } );
-    });
+    } )[ 4 ] ).trigger( "click" );
 
 } );
