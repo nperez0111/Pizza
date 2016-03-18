@@ -144,23 +144,7 @@ var Tele = Base.extend( {
                 } ).then( JSON.stringify ).then( resolve );
             } );
         } );
-        this.getCache( "settings", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET"
-                }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
-                    return ob.map( ( cur ) => {
-                        return this.makeObj( cur.keyKey, cur.val );
-                    } ).reduce( ( prev, cur, index, arr ) => {
-                        $.extend( cur, prev );
-                        return cur;
-                    } );
-                } ).then( JSON.stringify ).then( resolve );
-            } );
-        }, true ).then( ( a ) => {
-            that.set( "cols", parseInt( a.columns, 10 ) );
-            return a;
-        } );
+        this.loadDeps();
 
 
     },
