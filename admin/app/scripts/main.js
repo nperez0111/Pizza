@@ -67,7 +67,7 @@ $( document ).ready( ( a ) => {
 
 
         } );
-    } );
+    } ).trigger( "click" );
     $( '#home' ).click( function ( e ) {
         viewBuilder( e, "#home", "tablePage", ( template ) => {
             viewBuilder( false, false, "table", ( componentTemp ) => {
@@ -137,7 +137,7 @@ $( document ).ready( ( a ) => {
         } );
     } );
 
-    $( $( '#quickOrder a' ).click( function ( e ) {
+    $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
         viewBuilder( e, false, 'quickOrderEditor', ( template ) => {
             viewBuilder( false, false, "table", ( tableComponent ) => {
@@ -157,8 +157,11 @@ $( document ).ready( ( a ) => {
                             this.on( 'Builder.checkout', queue => {
                                 console.log( queue );
                                 $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
-                                var tabl = this.findComponent( "Table" );
-                                tabl.set( "add.1", this.mapNameToSymbols( queue ) );
+                                this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
+                                var b = this.findComponent( "Builder" );
+                                b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
+                                    return cur.fill( false );
+                                } ) );
                             } );
                         },
                         buildMe: function ( a ) {
@@ -187,6 +190,6 @@ $( document ).ready( ( a ) => {
                 } );
             } );
         } );
-    } )[ 4 ] ).trigger( "click" );
+    } );
 
 } );
