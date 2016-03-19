@@ -212,7 +212,6 @@ footer p {
     outline: none !important;
     position: relative !important;
     margin: 4px 0 !important;
-    z-index: 1000;
     &:checked {
         background: $brand-primary;
         &::before {

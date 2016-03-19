@@ -178,7 +178,6 @@ $( document ).ready( ( a ) => {
                     } );
                     this.loadDeps();
                     this.on( 'Builder.checkout', queue => {
-                        console.log( queue );
                         $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
                         this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
                         var b = this.findComponent( "Builder" );
@@ -188,8 +187,6 @@ $( document ).ready( ( a ) => {
                     } );
                 },
                 buildMe: function ( a ) {
-                    console.log( $( '#quickOrder' + this.get( 'itemType' ) ) );
-
                     $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
                 }
             } );
