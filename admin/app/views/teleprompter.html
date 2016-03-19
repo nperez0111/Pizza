@@ -65,31 +65,12 @@
     </div>
 
 
-<div class="modal fade" id="moduler" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title text-capitalize">{{cur}} Builder</h3>
-            </div>
-            <div class="modal-body" id="modal">
-                <Builder labels="{{cur}}Headings" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal id="moduler" title="{{cur}} Builder">
+    <Builder labels="{{cur}}Headings" />
+</Modal>
 
-<div class="modal fade" id="orders" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Current Orders:</h3>
-            </div>
-            <div class="modal-body">
+<Modal id="orders" title="Current Orders:" footer='{{#if queue.length>0}}<button type="button" class="btn btn-default" on-click="checkout">Order</button>{{/if}}<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'>
+    
                {{#if queue.length>0}}
                     <table class="table table-striped table-bordered table-hover table-fixed">
                        <thead>
@@ -115,14 +96,4 @@
                 {{else}}
                     <h4>No Orders in the Cart.</h4>
                 {{/if}}
-            </div>
-            <div class="modal-footer">
-               {{#if queue.length>0}}
-                <button type="button" class="btn btn-default" on-click="checkout">Order</button>
-                {{/if}}
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
+        </Modal>
