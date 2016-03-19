@@ -39,6 +39,7 @@ function viewBuilder( evente, el, url, callback ) {
         return Error( JSON.stringify( err ) );
     } ).then( ( template ) => {
         cache[ url ] = template;
+        return template;
     } );
 
 }
@@ -46,61 +47,58 @@ function viewBuilder( evente, el, url, callback ) {
 
 
 $( document ).ready( ( a ) => {
+    var components = {
+        builder: Builder,
+        table: Table,
+        modal: Base
+    };
+    Promise.all( Object.keys( components ).map( ( c ) => {
+        return viewBuilder( false, false, c, function ( d ) {
+            return d;
+        } )
+    } ) ).then( ( all ) => {
+        Object.keys( components ).forEach( ( cur, i, arr ) => {
+            Ractive.components[ cur.charAt( 0 ).toUpperCase() + cur.slice( 1 ) ] = function () {
+                var that = this;
+                return components[ cur ].extend( {
+                    template: all[ i ],
+                    cache: that.cache
+                } )
+            };
+        } );
+    } );
     $( '#tele' ).click( ( e ) => {
         viewBuilder( e, "#tele", "teleprompter", ( template ) => {
-            viewBuilder( false, false, "builder", ( componentTemp ) => {
-                if ( tele ) {
-                    tele.insert( tele.el );
-                    cur.detach();
-                }
-                tele = tele || new Tele( {
-                    el: '#container',
-                    template: template,
-                    components: {
-                        //http://docs.ractivejs.org/latest/components#content
-                        Builder: function () {
-                            var that = this;
-                            return Builder.extend( {
-                                template: componentTemp,
-                                cache: that.cache
-                            } );
-                        }
-                    }
-                } );
-                cur = tele;
+            if ( tele ) {
+                tele.insert( tele.el );
+                cur.detach();
+            }
+            tele = tele || new Tele( {
+                el: '#container',
+                template: template
             } );
+            cur = tele;
 
 
         } );
     } ).trigger( "click" );
     $( '#home' ).click( function ( e ) {
         viewBuilder( e, "#home", "tablePage", ( template ) => {
-            viewBuilder( false, false, "table", ( componentTemp ) => {
-                if ( table ) {
-                    table.insert( table.el );
-                    cur.detach();
+            if ( table ) {
+                table.insert( table.el );
+                cur.detach();
 
+            }
+            table = table || new Table( {
+                // The `el` option can be a node, an ID, or a CSS selector.
+                el: '#container',
+                template: template,
+                data: {
+                    table: "users",
+                    tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                 }
-                table = table || new Table( {
-                    // The `el` option can be a node, an ID, or a CSS selector.
-                    el: '#container',
-                    template: template,
-                    data: {
-                        table: "users",
-                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                    },
-                    components: {
-                        Table: function () {
-                            var that = this;
-                            return Table.extend( {
-                                template: componentTemp,
-                                cache: that.cache
-                            } )
-                        }
-                    }
-                } );
-                cur = table;
             } );
+            cur = table;
 
         } ).then( ( resp ) => {
             var func = function () {
@@ -163,60 +161,39 @@ $( document ).ready( ( a ) => {
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
         viewBuilder( e, false, 'quickOrderEditor', ( template ) => {
-            viewBuilder( false, false, "table", ( tableComponent ) => {
-                viewBuilder( false, false, "builder", ( builderComponent ) => {
-                    if ( quickOrder[ current ] ) {
-                        quickOrder[ current ].insert( quickOrder[ current ].el );
-                        cur.detach();
-                    }
-                    quickOrder[ current ] = quickOrder[ current ] || new Base( {
-                        el: '#container',
-                        template,
-                        data: {
-                            itemType: current
-                        },
-                        oninit: function () {
-                            var that = this;
-                            this.on( 'buildMe', event => {
-                                this.buildMe( event );
-                            } );
-                            this.loadDeps();
-                            this.on( 'Builder.checkout', queue => {
-                                console.log( queue );
-                                $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
-                                this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
-                                var b = this.findComponent( "Builder" );
-                                b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
-                                    return cur.fill( false );
-                                } ) );
-                            } );
-                        },
-                        buildMe: function ( a ) {
-                            console.log( $( '#quickOrder' + this.get( 'itemType' ) ) );
-
-                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
-                        },
-                        components: {
-                            Table: function () {
-                                var that = this;
-                                return Table.extend( {
-                                    template: tableComponent,
-                                    cache: that.cache
-                                } )
-
-                            },
-                            Builder: function () {
-                                var that = this;
-                                return Builder.extend( {
-                                    template: builderComponent,
-                                    cache: that.cache
-                                } )
-                            }
-                        }
+            if ( quickOrder[ current ] ) {
+                quickOrder[ current ].insert( quickOrder[ current ].el );
+                cur.detach();
+            }
+            quickOrder[ current ] = quickOrder[ current ] || new Base( {
+                el: '#container',
+                template,
+                data: {
+                    itemType: current
+                },
+                oninit: function () {
+                    var that = this;
+                    this.on( 'buildMe', event => {
+                        this.buildMe( event );
                     } );
-                    cur = quickOrder[ current ];
-                } );
+                    this.loadDeps();
+                    this.on( 'Builder.checkout', queue => {
+                        console.log( queue );
+                        $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
+                        this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
+                        var b = this.findComponent( "Builder" );
+                        b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
+                            return cur.fill( false );
+                        } ) );
+                    } );
+                },
+                buildMe: function ( a ) {
+                    console.log( $( '#quickOrder' + this.get( 'itemType' ) ) );
+
+                    $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
+                }
             } );
+            cur = quickOrder[ current ];
         } );
     } );
 
