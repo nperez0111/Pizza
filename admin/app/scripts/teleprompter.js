@@ -88,13 +88,9 @@ var Tele = Base.extend( {
                     }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
                 } );
             }, true ).then( ( symbols ) => {
-                this.getCache( "unavailableItems", function () {
-                    return new Promise( ( resolve, reject ) => {
-                        this.sendToDataBase( {
+                        return this.sendToDataBase( {
                             type: "GET"
-                        }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
-                    } );
-                }, true ).then( ( resp ) => resp.map( ( cur ) => symbols[ cur.ingredient ] ) ).then( ( unavailableItems ) => {
+                        }, "unavailableItems" ).then( JSON.parse ).then( ( resp ) => resp.map( ( cur ) => symbols[ cur.ingredient ] ) ).then( ( unavailableItems ) => {
                     this.set( "unavailableItems", unavailableItems );
                     return unavailableItems;
                 } ).then( ( unavailableItems ) => {
