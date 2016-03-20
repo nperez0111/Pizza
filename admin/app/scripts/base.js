@@ -104,7 +104,7 @@ var Base = Ractive.extend( {
         } );
     },
     getCache: function ( prop, func, isPromise, isNotJSON ) {
-        if ( prop in this.cache || ( localStorage.getItem( prop ) ) ) {
+        if ( prop in this.cache || ( localStorage && localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
                 this.cache[ prop ] = isNotJSON ? localStorage.getItem( prop ) : JSON.parse( localStorage.getItem( prop ) );
             }

@@ -222,7 +222,7 @@ footer p {
             display: inline-block;
             font-size: 35px;
             text-align: center;
-            line-height: 40px;
+            line-height: 35px;
             animation: halfspin .5s ease-out;
         }
         &::after {
@@ -246,6 +246,7 @@ input[type="radio"] {
     &.option-input:checked::before {
         content: "\2713" !important;
         font-size: 26.66667px !important;
+        line-height:40px !important;
     }
 }
 
