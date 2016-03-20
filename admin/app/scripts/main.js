@@ -174,7 +174,7 @@ $( document ).ready( ( a ) => {
                 oninit: function () {
                     var that = this;
                     this.on( 'buildMe', event => {
-                        this.buildMe( event );
+                        $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
                     } );
                     this.loadDeps();
                     this.on( 'Builder.checkout', queue => {
@@ -185,9 +185,6 @@ $( document ).ready( ( a ) => {
                             return cur.fill( false );
                         } ) );
                     } );
-                },
-                buildMe: function ( a ) {
-                    $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
                 }
             } );
             cur = quickOrder[ current ];
