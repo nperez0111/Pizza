@@ -101,23 +101,31 @@ $( document ).ready( ( a ) => {
             cur = table;
 
         } ).then( ( resp ) => {
-            var func = function () {
+            interval = setInterval( function () {
+
                 table.switchTable( {
                     type: 'GET'
-                }, table.get( "table" ) ).then( function () {}, ( err ) => {
+                }, table.get( "table" ) ).then( function () { /*Successfully loaded the current table*/ }, ( err ) => {
+
                     clearInterval( interval );
+
                     table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
+
                     $( '#click' ).click( function () {
+
                         $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
                         $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
                             $( this ).remove();
                         } );
                         interval = setInterval( func, 12000 );
+
                     } );
+
                     table.logger( err );
+
                 } );
-            };
-            interval = setInterval( func, 12000 );
+
+            }, 12000 );
         }, function ( err ) {
             console.log( err );
         } );
