@@ -181,7 +181,7 @@ var Base = Ractive.extend( {
             if ( warning ) {
                 console.warn( a );
             } else {
-                console.log( a );
+                console.trace( a );
             }
         }
         return a;
