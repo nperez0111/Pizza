@@ -238,7 +238,7 @@ var Table = Base.extend( {
                         }, ( "tablesInfo/search/tableName/" + tabler ) ).then( ( response ) => {
                             return JSON.parse( response )[ 0 ];
                         }, ( err ) => {
-                            this.notify( "Table Missing", "This may not be a valid table according to DataBase!" );
+                            this.notify( "Table Missing from tablesInfo table", "This may not be a valid table according to DataBase!" );
                             reject( err );
                             throw ( err );
 
