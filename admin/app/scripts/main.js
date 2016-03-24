@@ -105,12 +105,7 @@ $( document ).ready( ( a ) => {
 
                 table.switchTable( {
                     type: 'GET'
-<<<<<<< HEAD
                 }, table.get( "table" ) ).catch( ( err ) => {
-=======
-                }, table.get( "table" ) ).then( function () { /*Successfully loaded the current table*/ }, ( err ) => {
-
->>>>>>> master
                     clearInterval( interval );
 
                     table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
