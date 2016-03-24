@@ -210,7 +210,7 @@ var Table = Base.extend( {
 
         return this.sendToDataBase( obj, str ).then( JSON.parse, ( err ) => {
             this.alerter( "Sorry, Issues loading Table Data from API.." );
-            return Error( JSON.stringify( err ) );
+            throw Error( JSON.stringify( err ) );
         } ).then( ( objs ) => {
 
             var arr = objs.map( ( cur ) => {
@@ -240,7 +240,7 @@ var Table = Base.extend( {
                         }, ( err ) => {
                             this.notify( "Table Missing", "This may not be a valid table according to DataBase!" );
                             reject( err );
-                            return ( err );
+                            throw ( err );
 
                         } ).then( resolve );
                     } );
