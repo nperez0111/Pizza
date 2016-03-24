@@ -107,7 +107,7 @@ $( document ).ready( ( a ) => {
             var func = function () {
                 table.switchTable( {
                     type: 'GET'
-                }, table.get( "table" ) ).then( function () {}, ( err ) => {
+                }, table.get( "table" ) ).catch( ( err ) => {
                     clearInterval( interval );
                     table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
                     $( '#click' ).click( function () {
