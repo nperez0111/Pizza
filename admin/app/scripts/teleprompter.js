@@ -4,7 +4,7 @@ var Tele = Base.extend( {
             this.order( event );
         } );
         this.on( 'rmvqueue', ( event ) => {
-            this.rmvqueue( event );
+            this.get( "queue" ).splice( event.index.i, 1 );
         } );
         this.on( 'build', ( event ) => {
             //this.build( this.get( "type" )[ event.index.cur ].name );
@@ -226,8 +226,5 @@ var Tele = Base.extend( {
             } );
         } );
         return this.get( 'queue' ).push( order );
-    },
-    rmvqueue: function ( obj ) {
-        return this.get( "queue" ).splice( obj.index.i, 1 );
     }
 } );
