@@ -122,7 +122,7 @@ var Table = Base.extend( {
         this.sendToDataBase( {
             type: "DELETE"
         }, this.get( 'table' ) + "/" + rowOfDeletion[ this.get( 'editing.notAllowed' ).indexOf( true ) ] ).then( function ( message ) {
-            that.notify( "Delete went well!", message );
+            that.notify( "Delete occured succesfully!", message );
         }, that.errorMessage );
         return rowOfDeletion;
     },
