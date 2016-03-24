@@ -76,8 +76,35 @@ var Base = Ractive.extend( {
             } ) );
     },
     cache: {},
+    loadDeps: function () {
+        var that = this;
+        this.getCache( "symbols", function () {
+            return new Promise( ( resolve, reject ) => {
+                that.sendToDataBase( {
+                    type: "GET"
+                }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
+            } );
+        }, true )
+        this.getCache( "settings", function () {
+            return new Promise( ( resolve, reject ) => {
+                that.sendToDataBase( {
+                    type: "GET"
+                }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
+                    return ob.map( ( cur ) => {
+                        return this.makeObj( cur.keyKey, cur.val );
+                    } ).reduce( ( prev, cur, index, arr ) => {
+                        $.extend( cur, prev );
+                        return cur;
+                    } );
+                } ).then( JSON.stringify ).then( resolve );
+            } );
+        }, true ).then( ( a ) => {
+            that.set( "cols", parseInt( a.columns, 10 ) );
+            return a;
+        } );
+    },
     getCache: function ( prop, func, isPromise, isNotJSON ) {
-        if ( prop in this.cache || ( localStorage.getItem( prop ) ) ) {
+        if ( prop in this.cache || ( localStorage && localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
                 this.cache[ prop ] = isNotJSON ? localStorage.getItem( prop ) : JSON.parse( localStorage.getItem( prop ) );
             }
@@ -154,7 +181,7 @@ var Base = Ractive.extend( {
             if ( warning ) {
                 console.warn( a );
             } else {
-                console.log( a );
+                console.trace( a );
             }
         }
         return a;

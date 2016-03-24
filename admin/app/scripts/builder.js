@@ -8,18 +8,14 @@ var Builder = Base.extend( {
                     }, "toppingsSVG" ).then( JSON.parse, reject ).then( resolve );
                 } );
             }, true, true ).then( ( resp ) => {
-                var obj = {},
-                    data = this.get( "svg" );
                 resp.forEach( ( cur ) => {
-                    var temp = new Ractive( {
-                        data: data,
-                        template: cur.svg
-                    } );
-                    obj[ cur.title + cur.size ] = temp.toHTML();
+                    this.set( "toppingsSVG", $.extend( this.get( "toppingsSVG" ), this.makeObj( cur.title + cur.size, cur.svg ) ) );
                 } );
-                return obj;
+
+                return resp;
             }, this.logger ).then( resp => {
-                this.set( "toppingsSVG", resp );
+                this.set( "svg.anim", 0 );
+                this.animate( "svg.anim", 100 );
                 return resp;
             } );
         } );
@@ -79,9 +75,25 @@ var Builder = Base.extend( {
             ],
             sizes: [ 45, 37.5, 30 ],
             svg: {
-                radius: 0
+                radius: 0,
+                anim: 0
             },
-            toppingsSVG: []
+            toppingsSVG: {},
+            dynamicSVG: function ( t ) {
+                //http://jsfiddle.net/nperez0111/bcbyzv02/
+                var s = this.get( "curSize" ),
+                    temp = "",
+                    svgs = this.get( "toppingsSVG" );
+                t = t || [];
+                t.forEach( ( cur ) => {
+                    var key = cur + s;
+                    if ( key in svgs ) {
+                        temp += "<g id='" + key + "'>" + svgs[ key ] + "</g>"
+                    }
+                } );
+                this.partials[ t.join( "" ) ] = temp;
+                return t.join( "" );
+            }
         };
     },
     queue: [],

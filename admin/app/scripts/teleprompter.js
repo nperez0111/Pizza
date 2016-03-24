@@ -88,13 +88,9 @@ var Tele = Base.extend( {
                     }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
                 } );
             }, true ).then( ( symbols ) => {
-                this.getCache( "unavailableItems", function () {
-                    return new Promise( ( resolve, reject ) => {
-                        this.sendToDataBase( {
-                            type: "GET"
-                        }, "unavailableItems" ).then( JSON.parse, reject ).then( JSON.stringify ).then( resolve );
-                    } );
-                }, true ).then( ( resp ) => resp.map( ( cur ) => symbols[ cur.ingredient ] ) ).then( ( unavailableItems ) => {
+                return this.sendToDataBase( {
+                    type: "GET"
+                }, "unavailableItems" ).then( JSON.parse ).then( ( resp ) => resp.map( ( cur ) => symbols[ cur.ingredient ] ) ).then( ( unavailableItems ) => {
                     this.set( "unavailableItems", unavailableItems );
                     return unavailableItems;
                 } ).then( ( unavailableItems ) => {
@@ -144,23 +140,7 @@ var Tele = Base.extend( {
                 } ).then( JSON.stringify ).then( resolve );
             } );
         } );
-        this.getCache( "settings", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET"
-                }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
-                    return ob.map( ( cur ) => {
-                        return this.makeObj( cur.keyKey, cur.val );
-                    } ).reduce( ( prev, cur, index, arr ) => {
-                        $.extend( cur, prev );
-                        return cur;
-                    } );
-                } ).then( JSON.stringify ).then( resolve );
-            } );
-        }, true ).then( ( a ) => {
-            that.set( "cols", parseInt( a.columns, 10 ) );
-            return a;
-        } );
+        this.loadDeps();
 
 
     },
@@ -219,7 +199,7 @@ var Tele = Base.extend( {
     getPrice: function ( order, isSymbol ) {
         var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
-        return this.getCache( symboled, () => {
+        return this.getCache( symboled.join( " " ), () => {
             return new Promise( ( resolve, reject ) => {
                 this.sendToDataBase( {
                     data: {

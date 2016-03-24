@@ -212,7 +212,6 @@ footer p {
     outline: none !important;
     position: relative !important;
     margin: 4px 0 !important;
-    z-index: 1000;
     &:checked {
         background: $brand-primary;
         &::before {
@@ -223,7 +222,6 @@ footer p {
             display: inline-block;
             font-size: 35px;
             text-align: center;
-            line-height: 40px;
             animation: halfspin .5s ease-out;
         }
         &::after {
