@@ -78,13 +78,13 @@ var Base = Ractive.extend( {
     cache: {},
     loadDeps: function () {
         var that = this;
-        this.getCache( "symbols", function () {
+        return Promise.all([this.getCache( "symbols", function () {
             return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
                     type: "GET"
                 }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
             } );
-        }, true )
+        }, true ),
         this.getCache( "settings", function () {
             return new Promise( ( resolve, reject ) => {
                 that.sendToDataBase( {
@@ -101,8 +101,9 @@ var Base = Ractive.extend( {
         }, true ).then( ( a ) => {
             that.set( "cols", parseInt( a.columns, 10 ) );
             return a;
-        } );
+        } )].concat(this.deps.map(dep=>{return this.getCache(dep[0],dep[1],true);})));
     },
+    deps:[],
     getCache: function ( prop, func, isPromise, isNotJSON ) {
         if ( prop in this.cache || ( localStorage && localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
