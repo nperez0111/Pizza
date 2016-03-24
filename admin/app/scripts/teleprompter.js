@@ -36,6 +36,33 @@ var Tele = Base.extend( {
         Mousetrap.bind( this.keyBindings[ 0 ], function () {
             that.placeOrder( that.get( "queue" ) );
         } );
+        this.loadDeps();
+
+
+    },
+    deps:[[ "priorities", function () {
+            return new Promise( ( resolve, reject ) => {
+                this.sendToDataBase( {
+                    type: "GET",
+                    data: {
+                        tables: [ "symbols" ],
+                        from: "ingredients",
+                        relations: [
+                            [ "symbols.Name", "ingredients.Symbol" ]
+                        ],
+                        select: [ "symbols.Symbol", "symbols.Name", "ingredients.Priority" ]
+                    }
+                }, "join" ).then( JSON.parse, reject ).then( ( resp ) => {
+                    return resp.map( ( cur ) => {
+                        cur.Priority = parseInt( cur.Priority, 10 );
+                        return cur;
+                    } );
+                } ).then( JSON.stringify ).then( resolve );
+            } );
+        } ]],
+    keyBindings: [ 'shift+a' ],
+    data: function () {
+        var that=this;
         this.getCache( "teleSettings", function () {
             return that.sendToDataBase( {
                 type: "GET"
@@ -119,33 +146,6 @@ var Tele = Base.extend( {
                 } );
             } );
         } );
-
-        this.getCache( "priorities", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET",
-                    data: {
-                        tables: [ "symbols" ],
-                        from: "ingredients",
-                        relations: [
-                            [ "symbols.Name", "ingredients.Symbol" ]
-                        ],
-                        select: [ "symbols.Symbol", "symbols.Name", "ingredients.Priority" ]
-                    }
-                }, "join" ).then( JSON.parse, reject ).then( ( resp ) => {
-                    return resp.map( ( cur ) => {
-                        cur.Priority = parseInt( cur.Priority, 10 );
-                        return cur;
-                    } );
-                } ).then( JSON.stringify ).then( resolve );
-            } );
-        } );
-        this.loadDeps();
-
-
-    },
-    keyBindings: [ 'shift+a' ],
-    data: function () {
         return {
             cols: 2,
             queue: [],
