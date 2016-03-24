@@ -23,20 +23,7 @@
 
                 </g>
                 {{/if}}
-                {{#each toppingsSelected:i}}
-                   
-                    {{#if this + curSize in toppingsSVG}}
-                       
-                        <g id="{{this}}">
-                           
-                            {{{ toppingsSVG[this + curSize]}}}
-                            
-                        </g>
-                        
-                    {{/if}}
-                    
-                {{/each}}
-
+                {{>dynamicSVG(toppingsSelected)}}
             </svg>
             {{/with}}
         </div>
