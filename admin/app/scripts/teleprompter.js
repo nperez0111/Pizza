@@ -32,6 +32,10 @@ var Tele = Base.extend( {
 
             this.placeOrder( this.get( "queue" ) );
         } );
+        this.on( 'Modal.close', ( event ) => {
+            var b = this.findComponent( "Builder" );
+            b.set( "currentChoices", b.get( "currentChoices" ).map( ( cur ) => cur.fill( false ) ) );
+        } );
         var that = this;
         Mousetrap.bind( this.keyBindings[ 0 ], function () {
             that.placeOrder( that.get( "queue" ) );
@@ -40,7 +44,8 @@ var Tele = Base.extend( {
 
 
     },
-    deps:[[ "priorities", function () {
+    deps: [
+        [ "priorities", function () {
             return new Promise( ( resolve, reject ) => {
                 this.sendToDataBase( {
                     type: "GET",
@@ -59,10 +64,11 @@ var Tele = Base.extend( {
                     } );
                 } ).then( JSON.stringify ).then( resolve );
             } );
-        } ]],
+        } ]
+    ],
     keyBindings: [ 'shift+a' ],
     data: function () {
-        var that=this;
+        var that = this;
         this.getCache( "teleSettings", function () {
             return that.sendToDataBase( {
                 type: "GET"
