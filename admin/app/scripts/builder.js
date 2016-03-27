@@ -1,6 +1,6 @@
 var Builder = Base.extend( {
     oninit: function () {
-        this.observe( "toppingsSelected", ( newVal ) => {
+        this.observe( "toppingsSelected", ( newVal, oldVal ) => {
             this.getCache( "toppingsSVG", ( a ) => {
                 return new Promise( ( resolve, reject ) => {
                     this.sendToDataBase( {
@@ -14,8 +14,32 @@ var Builder = Base.extend( {
 
                 return resp;
             }, this.logger ).then( resp => {
-                this.set( "svg.anim", 0 );
-                this.animate( "svg.anim", 100 );
+                if ( oldVal && newVal && newVal.length > oldVal.length ) {
+                    var x = newVal.filter( ( i ) => {
+                            return oldVal.indexOf( i ) < 0;
+                        } ).map( ( item ) => {
+                            return [ this.makeObj( "svg.Anim" + item, 0 ),
+                                this.makeObj( "svg.Anim" + item, 100 )
+                            ];
+                        } ),
+                        options = {
+                            easing: 'linear'
+                        };
+                    //here is passing in an object of keypath:value pairs into set and animate
+
+                    this.set( x.map( cur => {
+                        return cur[ 0 ];
+                    } ).reduce( ( a, b ) => {
+                        return $.extend( a || {}, b[ 1 ] );
+                    } ) );
+
+                    this.animate( x.map( cur => {
+                        return cur[ 1 ];
+                    } ).reduce( ( a, b ) => {
+                        return $.extend( a || {}, b[ 1 ] );
+                    } ), options );
+                }
+
                 return resp;
             } );
         } );
@@ -79,20 +103,25 @@ var Builder = Base.extend( {
                 anim: 0
             },
             toppingsSVG: {},
-            dynamicSVG: function ( t ) {
+            dynamicSVG: function ( curSize, toppingsSelected ) {
                 //http://jsfiddle.net/nperez0111/bcbyzv02/
-                var s = this.get( "curSize" ),
+                var s = curSize,
                     temp = "",
                     svgs = this.get( "toppingsSVG" );
-                t = t || [];
+                var t = toppingsSelected;
+                if ( !s || !t ) {
+                    this.partials[ "emptiness" ] = "";
+                    return "emptiness";
+                }
                 t.forEach( ( cur ) => {
                     var key = cur + s;
                     if ( key in svgs ) {
                         temp += "<g id='" + key + "'>" + svgs[ key ] + "</g>"
                     }
                 } );
-                this.partials[ t.join( "" ) ] = temp;
-                return t.join( "" );
+                //console.log( "Size" + s + "<br>" + t.join( ", " ) + temp );
+                this.partials[ t.join( "" ) + s ] = temp;
+                return t.join( "" ) + s;
             }
         };
     },
