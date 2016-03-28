@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 {{#each rows:i}}
-                <th class="text-center text-capitalize">{{rows[i]}}</th>
+                <th class="text-center text-capitalize">{{this}}</th>
                 {{/each}}
                 <th class="text-center">Delete?</th>
             </tr>
@@ -19,7 +19,7 @@
             {{#each data:r}}
             <tr>
                 {{#each data[r]:c}}
-                <td on-click="edit" tabindex="{{(r*data[r].length)+c+1}}" contentEditable="{{!editing.notAllowed[c]}}" class="{{editing.notAllowed[c]?'noEdit':''}} mousetrap text-capitalize">{{data[r][c]}}</td>
+                <td on-click="edit" tabindex="{{(r*data[r].length)+c+1}}" contentEditable="{{!editing.notAllowed[c]}}" class="{{editing.notAllowed[c]?'noEdit':''}} mousetrap text-capitalize">{{this}}</td>
                 {{/each}} {{#if (editing.cur!==r)}}
                 <td on-click="delete">
                     <span class="glyphicon glyphicon-remove table-remove center"></span>
@@ -41,7 +41,7 @@
                 {{#each rows:i}}
                 <th class="text-center">
                         <div class="input-group">
-                            <label for="inp{{i}}" class="input-group-addon" id="label{{i}}">{{rows[i]}}: </label>
+                            <label for="inp{{i}}" class="input-group-addon" id="label{{i}}">{{this}}: </label>
                             <input type="text" value="{{add[i]}}" tabindex="{{(data[0].length*data.length)+i+1}}" id="inp{{i}}" class="form-control" aria-describedby="label{{i}}" required />
                         </div>
                 </th>

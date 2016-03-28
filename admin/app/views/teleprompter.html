@@ -84,8 +84,8 @@
                         <tbody class="text-center">
                             {{#each queue:i}}
                             <tr>
-                                <td>{{queue[i].Name}}</td>
-                                <td>{{queue[i].Price}}</td>
+                                <td>{{this.Name}}</td>
+                                <td>{{this.Price}}</td>
                                 <td>
                                     <button class="btn btn-default table-remove" on-click="rmvqueue"><span class="glyphicon glyphicon-remove"></span>Delete</button>
                                 </td>
