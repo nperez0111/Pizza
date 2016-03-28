@@ -107,21 +107,25 @@ var Builder = Base.extend( {
                 //http://jsfiddle.net/nperez0111/bcbyzv02/
                 var s = curSize,
                     temp = "",
-                    svgs = this.get( "toppingsSVG" );
-                var t = toppingsSelected;
-                if ( !s || !t ) {
+                    svgs = this.get( "toppingsSVG" ),
+                    t = toppingsSelected,
+                    part = t.slice( 0 ).sort().join( "" ) + s;
+                if ( !s || !t || t.length == 0 ) {
                     this.partials[ "emptiness" ] = "";
                     return "emptiness";
+                }
+                if ( part in this.partials ) {
+                    return part;
                 }
                 t.forEach( ( cur ) => {
                     var key = cur + s;
                     if ( key in svgs ) {
-                        temp += "<g id='" + key + "'>" + svgs[ key ] + "</g>"
+                        temp += "<g id='" + key + "'>" + svgs[ key ] + "</g>";
                     }
                 } );
                 //console.log( "Size" + s + "<br>" + t.join( ", " ) + temp );
-                this.partials[ t.join( "" ) + s ] = temp;
-                return t.join( "" ) + s;
+                this.partials[ part ] = temp;
+                return part;
             }
         };
     },
