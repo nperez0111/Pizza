@@ -8,5 +8,5 @@
 <button on-click="buildMe" class="btn btn-default">Add Specific {{itemType}}</button>
 
 <Modal id="quickOrder{{itemType}}" title="{{itemType}} Builder">
-                <Builder labels="{{itemType.charAt(0).toLowerCase()+itemType.slice(1)}}Headings" />
+                <Builder labels="{{buildItem}}" />
 </Modal>

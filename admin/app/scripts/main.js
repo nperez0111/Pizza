@@ -178,6 +178,14 @@ $( document ).ready( ( a ) => {
                 data: {
                     itemType: current
                 },
+                computed: {
+                    buildItem: {
+                        get: function () {
+                            var t = this.get( "itemType" );
+                            return t.charAt( 0 ).toLowerCase() + t.slice( 1 ) + "Headings";
+                        }
+                    }
+                },
                 oninit: function () {
                     var that = this;
                     this.on( 'buildMe', event => {
