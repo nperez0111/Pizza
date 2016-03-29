@@ -22,9 +22,12 @@ module.exports = function ( grunt ) {
     var config = {
         app: 'app',
         dist: 'dist',
-        auth: {
+        auth: false ? {
             host: 'ftp.nickthesick.com',
             authKey: 'main'
+        } : {
+            host: 'gator4194.hostgator.com',
+            authKey: 'joes'
         }
     };
 
