@@ -1,6 +1,6 @@
 var Base = Ractive.extend( {
-    //url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
-    url: "http://api.nickthesick.com/",
+    url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
+    //url: "http://api.nickthesick.com/",
     alerter: function ( str, moreInfo ) {
         var other = ( str.str || str ) + "";
         moreInfo = ( ( moreInfo ) ? ( moreInfo.join ? moreInfo.join( "</p><p>" ) : moreInfo ) : "undefined" ) + "";
@@ -78,32 +78,35 @@ var Base = Ractive.extend( {
     cache: {},
     loadDeps: function () {
         var that = this;
-        return Promise.all([this.getCache( "symbols", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET"
-                }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
-            } );
-        }, true ),
-        this.getCache( "settings", function () {
-            return new Promise( ( resolve, reject ) => {
-                that.sendToDataBase( {
-                    type: "GET"
-                }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
-                    return ob.map( ( cur ) => {
-                        return this.makeObj( cur.keyKey, cur.val );
-                    } ).reduce( ( prev, cur, index, arr ) => {
-                        $.extend( cur, prev );
-                        return cur;
-                    } );
-                } ).then( JSON.stringify ).then( resolve );
-            } );
-        }, true ).then( ( a ) => {
-            that.set( "cols", parseInt( a.columns, 10 ) );
-            return a;
-        } )].concat(this.deps.map(dep=>{return this.getCache(dep[0],dep[1],true);})));
+        return Promise.all( [ this.getCache( "symbols", function () {
+                return new Promise( ( resolve, reject ) => {
+                    that.sendToDataBase( {
+                        type: "GET"
+                    }, "symbols" ).then( JSON.parse, reject ).then( ( ret ) => ret.map( ( cur ) => this.makeObj( cur.Name, cur.Symbol ) ).reduce( ( prev, cur ) => $.extend( cur, prev ) ) ).then( JSON.stringify ).then( resolve );
+                } );
+            }, true ),
+            this.getCache( "settings", function () {
+                return new Promise( ( resolve, reject ) => {
+                    that.sendToDataBase( {
+                        type: "GET"
+                    }, "settings" ).then( JSON.parse, reject ).then( ( ob ) => {
+                        return ob.map( ( cur ) => {
+                            return this.makeObj( cur.keyKey, cur.val );
+                        } ).reduce( ( prev, cur, index, arr ) => {
+                            $.extend( cur, prev );
+                            return cur;
+                        } );
+                    } ).then( JSON.stringify ).then( resolve );
+                } );
+            }, true ).then( ( a ) => {
+                that.set( "cols", parseInt( a.columns, 10 ) );
+                return a;
+            } )
+        ].concat( this.deps.map( dep => {
+            return this.getCache( dep[ 0 ], dep[ 1 ], true );
+        } ) ) );
     },
-    deps:[],
+    deps: [],
     getCache: function ( prop, func, isPromise, isNotJSON ) {
         if ( prop in this.cache || ( localStorage && localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
