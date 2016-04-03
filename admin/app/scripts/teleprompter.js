@@ -205,7 +205,7 @@ var Tele = Base.extend( {
     getPrice: function ( order, isSymbol ) {
         var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
-        return this.getCache( symboled.join( " " ), () => {
+        return this.getCache( isSymbol ? symboled : symboled.join( " " ), () => {
             return new Promise( ( resolve, reject ) => {
                 this.sendToDataBase( {
                     data: {
