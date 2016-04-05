@@ -212,6 +212,20 @@ var Base = Ractive.extend( {
         }
         return ret;
     },
+    sequence: function () {
+        return this.compose.apply( this, Array.prototype.slice.call( arguments ).reverse() );
+    },
+    compose: function () {
+        var fns = arguments;
+
+        return function ( result ) {
+            for ( var i = fns.length - 1; i > -1; i-- ) {
+                result = fns[ i ].call( this, result );
+            }
+
+            return result;
+        };
+    },
     errorMessage: function ( err ) {
         console.log( err );
         console.log( this );
