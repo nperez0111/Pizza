@@ -26,18 +26,16 @@ var Builder = Base.extend( {
                             easing: 'linear'
                         };
                     //here is passing in an object of keypath:value pairs into set and animate
+                    var mapper = ( numero ) => {
+                        return x.map( cur => {
+                            return cur[ numero ];
+                        } ).reduce( ( a, b ) => {
+                            return $.extend( a || {}, b[ 1 ] );
+                        } )
+                    }
+                    this.set( mapper( 0 ) );
 
-                    this.set( x.map( cur => {
-                        return cur[ 0 ];
-                    } ).reduce( ( a, b ) => {
-                        return $.extend( a || {}, b[ 1 ] );
-                    } ) );
-
-                    this.animate( x.map( cur => {
-                        return cur[ 1 ];
-                    } ).reduce( ( a, b ) => {
-                        return $.extend( a || {}, b[ 1 ] );
-                    } ), options );
+                    this.animate( mapper( 1 ), options );
                 }
 
                 return resp;
