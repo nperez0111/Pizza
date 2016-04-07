@@ -2,8 +2,18 @@ var table, tele, build, interval, stats, cur, cache = {},
     quickOrder = {};
 Ractive.DEBUG = false;
 
-function viewBuilder( evente, el, url, callback ) {
-
+function viewBuilder( url, evente=false, el=false, callback=(a)=>{return false;}) {
+    var resolveCallback = ( template ) => {
+        var newOrOld=callback(template);
+        if(newOrOld!==false){
+            if(cur){
+                cur.detach();
+            }
+            newOrOld.insert( newOrOld.el );
+            cur = newOrOld;
+        }
+        return template;
+    };
     if ( evente ) {
         evente.preventDefault();
     }
@@ -24,16 +34,13 @@ function viewBuilder( evente, el, url, callback ) {
     }
 
     if ( url in cache ) {
-        return Promise.resolve( callback( cache[ url ] ) );
+        return Promise.resolve( resolveCallback( cache[ url ] ) );
     }
 
     return $.ajax( {
         url: "views/" + url + ".html",
         dataType: "html"
-    } ).then( ( template ) => {
-        callback( template );
-        return template;
-    }, ( err ) => {
+    } ).then( resolveCallback, ( err ) => {
         var base = new Base();
         base.alerter( "Sorry, Issues loading template file..." );
         return Error( JSON.stringify( err ) );
@@ -53,9 +60,7 @@ $( document ).ready( ( a ) => {
         modal: Base
     };
     Promise.all( Object.keys( components ).map( ( c ) => {
-        return viewBuilder( false, false, c, function ( d ) {
-            return d;
-        } )
+        return viewBuilder( c);
     } ) ).then( ( all ) => {
         Object.keys( components ).forEach( ( cur, i, arr ) => {
             Ractive.components[ cur.charAt( 0 ).toUpperCase() + cur.slice( 1 ) ] = function () {
@@ -68,27 +73,20 @@ $( document ).ready( ( a ) => {
         } );
     } );
     $( '#tele' ).click( ( e ) => {
-        viewBuilder( e, "#tele", "teleprompter", ( template ) => {
-            if ( tele ) {
-                tele.insert( tele.el );
-                cur.detach();
-            }
+        viewBuilder( "teleprompter", e, "#tele", ( template ) => {
+            
             tele = tele || new Tele( {
                 el: '#container',
                 template: template
             } );
-            cur = tele;
+            return tele;
 
 
         } );
     } ).trigger( "click" );
     $( '#home' ).click( function ( e ) {
-        viewBuilder( e, "#home", "tablePage", ( template ) => {
-            if ( table ) {
-                table.insert( table.el );
-                cur.detach();
+        viewBuilder( "tablePage", e, "#home", ( template ) => {
 
-            }
             table = table || new Table( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -98,9 +96,9 @@ $( document ).ready( ( a ) => {
                     tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                 }
             } );
-            cur = table;
+            return table;
 
-        } ).then( ( resp ) => {
+        },table ).then( ( resp ) => {
             interval = setInterval( function () {
 
                 table.switchTable( {
@@ -130,12 +128,8 @@ $( document ).ready( ( a ) => {
         } );
     } );
     $( '#build' ).click( function ( e ) {
-        viewBuilder( e, "#build", "builder", ( template ) => {
-            if ( build ) {
-                build.insert( build.el );
-                cur.detach();
-
-            }
+        viewBuilder( "builder" , e, "#build", ( template ) => {
+            
             build = build || new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -145,33 +139,26 @@ $( document ).ready( ( a ) => {
 
                 }
             } );
-            cur = build;
+            return build;
         } );
     } );
 
     $( '#stats' ).click( ( e ) => {
-        viewBuilder( e, '#stats', 'stats', ( template ) => {
-            if ( stats ) {
-                stats.insert( stats.el );
-                cur.detach();
-
-            }
+        viewBuilder( 'stats', e, '#stats', ( template ) => {
+            
             stats = stats || new Stats( {
                 el: '#container',
                 template,
                 data: {}
             } );
-            cur = stats;
+            return stats;
         } );
     } );
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
-        viewBuilder( e, false, 'quickOrderEditor', ( template ) => {
-            if ( quickOrder[ current ] ) {
-                quickOrder[ current ].insert( quickOrder[ current ].el );
-                cur.detach();
-            }
+        viewBuilder( 'quickOrderEditor', e, false, ( template ) => {
+            
             quickOrder[ current ] = quickOrder[ current ] || new Base( {
                 el: '#container',
                 template,
@@ -202,7 +189,7 @@ $( document ).ready( ( a ) => {
                     } );
                 }
             } );
-            cur = quickOrder[ current ];
+            return quickOrder[ current ];
         } );
     } );
 
