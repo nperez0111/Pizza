@@ -22,7 +22,7 @@ $animationSpeed:1.75s;
         
         #crustAndShadow {
             circle {
-                animation: slight-bounce infinite alternate $animationSpeed ease-in;
+                //animation: slight-bounce infinite alternate $animationSpeed ease-in;
                 fill: $pizzaFill;
                 stroke: $pizzaBorder;
                 stroke-width: 4;
@@ -30,13 +30,16 @@ $animationSpeed:1.75s;
             ellipse {
                 fill: $pizzaShadow;
                 transform-origin: 0 50%;
-                animation: slight-grow infinite alternate $animationSpeed ease-in;
+                //animation: slight-grow infinite alternate $animationSpeed ease-in;
                 animation-delay: $animationSpeed/2;
             }
             text {
                 fill: $gray;
                 font-size: $font-size-h3;
             }
+        }
+        g{
+        //animation: slight-bounce infinite alternate $animationSpeed ease-in;
         }
     }
 }
