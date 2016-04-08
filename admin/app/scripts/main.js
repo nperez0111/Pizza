@@ -2,11 +2,13 @@ var table, tele, build, interval, stats, cur, cache = {},
     quickOrder = {};
 Ractive.DEBUG = false;
 
-function viewBuilder( url, evente=false, el=false, callback=(a)=>{return false;}) {
+function viewBuilder( url, evente = false, el = false, callback = ( a ) => {
+    return false;
+} ) {
     var resolveCallback = ( template ) => {
-        var newOrOld=callback(template);
-        if(newOrOld!==false){
-            if(cur){
+        var newOrOld = callback( template );
+        if ( newOrOld !== false ) {
+            if ( cur ) {
                 cur.detach();
             }
             newOrOld.insert( newOrOld.el );
@@ -54,33 +56,43 @@ function viewBuilder( url, evente=false, el=false, callback=(a)=>{return false;}
 
 
 $( document ).ready( ( a ) => {
+
     var components = {
         builder: Builder,
         table: Table,
         modal: Base
     };
+
     Promise.all( Object.keys( components ).map( ( c ) => {
-        return viewBuilder( c);
+
+        return viewBuilder( c );
+
     } ) ).then( ( all ) => {
+
         Object.keys( components ).forEach( ( cur, i, arr ) => {
+
             Ractive.components[ cur.charAt( 0 ).toUpperCase() + cur.slice( 1 ) ] = function () {
                 var that = this;
+
                 return components[ cur ].extend( {
                     template: all[ i ],
                     cache: that.cache
-                } )
+                } );
+
             };
+
         } );
+
     } );
     $( '#tele' ).click( ( e ) => {
         viewBuilder( "teleprompter", e, "#tele", ( template ) => {
-            
+
             tele = tele || new Tele( {
                 el: '#container',
                 template: template
             } );
-            return tele;
 
+            return tele;
 
         } );
     } ).trigger( "click" );
@@ -96,9 +108,10 @@ $( document ).ready( ( a ) => {
                     tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                 }
             } );
+
             return table;
 
-        },table ).then( ( resp ) => {
+        }, table ).then( ( resp ) => {
             interval = setInterval( function () {
 
                 table.switchTable( {
@@ -128,8 +141,8 @@ $( document ).ready( ( a ) => {
         } );
     } );
     $( '#build' ).click( function ( e ) {
-        viewBuilder( "builder" , e, "#build", ( template ) => {
-            
+        viewBuilder( "builder", e, "#build", ( template ) => {
+
             build = build || new Builder( {
                 // The `el` option can be a node, an ID, or a CSS selector.
                 el: '#container',
@@ -139,13 +152,15 @@ $( document ).ready( ( a ) => {
 
                 }
             } );
+
             return build;
+
         } );
     } );
 
     $( '#stats' ).click( ( e ) => {
         viewBuilder( 'stats', e, '#stats', ( template ) => {
-            
+
             stats = stats || new Stats( {
                 el: '#container',
                 template,
@@ -158,7 +173,7 @@ $( document ).ready( ( a ) => {
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
         viewBuilder( 'quickOrderEditor', e, false, ( template ) => {
-            
+
             quickOrder[ current ] = quickOrder[ current ] || new Base( {
                 el: '#container',
                 template,
@@ -189,6 +204,7 @@ $( document ).ready( ( a ) => {
                     } );
                 }
             } );
+
             return quickOrder[ current ];
         } );
     } );
