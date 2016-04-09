@@ -47,7 +47,8 @@ var Table = Base.extend( {
     add: function ( obj ) {
         var itemToAdd = this.get( 'add' ),
             missing = false;
-
+        this.logger( this.get( 'add' ) );
+        this.logger( itemToAdd );
         $( obj.node ).html( "<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Loading..." );
 
         $( obj.el || 'th .input-group' ).each( function ( i ) {
@@ -66,6 +67,7 @@ var Table = Base.extend( {
             $( obj.node ).html( '<span class="glyphicon glyphicon-floppy-saved"></span> Add' );
             return false;
         }
+        this.logger( itemToAdd );
         this.set( "add", [] );
         this.get( 'data' ).push( itemToAdd );
         var that = this;

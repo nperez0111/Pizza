@@ -2,7 +2,7 @@ var table, tele, build, interval, stats, cur, cache = {},
     quickOrder = {};
 Ractive.DEBUG = false;
 
-function viewBuilder( url, evente = false, el = false, callback = ( a ) => {
+function viewBuilder( url, el = false, callback = ( a ) => {
     return false;
 } ) {
     var resolveCallback = ( template ) => {
@@ -16,23 +16,20 @@ function viewBuilder( url, evente = false, el = false, callback = ( a ) => {
         }
         return template;
     };
-    if ( evente ) {
-        evente.preventDefault();
-    }
 
     if ( el && $( el ).parent().hasClass( "active" ) ) {
-        return Promise.reject( "Same Element clicked twice" );
+        return Promise.reject( "'" + el + "' Element clicked twice" );
     }
 
     if ( interval ) {
         clearInterval( interval );
     }
 
-    if ( evente ) {
+    if ( el ) {
         $( '.nav li' ).each( function () {
             $( this ).removeClass( "active" );
         } );
-        $( $( evente.target )[ 0 ] ).parent().addClass( "active" );
+        $( el ).parent().addClass( "active" );
     }
 
     if ( url in cache ) {
@@ -52,6 +49,15 @@ function viewBuilder( url, evente = false, el = false, callback = ( a ) => {
     } );
 
 }
+
+
+/*
+page( '/about', about );
+page( '/contact', contact );
+page( '/contact/:contactName', contact );*/
+
+
+
 
 
 
@@ -84,129 +90,168 @@ $( document ).ready( ( a ) => {
         } );
 
     } );
-    $( '#tele' ).click( ( e ) => {
-        viewBuilder( "teleprompter", e, "#tele", ( template ) => {
+    var x = function ( func ) {
+        return function ( e ) {
+            func.call( this, e );
+            e.preventDefault();
+        }
+    };
+    $( '#tele' ).click( x( ( e ) => {
+        page( "/teleprompter" );
+    } ) );
+    $( '#home' ).click( x( ( e ) => {
+        page( "/tablePage" );
+    } ) );
+    $( '#build' ).click( x( ( e ) => {
+        page( "/builder" );
+    } ) );
 
-            tele = tele || new Tele( {
-                el: '#container',
-                template: template
-            } );
-
-            return tele;
-
-        } );
-    } ).trigger( "click" );
-    $( '#home' ).click( function ( e ) {
-        viewBuilder( "tablePage", e, "#home", ( template ) => {
-
-            table = table || new Table( {
-                // The `el` option can be a node, an ID, or a CSS selector.
-                el: '#container',
-                template: template,
-                data: {
-                    table: "users",
-                    tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                }
-            } );
-
-            return table;
-
-        }, table ).then( ( resp ) => {
-            interval = setInterval( function () {
-
-                table.switchTable( {
-                    type: 'GET'
-                }, table.get( "table" ) ).catch( ( err ) => {
-                    clearInterval( interval );
-
-                    table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
-
-                    $( '#click' ).click( function () {
-
-                        $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
-                        $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
-                            $( this ).remove();
-                        } );
-                        interval = setInterval( func, 12000 );
-
-                    } );
-
-                    table.logger( err );
-
-                } );
-
-            }, 12000 );
-        }, function ( err ) {
-            console.log( err );
-        } );
-    } );
-    $( '#build' ).click( function ( e ) {
-        viewBuilder( "builder", e, "#build", ( template ) => {
-
-            build = build || new Builder( {
-                // The `el` option can be a node, an ID, or a CSS selector.
-                el: '#container',
-                template,
-                // Here, we're passing in some initial data
-                data: {
-
-                }
-            } );
-
-            return build;
-
-        } );
-    } );
-
-    $( '#stats' ).click( ( e ) => {
-        viewBuilder( 'stats', e, '#stats', ( template ) => {
-
-            stats = stats || new Stats( {
-                el: '#container',
-                template,
-                data: {}
-            } );
-            return stats;
-        } );
-    } );
+    $( '#stats' ).click( x( ( e ) => {
+        page( "/stats" );
+    } ) );
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
-        viewBuilder( 'quickOrderEditor', e, false, ( template ) => {
+        page( "/quickOrders/" + current );
+        e.preventDefault();
+    } );
 
-            quickOrder[ current ] = quickOrder[ current ] || new Base( {
-                el: '#container',
-                template,
-                data: {
-                    itemType: current
-                },
-                computed: {
-                    buildItem: {
-                        get: function () {
-                            var t = this.get( "itemType" );
-                            return t.charAt( 0 ).toLowerCase() + t.slice( 1 ) + "Headings";
-                        }
+    var routes = {
+        telePrompter: function () {
+
+            viewBuilder( "teleprompter", "#tele", ( template ) => {
+
+                tele = tele || new Tele( {
+                    el: '#container',
+                    template: template
+                } );
+
+                return tele;
+
+            } );
+        },
+        tablePage: function () {
+            viewBuilder( "tablePage", "#home", ( template ) => {
+
+                table = table || new Table( {
+                    // The `el` option can be a node, an ID, or a CSS selector.
+                    el: '#container',
+                    template: template,
+                    data: {
+                        table: "users",
+                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     }
-                },
-                oninit: function () {
-                    var that = this;
-                    this.on( 'buildMe', event => {
-                        $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
+                } );
+                console.log( "t" );
+
+                return table;
+
+            } ).then( ( resp ) => {
+                interval = setInterval( function () {
+
+                    table.switchTable( {
+                        type: 'GET'
+                    }, table.get( "table" ) ).catch( ( err ) => {
+                        clearInterval( interval );
+
+                        table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
+
+                        $( '#click' ).click( function () {
+
+                            $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
+                            $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
+                                $( this ).remove();
+                            } );
+                            interval = setInterval( func, 12000 );
+
+                        } );
+
+                        table.logger( err );
+
                     } );
-                    this.loadDeps();
-                    this.on( 'Builder.checkout', queue => {
-                        $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
-                        this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
-                        var b = this.findComponent( "Builder" );
-                        b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
-                            return cur.fill( false );
-                        } ) );
-                    } );
-                }
+
+                }, 12000 );
+            }, function ( err ) {
+                console.log( err );
+            } );
+        },
+        builder: function () {
+            viewBuilder( "builder", "#build", ( template ) => {
+
+                build = build || new Builder( {
+                    // The `el` option can be a node, an ID, or a CSS selector.
+                    el: '#container',
+                    template,
+                    // Here, we're passing in some initial data
+                    data: {
+
+                    }
+                } );
+
+                return build;
+
+            } );
+        },
+        stats: function () {
+            viewBuilder( 'stats', '#stats', ( template ) => {
+
+                stats = stats || new Stats( {
+                    el: '#container',
+                    template,
+                    data: {}
+                } );
+                return stats;
+            } );
+        },
+        "quickOrders/:current": function ( ctx ) {
+            var current = ctx.params.current;
+            viewBuilder( 'quickOrderEditor', false, ( template ) => {
+
+                quickOrder[ current ] = quickOrder[ current ] || new Base( {
+                    el: '#container',
+                    template,
+                    data: {
+                        itemType: current
+                    },
+                    computed: {
+                        buildItem: {
+                            get: function () {
+                                var t = this.get( "itemType" );
+                                return t.charAt( 0 ).toLowerCase() + t.slice( 1 ) + "Headings";
+                            }
+                        }
+                    },
+                    oninit: function () {
+                        var that = this;
+                        this.on( 'buildMe', event => {
+                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
+                        } );
+                        this.loadDeps();
+                        this.on( 'Builder.checkout', queue => {
+                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
+                            this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
+                            var b = this.findComponent( "Builder" );
+                            b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
+                                return cur.fill( false );
+                            } ) );
+                        } );
+                    }
+                } );
+
+                return quickOrder[ current ];
             } );
 
-            return quickOrder[ current ];
-        } );
+        }
+    }
+
+    page( '/', routes.telePrompter );
+
+    Object.keys( routes ).forEach( ( cur ) => {
+        page( '/' + cur, routes[ cur ] );
+    } );
+
+    page( {
+        hashbang: true
     } );
 
 } );
