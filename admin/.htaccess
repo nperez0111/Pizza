@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+Options +FollowSymLinks
+    RewriteEngine On
+    # html5 pushstate (history) support
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^((?s).*)$ index.html [QSA,L]
+</IfModule>
