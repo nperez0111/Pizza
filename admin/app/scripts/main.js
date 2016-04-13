@@ -37,7 +37,7 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     }
 
     return $.ajax( {
-        url: "views/" + url + ".html",
+        url: window.location.origin + "/views/" + url + ".html",
         dataType: "html"
     } ).then( resolveCallback, ( err ) => {
         var base = new Base();
@@ -49,16 +49,6 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     } );
 
 }
-
-
-/*
-page( '/about', about );
-page( '/contact', contact );
-page( '/contact/:contactName', contact );*/
-
-
-
-
 
 
 $( document ).ready( ( a ) => {
@@ -243,15 +233,14 @@ $( document ).ready( ( a ) => {
 
         }
     }
-
+    page.base( '/' );
     page( '/', routes.telePrompter );
+    page( '', routes.telePrompter );
 
     Object.keys( routes ).forEach( ( cur ) => {
-        page( '/' + cur, routes[ cur ] );
+        page( cur, routes[ cur ] );
     } );
 
-    page( {
-        hashbang: true
-    } );
+    page();
 
 } );
