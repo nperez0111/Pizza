@@ -1,5 +1,5 @@
 var table, tele, build, interval, stats, cur, cache = {},
-    quickOrder = {};
+    quickOrder = {},tables={};
 Ractive.DEBUG = false;
 
 function viewBuilder( url, el = false, callback = ( a ) => {
@@ -132,7 +132,6 @@ $( document ).ready( ( a ) => {
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     }
                 } );
-                console.log( "t" );
 
                 return table;
 
@@ -191,6 +190,32 @@ $( document ).ready( ( a ) => {
                     data: {}
                 } );
                 return stats;
+            } );
+        },
+        "table/:tableName":function(ctx){
+            console.log("lets see");
+            var tableName=ctx.params.tableName;
+            viewBuilder( "tablePage", false, ( template ) => {
+
+                tables[tableName] = tables[tableName] || new Table( {
+                    // The `el` option can be a node, an ID, or a CSS selector.
+                    el: '#container',
+                    template: template,
+                    data: {
+                        table: tableName,
+                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
+                    },
+                    switchTable:function(){
+                        if(tableName!==this.get("table")){
+                            page("/table/"+this.get("table"))
+                        }
+                    }
+                } );
+
+                tables[tableName].set("table",tableName);
+
+                return tables[tableName];
+
             } );
         },
         "quickOrders/:current": function ( ctx ) {
