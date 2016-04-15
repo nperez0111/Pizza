@@ -25,11 +25,11 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     if ( interval ) {
         clearInterval( interval );
     }
-
+    $( '.nav li' ).each( function () {
+        $( this ).removeClass( "active" );
+    } );
     if ( el ) {
-        $( '.nav li' ).each( function () {
-            $( this ).removeClass( "active" );
-        } );
+
         $( el ).parent().addClass( "active" );
     }
 
