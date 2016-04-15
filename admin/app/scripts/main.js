@@ -1,5 +1,6 @@
 var table, tele, build, interval, stats, cur, cache = {},
-    quickOrder = {},tables={};
+    quickOrder = {},
+    tables = {};
 Ractive.DEBUG = false;
 
 function viewBuilder( url, el = false, callback = ( a ) => {
@@ -90,7 +91,7 @@ $( document ).ready( ( a ) => {
         page( "/teleprompter" );
     } ) );
     $( '#home' ).click( x( ( e ) => {
-        page( "/tablePage" );
+        page( "/table/users" );
     } ) );
     $( '#build' ).click( x( ( e ) => {
         page( "/builder" );
@@ -118,50 +119,6 @@ $( document ).ready( ( a ) => {
 
                 return tele;
 
-            } );
-        },
-        tablePage: function () {
-            viewBuilder( "tablePage", "#home", ( template ) => {
-
-                table = table || new Table( {
-                    // The `el` option can be a node, an ID, or a CSS selector.
-                    el: '#container',
-                    template: template,
-                    data: {
-                        table: "users",
-                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                    }
-                } );
-
-                return table;
-
-            } ).then( ( resp ) => {
-                interval = setInterval( function () {
-
-                    table.switchTable( {
-                        type: 'GET'
-                    }, table.get( "table" ) ).catch( ( err ) => {
-                        clearInterval( interval );
-
-                        table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
-
-                        $( '#click' ).click( function () {
-
-                            $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
-                            $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
-                                $( this ).remove();
-                            } );
-                            interval = setInterval( func, 12000 );
-
-                        } );
-
-                        table.logger( err );
-
-                    } );
-
-                }, 12000 );
-            }, function ( err ) {
-                console.log( err );
             } );
         },
         builder: function () {
@@ -192,12 +149,11 @@ $( document ).ready( ( a ) => {
                 return stats;
             } );
         },
-        "table/:tableName":function(ctx){
-            console.log("lets see");
-            var tableName=ctx.params.tableName;
+        "table/:tableName": function ( ctx ) {
+            var tableName = ctx.params.tableName;
             viewBuilder( "tablePage", false, ( template ) => {
 
-                tables[tableName] = tables[tableName] || new Table( {
+                tables[ tableName ] = tables[ tableName ] || new Table( {
                     // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template: template,
@@ -205,17 +161,49 @@ $( document ).ready( ( a ) => {
                         table: tableName,
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     },
-                    switchTable:function(){
-                        if(tableName!==this.get("table")){
-                            page("/table/"+this.get("table"))
+                    switchTable: function () {
+                        var newRoute = this.get( "table" );
+                        if ( newRoute !== this.get( "table" ) ) {
+                            this.set( "table", tableName );
+                            page( "/table/" + newRoute );
+
                         }
                     }
                 } );
 
-                tables[tableName].set("table",tableName);
+                tables[ tableName ].set( "table", tableName );
 
-                return tables[tableName];
+                return tables[ tableName ];
 
+            } ).then( ( resp ) => {
+                interval = setInterval( function () {
+                    var table = tables[ tableName ];
+                    ( new Table( {
+                        data: table.get()
+                    } ) ).switchTable.call( table, {
+                        type: 'GET'
+                    }, table.get( "table" ) ).catch( ( err ) => {
+                        clearInterval( interval );
+
+                        table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
+
+                        $( '#click' ).click( function () {
+
+                            $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
+                            $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
+                                $( this ).remove();
+                            } );
+                            interval = setInterval( func, 12000 );
+
+                        } );
+
+                        table.logger( err );
+
+                    } );
+
+                }, 12000 );
+            }, function ( err ) {
+                console.log( err );
             } );
         },
         "quickOrders/:current": function ( ctx ) {
