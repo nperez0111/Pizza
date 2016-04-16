@@ -20,7 +20,7 @@ var Table = Base.extend( {
         this.observe( "table", ( newVal, oldVal, obj ) => {
             this.switchTable( {
                 type: 'GET',
-            }, newVal );
+            }, [ newVal, oldVal ] );
         } );
 
         var that = this,
@@ -210,7 +210,7 @@ var Table = Base.extend( {
     switchTable: function ( obj, str ) {
 
 
-        return this.sendToDataBase( obj, str ).then( JSON.parse, ( err ) => {
+        return this.sendToDataBase( obj, str[ 0 ] ).then( JSON.parse, ( err ) => {
             this.alerter( "Sorry, Issues loading Table Data from API.." );
             throw Error( JSON.stringify( err ) );
         } ).then( ( objs ) => {
@@ -253,7 +253,7 @@ var Table = Base.extend( {
 
                     return response;
                 } ).then( ( resp ) => {
-                    this.fire( "tableSwitch", tabler );
+                    this.fire( "tableSwitch", str );
                     return resp;
                 } );
 

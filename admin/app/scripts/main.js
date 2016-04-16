@@ -1,6 +1,9 @@
 var table, tele, build, interval, stats, cur, cache = {},
     quickOrder = {},
-    tables = {};
+    tables = {
+        switched: true,
+        past: {}
+    };
 Ractive.DEBUG = false;
 
 function viewBuilder( url, el = false, callback = ( a ) => {
@@ -163,17 +166,31 @@ $( document ).ready( ( a ) => {
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     }
                 } );
-                table.on( "tableSwitch", function ( newRoute ) {
-                    page( "/table/" + newRoute );
-                } );
-                table.set( "table", tableName );
+                if ( !tables.past[ tableName ] ) {
+                    table.on( "tableSwitch", function ( newRoute ) {
+                        if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
+                            page( "/table/" + newRoute[ 0 ] );
+                            //console.log( "tableSwitched fired with", newRoute[ 0 ], tableName );
+                            tables.switched = true;
+                        }
+
+                    } );
+                    tables.past[ tableName ] = true;
+                }
+
+                if ( !tables.switched ) {
+                    table.set( "table", tableName );
+                    //console.log( "table set " );
+                }
+                tables.switched = false;
+                //console.trace( "switched off" );
                 return table;
 
             } ).then( ( resp ) => {
                 interval = setInterval( function () {
                     table.switchTable( {
                         type: 'GET'
-                    }, table.get( "table" ) ).catch( ( err ) => {
+                    }, [ table.get( "table" ), table.get( "table" ) ] ).catch( ( err ) => {
                         clearInterval( interval );
 
                         table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
