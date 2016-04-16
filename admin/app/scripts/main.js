@@ -9,6 +9,24 @@ Ractive.DEBUG = false;
 function viewBuilder( url, el = false, callback = ( a ) => {
     return false;
 } ) {
+
+
+    if ( $( el ).parent().hasClass( "active" ) ) {
+        return Promise.reject( "'" + el + "' Element clicked twice" );
+    }
+
+    if ( interval ) {
+        clearInterval( interval );
+    }
+
+    $( '.nav li' ).each( function () {
+        $( this ).removeClass( "active" );
+    } );
+
+    if ( el ) {
+        $( el ).parent().addClass( "active" );
+    }
+
     var resolveCallback = ( template ) => {
         var newOrOld = callback( template );
         if ( newOrOld !== false ) {
@@ -20,22 +38,6 @@ function viewBuilder( url, el = false, callback = ( a ) => {
         }
         return template;
     };
-
-    if ( el && $( el ).parent().hasClass( "active" ) ) {
-        return Promise.reject( "'" + el + "' Element clicked twice" );
-    }
-
-    if ( interval ) {
-        clearInterval( interval );
-    }
-
-    if ( el ) {
-        $( '.nav li' ).each( function () {
-            $( this ).removeClass( "active" );
-        } );
-
-        $( el ).parent().addClass( "active" );
-    }
 
     if ( url in cache ) {
         return Promise.resolve( resolveCallback( cache[ url ] ) );
@@ -166,6 +168,7 @@ $( document ).ready( ( a ) => {
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
                     }
                 } );
+
                 if ( !tables.past[ tableName ] ) {
                     table.on( "tableSwitch", function ( newRoute ) {
                         if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
