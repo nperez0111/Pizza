@@ -212,6 +212,12 @@ var Base = Ractive.extend( {
         }
         return ret;
     },
+    iterateOver: function ( obj, doThat ) {
+        Object.keys( obj ).forEach( function ( cur, i ) {
+            doThat( obj[ cur ], cur, obj );
+        } );
+        return Object.keys( obj );
+    },
     sequence: function () {
         return this.compose.apply( this, Array.prototype.slice.call( arguments ).reverse() );
     },

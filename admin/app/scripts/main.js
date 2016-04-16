@@ -25,10 +25,11 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     if ( interval ) {
         clearInterval( interval );
     }
-    $( '.nav li' ).each( function () {
-        $( this ).removeClass( "active" );
-    } );
+
     if ( el ) {
+        $( '.nav li' ).each( function () {
+            $( this ).removeClass( "active" );
+        } );
 
         $( el ).parent().addClass( "active" );
     }
@@ -153,34 +154,24 @@ $( document ).ready( ( a ) => {
             var tableName = ctx.params.tableName;
             viewBuilder( "tablePage", false, ( template ) => {
 
-                tables[ tableName ] = tables[ tableName ] || new Table( {
+                table = table || new Table( {
                     // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template: template,
                     data: {
                         table: tableName,
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                    },
-                    switchTable: function () {
-                        var newRoute = this.get( "table" );
-                        if ( newRoute !== this.get( "table" ) ) {
-                            this.set( "table", tableName );
-                            page( "/table/" + newRoute );
-
-                        }
                     }
                 } );
-
-                tables[ tableName ].set( "table", tableName );
-
-                return tables[ tableName ];
+                table.on( "tableSwitch", function ( newRoute ) {
+                    page( "/table/" + newRoute );
+                } );
+                table.set( "table", tableName );
+                return table;
 
             } ).then( ( resp ) => {
                 interval = setInterval( function () {
-                    var table = tables[ tableName ];
-                    ( new Table( {
-                        data: table.get()
-                    } ) ).switchTable.call( table, {
+                    table.switchTable( {
                         type: 'GET'
                     }, table.get( "table" ) ).catch( ( err ) => {
                         clearInterval( interval );

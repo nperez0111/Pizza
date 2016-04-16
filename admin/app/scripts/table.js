@@ -252,6 +252,9 @@ var Table = Base.extend( {
                     this.set( "description", response.description );
 
                     return response;
+                } ).then( ( resp ) => {
+                    this.fire( "tableSwitch", tabler );
+                    return resp;
                 } );
 
             return data;
