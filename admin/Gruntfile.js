@@ -22,10 +22,11 @@ module.exports = function ( grunt ) {
     var config = {
         app: 'app',
         dist: 'dist',
-        auth: false ? {
+        authN: {
             host: 'ftp.nickthesick.com',
             authKey: 'main'
-        } : {
+        },
+        auth: {
             host: 'gator4194.hostgator.com',
             authKey: 'joes'
         }
@@ -372,6 +373,24 @@ module.exports = function ( grunt ) {
                 src: '../includes/',
                 dest: '/public_html/includes/',
                 exclusions: [ '*.md', 'database.php' ]
+            },
+            buildN: {
+                auth: config.authN,
+                src: 'dist/',
+                dest: '/public_html/admin/',
+                exclusions: [ '*.md', 'dist/**/Thumbs.db' ]
+            },
+            apiN: {
+                auth: config.authN,
+                src: '../api/v1/',
+                dest: '/public_html/api/v1/',
+                exclusions: [ '*.md' ]
+            },
+            includesN: {
+                auth: config.authN,
+                src: '../includes/',
+                dest: '/public_html/includes/',
+                exclusions: [ '*.md', 'database.php' ]
             }
         },
         uncss: {
@@ -545,10 +564,12 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'deploy', function ( argue ) {
         grunt.loadNpmTasks( 'grunt-ftp-deploy' );
         grunt.option( 'force', true );
-        grunt.task.run( [ 'build', 'ftp-deploy' ] );
+        argue = argue || "";
+        grunt.task.run( [ 'build' ].concat( [ 'ftp-deploy:build', 'ftp-deploy:api', 'ftp-deploy:includes' ].map( function ( cur ) {
+            return cur + argue;
+        } ) ) );
 
     } );
-
     grunt.registerTask( 'tidy', function ( argue ) {
         grunt.loadNpmTasks( "grunt-uncss" );
         grunt.task.run( [ "file-creator", "uncss" ] );

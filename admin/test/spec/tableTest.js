@@ -493,7 +493,7 @@
                 expect( table.switchTable( {
                     url: 'http://localhost:80/pizza/api/v1/undefined',
                     dataType: 'json'
-                } ) ).to.exist;
+                }, [ 'undefined' ] ) ).to.exist;
             } );
             it( 'Should switch the current table data', function () {
                 var dta, table = new Table( {
@@ -506,7 +506,7 @@
                     url: 'http:///pizza/api/v1/undefined',
                     dataType: 'json',
                     type: 'GET'
-                } );
+                }, [ 'undefined' ] );
                 expect( table.get( 'data' ) ).to.not.deep.equal( dta );
                 expect( table.get( 'row' ) ).to.not.deep.equal( [] );
 
@@ -541,7 +541,7 @@
                     url: 'http://pizza/api/v1/undefined',
                     dataType: 'json',
                     type: 'GET'
-                } ).then( function () {
+                }, [ 'undefined' ] ).then( function () {
                     expect( table.get( "editing.notAllowed" ) ).to.deep.equal( [ false, false, true ] );
                 } );
 
@@ -596,7 +596,7 @@
                 table.switchTable( {
                     url: 'http:///pizza/api/v1/undefined',
                     type: 'GET'
-                } );
+                }, [ 'undefined' ] );
                 table.sendToDataBase( {
                     type: "GET",
                     url: 'http://pizza/api/v1/undefined'
@@ -624,7 +624,7 @@
                 table.switchTable( {
                     url: 'http:///pizza/api/v1/undefined',
                     type: 'GET'
-                } );
+                }, [ 'undefined' ] );
                 table.sendToDataBase( {
                     type: "GET",
                     url: 'http:///pizza/api/v1/undefined'
