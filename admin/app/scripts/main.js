@@ -49,7 +49,7 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     } ).then( resolveCallback, ( err ) => {
         var base = new Base();
         base.alerter( "Sorry, Issues loading template file..." );
-        return Error( JSON.stringify( err ) );
+        throw Error( JSON.stringify( err ) );
     } ).then( ( template ) => {
         cache[ url ] = template;
         return template;
@@ -87,25 +87,20 @@ $( document ).ready( ( a ) => {
         } );
 
     } );
-    var x = function ( func ) {
-        return function ( e ) {
-            func.call( this, e );
-            e.preventDefault();
-        }
-    };
-    $( '#tele' ).click( x( ( e ) => {
-        page( "/teleprompter" );
-    } ) );
-    $( '#home' ).click( x( ( e ) => {
-        page( "/table/users" );
-    } ) );
-    $( '#build' ).click( x( ( e ) => {
-        page( "/builder" );
-    } ) );
 
-    $( '#stats' ).click( x( ( e ) => {
-        page( "/stats" );
-    } ) );
+    var links = {
+        tele: "/teleprompter",
+        home: '/table/users',
+        build: "/builder",
+        stats: "/stats"
+    };
+
+    Object.keys( links ).forEach( ( cur ) => {
+        $( '#' + cur ).click( ( e ) => {
+            page( links[ cur ] );
+            e.preventDefault();
+        } );
+    } );
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
