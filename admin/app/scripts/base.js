@@ -212,6 +212,13 @@ var Base = Ractive.extend( {
         }
         return ret;
     },
+    ifPassesDo: function ( arr, condition, doer ) {
+
+        return arr.map( function ( cur, i ) {
+            return condition( cur, i ) ? doer( cur, i ) : cur;
+        } );
+
+    },
     iterateOver: function ( obj, doThat ) {
         Object.keys( obj ).forEach( function ( cur, i ) {
             doThat( obj[ cur ], cur, obj );
