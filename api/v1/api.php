@@ -31,20 +31,12 @@ $routes=$possibleRoutes;
 
 switch ( $method ) {
 case 'PUT':
-    //add
-    rest_put( $request );
-    break;
 case 'POST':
-    //update
-    rest_post( $request );
-    break;
 case 'GET':
-    //get
-    rest_get( $request );
-    break;
 case 'DELETE':
-    //remove
-    rest_delete( $request );
+    //add
+    $funcly="rest_".strtolower($method);
+    $funcly($request);
     break;
 case 'LOGIN':
     $var=( reqRouter( $request, "LOGIN" ) );
