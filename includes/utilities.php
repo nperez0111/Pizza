@@ -34,7 +34,7 @@ function checkTableReqs( $table, &$JSON ) {
 
 function isMethodAllowed( $table, $accessor ) {
     global $routes;
-    $i=array_search($accessor,["GET","POST","PUT","DELETE"]);
+    $i=array_search($accessor,["GET","POST","PUT","DELETE"])||-1;
     if($i==-1){
         return false;
     }
@@ -53,12 +53,7 @@ function isIdentifier( $table, $test ) {
 }
 
 function isInside($arr,$val,$searchFor){
-    for($x=0;$x<count($arr);$x++){
-            if($arr[$x][$val]==$searchFor){
-                return $x;
-            }
-        }
-        return -1;
+    return array_search($searchFor,$arr[$x][$val])||-1;
 }
 
 //true for props in array format false for comma delimited string
