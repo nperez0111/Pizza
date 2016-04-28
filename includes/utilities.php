@@ -21,35 +21,21 @@ function checkTableReqs( $table, &$JSON ) {
             //return false;
         }
         //echo json_encode($JSON);
-        for ( $i=0, $arr=$routes[$table]['identifiers'];$i<count( $arr );$i++ ) {
-            if ( !isset( $JSON[$arr[$i]] ) ) {
-                rest_error( "Mal-Formed JSON please read Documentation, missing '".$arr[$i]."' property", 400 );
+        break;
+    }
+    foreach ( $routes[$table]['identifiers'] as $val ) {
+            if ( !isset( $JSON[$val] ) ) {
+                rest_error( "Mal-Formed JSON please read Documentation, missing '".$val."' property", 400 );
                 return false;
             }
         }
-        return true;
-        break;
-    }
     return true;
 }
 
 function isMethodAllowed( $table, $accessor ) {
     global $routes;
-    $i=0;
-    switch ( $accessor ) {
-    case "GET":
-        $i=0;
-        break;
-    case "POST":
-        $i=1;
-        break;
-    case "PUT":
-        $i=2;
-        break;
-    case "DELETE":
-        $i=3;
-        break;
-    default:
+    $i=array_search($accessor,["GET","POST","PUT","DELETE"]);
+    if($i==-1){
         return false;
     }
     if ( isAdmin() ) {
