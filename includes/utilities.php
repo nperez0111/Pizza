@@ -34,12 +34,12 @@ function checkTableReqs( $table, &$JSON ) {
 
 function isMethodAllowed( $table, $accessor ) {
     global $routes;
+    if ( isAdmin() ) {
+        return true;
+    }
     $i=array_search($accessor,["GET","POST","PUT","DELETE"])||-1;
     if($i==-1){
         return false;
-    }
-    if ( isAdmin() ) {
-        return true;
     }
     return @$routes[$table]['methods'][$i]==1?true:false;
 }
