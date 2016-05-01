@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 function getPrice( $JSON ) {
     include '../../includes/database.php';
@@ -42,9 +42,9 @@ function getTransaction() {
     $table = "transactions";
     $num = sql_GET_ALL( $table, [ "ID", "DESC" ] )[ 0 ][ "ID" ] + 1;
 
-    $stmt = $db - > prepare( sql_PUT( $table ) );
+    $stmt = $db -> prepare( sql_PUT( $table ) );
     $ex = buildJSONInputWProps( $table, [ "Amount" => 4.5, "Type" => 1, "ID" => $num ] );
-    $stmt - > execute( $ex );
+    $stmt -> execute( $ex );
     return $num;
 }
 

@@ -1,4 +1,4 @@
-<? php
+<?PHP
 // curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"Email\":\"rf@gh.co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X PUT http://localhost/pizza/api/v1/users/
 //curl -i -u nick@nickthesick.com:0046788285 -X GET http://localhost/pizza/api/v1/users/sortBy/Email/DESC
 //curl -i -u nick@nickthesick.com:0046788285 -X DELETE http://localhost/pizza/api/v1/users/rf@gh.com

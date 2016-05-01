@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 /*
 
@@ -39,11 +39,9 @@ function sql_DELETE( $req ) {
     global $routes;
     global $JSON;
     include '../../includes/database.php';
-    $STR = "DELETE FROM ".$table.
-    " WHERE ".$routes[ $table ][ 'identifier' ].
-    "=:val";
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute( [ ":val" => $id ] );
+    $STR = "DELETE FROM ".$table." WHERE ".$routes[ $table ][ 'identifier' ]. "=:val";
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute( [ ":val" => $id ] );
     return true;
 }
 

@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 /*
 
   _      ____   _____ _____ _   _       __  _      ____   _____  ____  _    _ _______            _____ _____
@@ -37,13 +37,13 @@ function checkUser( $userName, $password ) {
 
     include '../../includes/database.php';
     // Retrieve username and password from database according to user's input
-    $stmt = $db - > prepare( "SELECT * FROM ".
+    $stmt = $db -> prepare( "SELECT * FROM ".
         "users".
         " WHERE (`Email` = :Email)" );
 
-    $resul = $stmt - > execute( array( ':Email' => $userName ) );
-    $result = $stmt - > fetch();
-    $num_rows = $stmt - > rowCount();
+    $resul = $stmt -> execute( array( ':Email' => $userName ) );
+    $result = $stmt -> fetch();
+    $num_rows = $stmt -> rowCount();
     // Check username and password match
     //echo $num_rows > 0 &&validate_password($password,$result['password'])?"pasword is real...\n":"not the right pass?\n";
     if ( $num_rows > 0 && validate_password( $password, $result[ 'password' ] ) ) {
@@ -65,11 +65,11 @@ function isAdmin() {
         return false;
     }
     global $db;
-    $stmt = $db - > prepare( "SELECT * FROM users WHERE (`Email` = :Email)" );
+    $stmt = $db -> prepare( "SELECT * FROM users WHERE (`Email` = :Email)" );
 
-    $resul = $stmt - > execute( array( ':Email' => $_SESSION[ 'Email' ] ) );
-    $result = $stmt - > fetch();
-    $num_rows = $stmt - > rowCount();
+    $resul = $stmt -> execute( array( ':Email' => $_SESSION[ 'Email' ] ) );
+    $result = $stmt -> fetch();
+    $num_rows = $stmt -> rowCount();
     if ( $num_rows > 0 && $result[ 'verified' ] == "1" ) {
         return true;
     }

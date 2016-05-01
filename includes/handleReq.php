@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 $JSON = array();
 $val = file_get_contents( 'php://input' );
 //parse_str(file_get_contents('php://input'), $JSON);

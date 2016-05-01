@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 //returns array for the spl executer and string with what is missing if the json obj does not have the property required
 function buildJSONInput( $table, $JSON ) {
     $keys = buildIdentifiers( $table, true );

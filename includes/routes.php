@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 $possibleRoutes = [
     'users' => [
         'methods' => [ 0, 0, 1, 0 ],

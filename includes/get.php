@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 
 /*
@@ -90,12 +90,12 @@ function sql_GET_ROW( $req ) {
     $table = $req[ 0 ];
     global $routes;
     include '../../includes/database.php';
-    $stmt = $db - > prepare( "SELECT ".$req[ 2 ].
+    $stmt = $db -> prepare( "SELECT ".$req[ 2 ].
         " FROM `".$table.
         "`" );
-    $resul = $stmt - > execute();
+    $resul = $stmt -> execute();
     $arr = [];
-    while ( $row = $stmt - > fetch( PDO::FETCH_ASSOC ) ) {
+    while ( $row = $stmt -> fetch( PDO::FETCH_ASSOC ) ) {
         array_push( $arr, $row[ $req[ 2 ] ] );
     }
     return $arr;
@@ -107,13 +107,13 @@ function sql_GET( $req ) {
     $value = $req[ 3 ];
     global $routes;
     include '../../includes/database.php';
-    $stmt = $db - > prepare( "SELECT ".implode( ",", $routes[ $table ][ 'identifiers' ] ).
+    $stmt = $db -> prepare( "SELECT ".implode( ",", $routes[ $table ][ 'identifiers' ] ).
         " FROM `".$table.
         "` WHERE ".$queryBy.
         "=:val" );
-    $resul = $stmt - > execute( array( ":val" => $value ) );
+    $resul = $stmt -> execute( array( ":val" => $value ) );
     $arr = [];
-    while ( $row = $stmt - > fetch( PDO::FETCH_ASSOC ) ) {
+    while ( $row = $stmt -> fetch( PDO::FETCH_ASSOC ) ) {
         array_push( $arr, $row );
     }
     return $arr;
@@ -128,9 +128,9 @@ function sql_GET_ALL( $tabl, $pos ) {
     " FROM `".$tabl.
     "`".( isset( $pos ) ? ( " ORDER BY ".$pos[ 0 ].
         " ".$pos[ 1 ] ) : "" );
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute();
-    while ( $row = $stmt - > fetch( PDO::FETCH_ASSOC ) ) {
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute();
+    while ( $row = $stmt -> fetch( PDO::FETCH_ASSOC ) ) {
         $data = [];
         for ( $i = 0; $i < count( $routes[ $tabl ][ 'identifiers' ] ); $i++ ) {
             $data[ $routes[ $tabl ][ 'identifiers' ][ $i ] ] = $row[ $routes[ $tabl ][ 'identifiers' ][ $i ] ];
@@ -172,23 +172,23 @@ function sql_GET_JOIN( $JSON ) {
     $required = [ "from", "tables", "relations", "select" ];
     $STR = "SELECT ";
     for ( $i = 0; $i < count( $JSON[ "select" ] ); $i++ ) {
-        $STR. = $JSON[ "select" ][ $i ].( $i + 1 == count( $JSON[ "select" ] ) ? " " : ", " );
+        $STR .= $JSON[ "select" ][ $i ].( $i + 1 == count( $JSON[ "select" ] ) ? " " : ", " );
     }
-    $STR. = "FROM ".$JSON[ "from" ].
+    $STR .= "FROM ".$JSON[ "from" ].
     " ";
     for ( $i = 0; $i < count( $JSON[ "tables" ] ); $i++ ) {
-        $STR. = "INNER JOIN ".$JSON[ "tables" ][ $i ].
+        $STR .= "INNER JOIN ".$JSON[ "tables" ][ $i ].
         " ";
     }
-    $STR. = "ON ";
+    $STR .= "ON ";
     for ( $r = 0; $r < count( $JSON[ "relations" ] ); $r++ ) {
-        $STR. = $JSON[ "relations" ][ $r ][ 0 ].
+        $STR .= $JSON[ "relations" ][ $r ][ 0 ].
         " = ".$JSON[ "relations" ][ $r ][ 1 ].( $r + 1 == count( $JSON[ "relations" ] ) ? " " : " AND " );
     }
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute();
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute();
     $arr = [];
-    while ( $row = $stmt - > fetch( PDO::FETCH_ASSOC ) ) {
+    while ( $row = $stmt -> fetch( PDO::FETCH_ASSOC ) ) {
         array_push( $arr, $row );
     }
     return $arr;
@@ -212,10 +212,10 @@ function getByTime( $req, $JSON ) {
     " between '".$from.
     "' and '".( isset( $to ) ? $to : date( 'Y-m-d' ) ).
     "'";
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute();
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute();
 
-    while ( $currow = $stmt - > fetch( PDO::FETCH_ASSOC ) ) {
+    while ( $currow = $stmt -> fetch( PDO::FETCH_ASSOC ) ) {
         $data = [];
         for ( $i = 0; $i < count( $routes[ $table ][ 'identifiers' ] ); $i++ ) {
             $data[ $routes[ $table ][ 'identifiers' ][ $i ] ] = $currow[ $routes[ $table ][ 'identifiers' ][ $i ] ];

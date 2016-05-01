@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 /*
 
@@ -42,13 +42,9 @@ function sql_POST( $req ) {
     global $routes;
     global $JSON;
     include '../../includes/database.php';
-    $STR = "UPDATE ".$table.
-    " SET ".$col.
-    "=:val WHERE ".$routes[ $table ][ 'identifier' ].
-    "='".$id.
-    "'";
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute( [ ":val" => $JSON[ $col ] ] );
+    $STR = "UPDATE ".$table." SET ".$col."=:val WHERE ".$routes[ $table ][ 'identifier' ]."='".$id."'";
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute( [ ":val" => $JSON[ $col ] ] );
     return true;
 }
 
@@ -59,21 +55,18 @@ function sql_POST_ALL( $req ) {
     global $JSON;
     include '../../includes/database.php';
 
-    $STR = "UPDATE ".$table.
-    " SET ";
+    $STR = "UPDATE ".$table." SET ";
 
     $keys = $routes[ $table ][ 'identifiers' ];
     $arr = [];
     for ( $i = 0; $i < count( $keys ); $i++ ) {
-        $STR. = $keys[ $i ].
-        "=:".$keys[ $i ].( $i + 1 < count( $keys ) ? "," : "" );
+        $STR.= $keys[ $i ]."=:".$keys[ $i ].( $i + 1 < count( $keys ) ? "," : "" );
         $arr[ ":".$keys[ $i ] ] = $JSON[ $keys[ $i ] ];
     }
-    $STR. = " WHERE ".$routes[ $table ][ 'identifier' ].
-    "=:valu";
+    $STR .= " WHERE ".$routes[ $table ][ 'identifier' ]."=:valu";
     //UPDATE settings SET keyKey=:keyKey,val=:val WHERE keyKey=:valu
-    $stmt = $db - > prepare( $STR );
-    $resul = $stmt - > execute( array_merge( [ ":valu" => $col ], $arr ) );
+    $stmt = $db -> prepare( $STR );
+    $resul = $stmt -> execute( array_merge( [ ":valu" => $col ], $arr ) );
     //echo $STR;
     //print_r($arr);
     return true;

@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 function rest_success( $data ) {
     http_response_code( 200 );

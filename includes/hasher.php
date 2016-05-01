@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 /*
  * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).
  * Copyright (c) 2013, Taylor Hornby
@@ -126,7 +126,7 @@ function pbkdf2( $algorithm, $password, $salt, $count, $key_length, $raw_output 
         for ( $j = 1; $j < $count; $j++ ) {
             $xorsum ^= ( $last = hash_hmac( $algorithm, $last, $password, true ) );
         }
-        $output. = $xorsum;
+        $output.= $xorsum;
     }
 
     if ( $raw_output )

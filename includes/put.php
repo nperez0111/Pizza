@@ -1,4 +1,4 @@
-<? PHP
+<?PHP
 
 
 
@@ -71,7 +71,7 @@ function rest_put( $req ) {
         }
     }
 
-    $stmt = $db - > prepare( sql_PUT( $table ) );
+    $stmt = $db -> prepare( sql_PUT( $table ) );
     $ex = buildJSONInputWProps( $table, $JSON );
 
     if ( is_string( $ex ) ) {
@@ -79,7 +79,7 @@ function rest_put( $req ) {
             "' is not set on provided JSON Object. Your JSON May be Mal-Formed,incorrect for the database or some other error may have occured", 400 );
         return;
     }
-    $var = $stmt - > execute( $ex );
+    $var = $stmt -> execute( $ex );
     if ( $var ) {
         rest_success( 'Inputted Successfully Into the DataBase!' );
     } else {
@@ -97,10 +97,10 @@ function sql_PUT( $table ) {
     ") VALUES(";
 
     for ( $i = 0, $arr = buildProps( $table, true ); $i < count( $arr ); $i++ ) {
-        $str. = ":".$arr[ $i ].( ( $i !== ( count( $arr ) - 1 ) ) ? "," : "" );
+        $str .= ":".$arr[ $i ].( ( $i !== ( count( $arr ) - 1 ) ) ? "," : "" );
     }
 
-    $str. = ")";
+    $str .= ")";
 
     return $str;
 }
