@@ -1,4 +1,4 @@
-<?php
+<? php
 // curl -i --data {\"fname\":\"NICK\",\"lname\":\"POST\",\"Email\":\"rf@gh.co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X PUT http://localhost/pizza/api/v1/users/
 //curl -i -u nick@nickthesick.com:0046788285 -X GET http://localhost/pizza/api/v1/users/sortBy/Email/DESC
 //curl -i -u nick@nickthesick.com:0046788285 -X DELETE http://localhost/pizza/api/v1/users/rf@gh.com
@@ -7,8 +7,8 @@
 //curl -i --data {\"FName\":\"NICK\",\"LName\":\"POSTER\",\"Email\":\"Rf@Gh.Co\",\"password\":\"test\"} -u nick@nickthesick.com:0046788285 -X POST http://localhost/pizza/api/v1/users/Rf@Gh.Co
 session_start();
 header( 'Content-Type: application/json' );
-$adminRequired=["users"];
-$keyRoutes=["columns", "join", "placeOrder","getPrice","getByTime"];
+$adminRequired = [ "users" ];
+$keyRoutes = [ "columns", "join", "placeOrder", "getPrice", "getByTime" ];
 include '../../includes/utilities.php';
 include '../../includes/routes.php';
 include '../../includes/hasher.php';
@@ -26,38 +26,35 @@ include '../../includes/get.php';
 
 
 global $possibleRoutes;
-$routes=$possibleRoutes;
+$routes = $possibleRoutes;
 
 
 switch ( $method ) {
-case 'PUT':
-case 'POST':
-case 'GET':
-case 'DELETE':
-    //add
-    $funcly="rest_".strtolower($method);
-    $funcly($request);
-    break;
-case 'LOGIN':
-    $var=( reqRouter( $request, "LOGIN" ) );
-    if ( $var==1 ) {
-        rest_success( "Successfully logged in..." );
-        return;
-    }
-    else if ( $var==2 ) {
-            rest_success( json_encode( ["location"=>"signin.php"] ) );
+    case 'PUT':
+    case 'POST':
+    case 'GET':
+    case 'DELETE':
+        //add
+        $funcly = "rest_".strtolower( $method );
+        $funcly( $request );
+        break;
+    case 'LOGIN':
+        $var = ( reqRouter( $request, "LOGIN" ) );
+        if ( $var == 1 ) {
+            rest_success( "Successfully logged in..." );
+            return;
+        } else if ( $var == 2 ) {
+            rest_success( json_encode( [ "location" => "signin.php" ] ) );
+            return;
+        } else {
+            rest_error( "Bad request", 400 );
             return;
         }
-    else {
-        rest_error( "Bad request", 400 );
+        break;
+    case 'OPTIONS':
         return;
-    }
-    break;
-case 'OPTIONS':
-    return;
-    break;
-default:
-    rest_error( $request, 400 );
-    break;
-}
-?>
+        break;
+    default:
+        rest_error( $request, 400 );
+        break;
+} ?>
