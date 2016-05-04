@@ -161,11 +161,6 @@ var Tele = Base.extend( {
         };
         //TODO implement the default types with their settings
     },
-    unavailable: function ( a ) {
-        console.log( this );
-        this.logger( a );
-        return true;
-    },
     buildYourOwn: [ true, true, true, false ],
     order: function ( obj ) {
         var param = this.get( obj.keypath ),

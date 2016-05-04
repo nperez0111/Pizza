@@ -42,7 +42,7 @@ function isMethodAllowed( $table, $accessor ) {
     if ( $i == -1 ) {
         return false;
     }
-    return@ $routes[ $table ][ 'methods' ][ $i ] == 1 ? true : false;
+    return @$routes[ $table ][ 'methods' ][ $i ] == 1 ? true : false;
 }
 
 function isIdentifier( $table, $test ) {
