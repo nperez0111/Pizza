@@ -1,8 +1,16 @@
-var table, tele, build, interval, stats, cur, cache = {},
-    quickOrder = {},
-    tables = {
-        switched: true,
-        past: {}
+var cache = {},
+    pages = {
+        cur: undefined,
+        stats: undefined,
+        tele: undefined,
+        build: undefined,
+        table: undefined,
+        tableProps: {
+            switched: true,
+            past: {},
+            interval: undefined
+        },
+        quickOrder: {}
     };
 Ractive.DEBUG = false;
 
@@ -15,8 +23,8 @@ function viewBuilder( url, el = false, callback = ( a ) => {
         return Promise.reject( "'" + el + "' Element clicked twice" );
     }
 
-    if ( interval ) {
-        clearInterval( interval );
+    if ( pages.tableProps.interval ) {
+        clearInterval( pages.tableProps.interval );
     }
 
     $( '.nav li' ).each( function () {
@@ -30,11 +38,11 @@ function viewBuilder( url, el = false, callback = ( a ) => {
     var resolveCallback = ( template ) => {
         var newOrOld = callback( template );
         if ( newOrOld !== false ) {
-            if ( cur ) {
-                cur.detach();
+            if ( pages.cur ) {
+                pages.cur.detach();
             }
             newOrOld.insert( newOrOld.el );
-            cur = newOrOld;
+            pages.cur = newOrOld;
         }
         return template;
     };
@@ -113,19 +121,19 @@ $( document ).ready( ( a ) => {
 
             viewBuilder( "teleprompter", "#tele", ( template ) => {
 
-                tele = tele || new Tele( {
+                pages.tele = pages.tele || new Tele( {
                     el: '#container',
                     template: template
                 } );
 
-                return tele;
+                return pages.tele;
 
             } );
         },
         builder: function () {
             viewBuilder( "builder", "#build", ( template ) => {
 
-                build = build || new Builder( {
+                pages.build = pages.build || new Builder( {
                     // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template,
@@ -135,26 +143,26 @@ $( document ).ready( ( a ) => {
                     }
                 } );
 
-                return build;
+                return pages.build;
 
             } );
         },
         stats: function () {
             viewBuilder( 'stats', '#stats', ( template ) => {
 
-                stats = stats || new Stats( {
+                pages.stats = pages.stats || new Stats( {
                     el: '#container',
                     template,
                     data: {}
                 } );
-                return stats;
+                return pages.stats;
             } );
         },
         "table/:tableName": function ( ctx ) {
             var tableName = ctx.params.tableName;
             viewBuilder( "tablePage", false, ( template ) => {
 
-                table = table || new Table( {
+                pages.table = pages.table || new Table( {
                     // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template: template,
@@ -164,34 +172,34 @@ $( document ).ready( ( a ) => {
                     }
                 } );
 
-                if ( !tables.past[ tableName ] ) {
-                    table.on( "tableSwitch", function ( newRoute ) {
+                if ( !pages.tableProps.past[ tableName ] ) {
+                    pages.table.on( "tableSwitch", function ( newRoute ) {
                         if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
                             page( "/table/" + newRoute[ 0 ] );
                             //console.log( "tableSwitched fired with", newRoute[ 0 ], tableName );
-                            tables.switched = true;
+                            pages.tableProps.switched = true;
                         }
 
                     } );
-                    tables.past[ tableName ] = true;
+                    pages.tableProps.past[ tableName ] = true;
                 }
 
-                if ( !tables.switched ) {
-                    table.set( "table", tableName );
+                if ( !pages.tableProps.switched ) {
+                    pages.table.set( "table", tableName );
                     //console.log( "table set " );
                 }
-                tables.switched = false;
+                pages.tableProps.switched = false;
                 //console.trace( "switched off" );
-                return table;
+                return pages.table;
 
             } ).then( ( resp ) => {
-                interval = setInterval( function () {
-                    table.switchTable( {
+                pages.tableProps.interval = setInterval( function () {
+                    pages.table.switchTable( {
                         type: 'GET'
-                    }, [ table.get( "table" ), table.get( "table" ) ] ).catch( ( err ) => {
-                        clearInterval( interval );
+                    }, [ pages.table.get( "table" ), pages.table.get( "table" ) ] ).catch( ( err ) => {
+                        clearInterval( pages.tableProps.interval );
 
-                        table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
+                        pages.table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
 
                         $( '#click' ).click( function () {
 
@@ -199,11 +207,11 @@ $( document ).ready( ( a ) => {
                             $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
                                 $( this ).remove();
                             } );
-                            interval = setInterval( func, 12000 );
+                            pages.tableProps.interval = setInterval( func, 12000 );
 
                         } );
 
-                        table.logger( err );
+                        pages.table.logger( err );
 
                     } );
 
@@ -216,7 +224,7 @@ $( document ).ready( ( a ) => {
             var current = ctx.params.current;
             viewBuilder( 'quickOrderEditor', false, ( template ) => {
 
-                quickOrder[ current ] = quickOrder[ current ] || new Base( {
+                pages.quickOrder[ current ] = pages.quickOrder[ current ] || new Base( {
                     el: '#container',
                     template,
                     data: {
@@ -247,7 +255,7 @@ $( document ).ready( ( a ) => {
                     }
                 } );
 
-                return quickOrder[ current ];
+                return pages.quickOrder[ current ];
             } );
 
         }
