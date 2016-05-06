@@ -1,17 +1,18 @@
-var cache = {},
-    pages = {
-        cur: undefined,
-        stats: undefined,
-        tele: undefined,
-        build: undefined,
-        table: undefined,
-        tableProps: {
-            switched: true,
-            past: {},
-            interval: undefined
-        },
-        quickOrder: {}
-    };
+var pages = {
+    cur: undefined,
+    stats: undefined,
+    tele: undefined,
+    build: undefined,
+    table: undefined,
+    charter: undefined,
+    tableProps: {
+        switched: true,
+        past: {},
+        interval: undefined
+    },
+    quickOrder: {},
+    templateCache: {}
+};
 Ractive.DEBUG = false;
 
 function viewBuilder( url, el = false, callback = ( a ) => {
@@ -47,8 +48,8 @@ function viewBuilder( url, el = false, callback = ( a ) => {
         return template;
     };
 
-    if ( url in cache ) {
-        return Promise.resolve( resolveCallback( cache[ url ] ) );
+    if ( url in pages.templateCache ) {
+        return Promise.resolve( resolveCallback( pages.templateCache[ url ] ) );
     }
 
     return $.ajax( {
@@ -59,7 +60,7 @@ function viewBuilder( url, el = false, callback = ( a ) => {
         base.alerter( "Sorry, Issues loading template file..." );
         throw Error( JSON.stringify( err ) );
     } ).then( ( template ) => {
-        cache[ url ] = template;
+        pages.templateCache[ url ] = template;
         return template;
     } );
 
@@ -71,7 +72,8 @@ $( document ).ready( ( a ) => {
     var components = {
         builder: Builder,
         table: Table,
-        modal: Base
+        modal: Base,
+        chart: Chart
     };
 
     Promise.all( Object.keys( components ).map( ( c ) => {
@@ -100,7 +102,8 @@ $( document ).ready( ( a ) => {
         tele: "/teleprompter",
         home: '/table/users',
         build: "/builder",
-        stats: "/stats"
+        stats: "/stats",
+        charty: "/charter"
     };
 
     Object.keys( links ).forEach( ( cur ) => {
@@ -117,6 +120,21 @@ $( document ).ready( ( a ) => {
     } );
 
     var routes = {
+        charter: function () {
+            viewBuilder( "chart", "#charty", ( template ) => {
+
+                pages.charter = pages.charter || new Chart( {
+                    el: '#container',
+                    template: template,
+                    data: {
+                        identifier: "woa"
+                    }
+                } );
+
+                return pages.charter;
+
+            } );
+        },
         telePrompter: function () {
 
             viewBuilder( "teleprompter", "#tele", ( template ) => {
