@@ -286,6 +286,8 @@ $( document ).ready( ( a ) => {
         page( cur, routes[ cur ] );
     } );
 
-    page();
+    page( {
+        hashbang: true
+    } );
 
 } );

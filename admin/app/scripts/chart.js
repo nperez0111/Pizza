@@ -1,18 +1,23 @@
 var Chart = Base.extend( {
     oninit: function () {
-        this.observe( "identifier", ( newVal, oldVal ) => {
-            if ( !newVal ) {
-                return;
+
+        this.observe( "chartType", ( newVal, oldVal ) => {
+            if ( newVal && ( newVal !== oldVal ) ) {
+                this.fire( "rerender" );
             }
-
-        } );
+        } )
         this.on( "rerender", () => {
-            new Chartist.Bar( this.get( "selector" ), this.get( "data" ), this.get( "options" ), this.get( "responsiveOptions" ) );
+            this.set( "instance", new Chartist[ this.get( "chartType" ) ]( this.get( "selector" ), this.get( "data" ), this.get( "options" ), this.get( "responsiveOptions" ) ) );
         } );
-
+    },
+    onrender: function () {
+        this.fire( "rerender" );
     },
     data: function () {
         return {
+            instance: undefined,
+            chartType: "Line",
+            chartTypes: [ "Bar", "Line" ],
             data: {
                 labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
                 series: [
