@@ -177,7 +177,7 @@ var Base = Ractive.extend( {
                         orderName: symboled
                     }
                 }, "getPrice" ).then( JSON.parse, reject ).then( ( o ) => {
-                    resolve( o[ 0 ] );
+                    resolve( o ? o[ 0 ] : null );
                 } );
             } );
         }, false, true );
@@ -226,6 +226,9 @@ var Base = Ractive.extend( {
             ret[ keys ] = values;
         }
         return ret;
+    },
+    toggle: function ( keypath ) {
+        this.set( keypath, !this.get( keypath ) );
     },
     ifPassesDo: function ( arr, condition, doer ) {
 
