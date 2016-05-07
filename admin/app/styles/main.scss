@@ -2,9 +2,12 @@ $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $brand-primary:#456;
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "chartist-settings.scss";
+@import "bower_components/chartist/dist/scss/chartist.scss";
 // endbower
 @import "svg.scss";
-@import "_mixins.scss";
+@import "svg.scss";
+
 .center {
     text-align: center;
     margin: 0 auto;
