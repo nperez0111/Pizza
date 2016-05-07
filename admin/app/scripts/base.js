@@ -181,7 +181,7 @@ var Base = Ractive.extend( {
         Mousetrap.unbind( that.keyBindings );
     },
     logger: function ( a, warning ) {
-        if ( true ) {
+        if ( /unminified/.test( function () { /*unminified*/ } ) ) {
             if ( warning ) {
                 console.warn( a );
             } else {
@@ -226,7 +226,7 @@ var Base = Ractive.extend( {
         return Object.keys( obj );
     },
     sequence: function () {
-        return this.compose.apply( this, Array.prototype.slice.call( arguments ).reverse() );
+        return this.compose.apply( this, Array.from( arguments ).reverse() );
     },
     compose: function () {
         var fns = arguments;
