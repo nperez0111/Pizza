@@ -54,7 +54,15 @@ function isIdentifier( $table, $test ) {
 }
 
 function isInside( $arr, $val, $searchFor ) {
-    return array_search( $searchFor, $arr[ $x ][ $val ] ) || -1;
+
+    $i=0;
+    foreach($arr as $cur){
+        if($cur[$val]==$searchFor){
+            return $i;
+        }
+        $i++;
+    }
+    return -1;
 }
 
 //true for props in array format false for comma delimited string
