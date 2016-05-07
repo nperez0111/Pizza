@@ -167,6 +167,21 @@ var Base = Ractive.extend( {
             return false;
         } ).join( this.cache.settings.dbdelimiter );
     },
+    getPrice: function ( order, isSymbol ) {
+        var symboled = isSymbol ? order : this.mapNameToSymbols( order );
+        this.logger( symboled );
+        return this.getCache( isSymbol ? symboled : symboled.join( " " ), () => {
+            return new Promise( ( resolve, reject ) => {
+                this.sendToDataBase( {
+                    data: {
+                        orderName: symboled
+                    }
+                }, "getPrice" ).then( JSON.parse, reject ).then( ( o ) => {
+                    resolve( o[ 0 ] );
+                } );
+            } );
+        }, false, true );
+    },
     onClose: function () {
         return this;
     },

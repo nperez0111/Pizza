@@ -26,7 +26,19 @@ var Chart = Base.extend( {
                 ]
             },
             options: {
-                seriesBarDistance: 15
+                seriesBarDistance: 15,
+                low: 0,
+                high: 10,
+                showArea: false,
+                fullwidth: true,
+                axisY: {
+                    onlyInteger: false,
+                    title: ""
+                },
+                axisX: {
+                    onlyInteger: true,
+                    title: ""
+                }
             },
             responsiveOptions: [
                 [ 'screen and (min-width: 641px) and (max-width: 1024px)', {
@@ -54,5 +66,8 @@ var Chart = Base.extend( {
                 return "." + this.get( "identifier" );
             }
         }
+    },
+    toggleOption: function ( keypath ) {
+        this.toggle( "options." + keypath );
     }
 } );

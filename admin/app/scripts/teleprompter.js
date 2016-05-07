@@ -197,21 +197,6 @@ var Tele = Base.extend( {
 
 
     },
-    getPrice: function ( order, isSymbol ) {
-        var symboled = isSymbol ? order : this.mapNameToSymbols( order );
-        this.logger( symboled );
-        return this.getCache( isSymbol ? symboled : symboled.join( " " ), () => {
-            return new Promise( ( resolve, reject ) => {
-                this.sendToDataBase( {
-                    data: {
-                        orderName: symboled
-                    }
-                }, "getPrice" ).then( JSON.parse, reject ).then( ( o ) => {
-                    resolve( o[ 0 ] );
-                } );
-            } );
-        }, false, true );
-    },
     stageOrder: function ( order ) {
         var not = this.notify( 'Order of <span class="underline">' + order.Name + '</span> has been added successfully!', '<button class="btn btn-default rmv"><span class="glyphicon glyphicon-remove table-remove"></span>Remove Order</button>' ),
             that = this;
