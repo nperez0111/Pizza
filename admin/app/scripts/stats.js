@@ -1,30 +1,19 @@
 var Stats = Base.extend( {
     oninit: function () {
-
+        this.getStats().then( res => {
+            return this.set( "data", res );
+        } ).then( res => {
+            this.findComponent( "Chart" ).fire( "rerender" );
+        } );
     },
     data: function () {
-        this.sendToDataBase( {
-            data: {
-                from: "2015-12-14 17:16:51"
-            }
-        }, "getByTime/orders/DateOrdered" ).then( JSON.parse, this.errorMessage ).then( ( resp ) => {
 
-            Promise.all( resp.map( ( cur ) => {
-                return this.getPrice( cur.OrderSymbols, true ).catch( function ( a ) {
-                    console.log( "Problem:", a );
-                } );
-            } ) ).then( ( a ) => {
-                return resp.map( ( curr, i ) => {
-                    return this.makeObj( Object.keys( curr ).concat( "Price" ), Object.keys( curr ).map( cur => {
-                        return curr[ cur ];
-                    } ).concat( a[ i ] ) )
-                } );
-            } ).then( res => {
-                this.set( "data", res );
-            } );
-        } );
         return {
-            data: []
+            data: [],
+            stats: {
+                from: "2015-12-14 17:16:51",
+                to: new Date()
+            }
         }
     },
     computed: {
@@ -40,5 +29,25 @@ var Stats = Base.extend( {
                 ] );
             }
         }
+    },
+    getStats: function () {
+        return this.sendToDataBase( {
+            data: {
+                from: this.get( "stats.from" )
+            }
+        }, "getByTime/orders/DateOrdered" ).then( JSON.parse, this.errorMessage ).then( ( resp ) => {
+
+            return Promise.all( resp.map( ( cur ) => {
+                return this.getPrice( cur.OrderSymbols, true ).catch( function ( a ) {
+                    console.log( "Problem:", a );
+                } );
+            } ) ).then( ( a ) => {
+                return resp.map( ( curr, i ) => {
+                    return this.makeObj( Object.keys( curr ).concat( "Price" ), Object.keys( curr ).map( cur => {
+                        return curr[ cur ];
+                    } ).concat( a[ i ] ) )
+                } );
+            } );
+        } );
     }
 } );

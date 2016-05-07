@@ -7,11 +7,12 @@ var Chart = Base.extend( {
             }
         } )
         this.on( "rerender", () => {
+            console.log( "rendered" );
             this.set( "instance", new Chartist[ this.get( "chartType" ) ]( this.get( "selector" ), this.get( "data" ), this.get( "options" ), this.get( "responsiveOptions" ) ) );
         } );
     },
     onrender: function () {
-        this.fire( "rerender" );
+
 
         var $tooltip = $( '<div class="tooltip tooltip-hidden"></div>' ).appendTo( $( this.get( "selector" ) ) );
 
@@ -36,6 +37,7 @@ var Chart = Base.extend( {
                 } );
             } );
         } );
+        this.fire( "rerender" );
     },
     teardown: function () {
         $( document ).off();

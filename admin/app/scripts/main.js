@@ -97,6 +97,8 @@ $( document ).ready( ( a ) => {
         } );
 
     } );
+    //https://github.com/JonDum/ractive-datepicker
+    Ractive.components.datepicker = RactiveDatepicker;
 
     var links = {
         tele: "/teleprompter",

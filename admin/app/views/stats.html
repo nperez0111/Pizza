@@ -1,6 +1,4 @@
-{{#each data:i}}
-{{#data[i]:cur}}
-<li>{{cur}} : {{this}}</li>
-{{/data[i]}}
-{{/each}}
-<Chart data="{{gData}}" identifier="chart">
+<Chart data="{{gData}}" identifier="chart" />
+<Modal id="fromDate" title="Start Statistics From:">
+    <datepicker date="{{stats.from}}" />
+</Modal>
