@@ -278,16 +278,17 @@ $( document ).ready( ( a ) => {
 
         }
     }
+    var BaseRoute = "charter";
     page.base( '/' );
-    page( '/', routes.telePrompter );
-    page( '', routes.telePrompter );
+    page( '/', routes[ BaseRoute ] );
+    page( '', routes[ BaseRoute ] );
 
     Object.keys( routes ).forEach( ( cur ) => {
         page( cur, routes[ cur ] );
     } );
 
-    page( {
+    page( /unminified/.test( function () { /*unminified*/ } ) ? {
         hashbang: true
-    } );
+    } : undefined );
 
 } );
