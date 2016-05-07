@@ -33,9 +33,10 @@ var Stats = Base.extend( {
                 return this.makeObj( [ "series", "labels" ], [
                     [ this.get( "data" ).map( cur => {
                         return cur.Price || null;
-                    } ) ], this.get( "data" ).map( ( cur, i ) => {
-                        return i + "";
-                    } )
+                    } ), this.get( "data" ).map( cur => {
+                        return cur.Price || null;
+                    } ) ],
+                    [ "First", "Second", "Third" ]
                 ] );
             }
         }

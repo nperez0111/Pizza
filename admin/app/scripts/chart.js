@@ -12,6 +12,33 @@ var Chart = Base.extend( {
     },
     onrender: function () {
         this.fire( "rerender" );
+
+        var $tooltip = $( '<div class="tooltip tooltip-hidden"></div>' ).appendTo( $( this.get( "selector" ) ) );
+
+        [ "point", "bar" ].forEach( ( cur ) => {
+            //http://jsbin.com/yihubuyaco/edit?css,js,output
+            $( document ).on( 'mouseenter', '.ct-' + cur, function () {
+                var seriesName = $( this ).closest( '.ct-series' ).attr( 'ct:series-name' ),
+                    value = $( this ).attr( 'ct:value' );
+
+                $tooltip.text( seriesName + ': ' + value );
+                $tooltip.removeClass( 'tooltip-hidden' );
+            } );
+
+            $( document ).on( 'mouseleave', '.ct-' + cur, function () {
+                $tooltip.addClass( 'tooltip-hidden' );
+            } );
+
+            $( document ).on( 'mousemove', '.ct-' + cur, function ( event ) {
+                $tooltip.css( {
+                    left: ( event.offsetX || event.originalEvent.layerX ) - $tooltip.width() / 2,
+                    top: ( event.offsetY || event.originalEvent.layerY ) - $tooltip.height() - 20
+                } );
+            } );
+        } );
+    },
+    teardown: function () {
+        $( document ).off();
     },
     data: function () {
         return {
@@ -27,17 +54,13 @@ var Chart = Base.extend( {
             },
             options: {
                 seriesBarDistance: 15,
-                low: 0,
-                high: 10,
                 showArea: false,
                 fullwidth: true,
                 axisY: {
-                    onlyInteger: false,
-                    title: ""
+                    onlyInteger: false
                 },
                 axisX: {
-                    onlyInteger: true,
-                    title: ""
+                    onlyInteger: true
                 }
             },
             responsiveOptions: [
@@ -69,5 +92,9 @@ var Chart = Base.extend( {
     },
     toggleOption: function ( keypath ) {
         this.toggle( "options." + keypath );
+    },
+    setMaxMinVal: function ( low, high ) {
+        this.set( "options.low", low );
+        this.set( "options.high", high );
     }
 } );

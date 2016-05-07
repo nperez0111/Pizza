@@ -7,7 +7,6 @@ $brand-primary:#456;
 // endbower
 @import "svg.scss";
 @import "svg.scss";
-
 .center {
     text-align: center;
     margin: 0 auto;
@@ -257,6 +256,25 @@ input[type="radio"] {
     align-items: space-around;
     @include bp(small) {
         justify-content: center;
+    }
+}
+
+.rel {
+    position: relative;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+    border-radius: 3px;
+    text-align: center;
+    pointer-events: none;
+    color: white;
+    transition: opacity .1s ease-out;
+    &-hidden {
+        opacity: 0;
     }
 }
 
