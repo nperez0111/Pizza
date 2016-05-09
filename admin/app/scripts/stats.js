@@ -1,5 +1,9 @@
 var Stats = Base.extend( {
     oninit: function () {
+        this.on( "openModal", ( event, target ) => {
+            $( "#" + target + "Date" ).modal( "show" );
+        } );
+
         this.getStats().then( res => {
             return this.set( "data", res );
         } ).then( res => {
@@ -11,7 +15,7 @@ var Stats = Base.extend( {
         return {
             data: [],
             stats: {
-                from: "2015-12-14 17:16:51",
+                from: new Date( "Mon Dec 14 2015 20:16:51" ),
                 to: new Date()
             }
         }
@@ -28,12 +32,27 @@ var Stats = Base.extend( {
                     [ "First", "Second", "Third" ]
                 ] );
             }
+        },
+        fromTimeStamp: {
+            get: function () {
+                var t = this.get( "stats.from" );
+                return `${t.toISOString().slice(0, 10)} ${t.getHours()}:${t.getMinutes()}:0`;
+                //example format "2015-12-14 17:16:51"
+            }
+        },
+        toTimeStamp: {
+            get: function () {
+                var t = this.get( "stats.to" );
+                return `${t.toISOString().slice(0, 10)} ${t.getHours()}:${t.getMinutes()}:0`;
+                //"2015-12-14 17:16:51"
+            }
         }
     },
     getStats: function () {
         return this.sendToDataBase( {
             data: {
-                from: this.get( "stats.from" )
+                from: this.get( "fromTimeStamp" ),
+                to: this.get( "toTimeStamp" )
             }
         }, "getByTime/orders/DateOrdered" ).then( JSON.parse, this.errorMessage ).then( ( resp ) => {
 

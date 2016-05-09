@@ -1,91 +1,54 @@
-.dark.well {
-    background: #1a1a1a;
-    color: #ccc;
-    padding: 3em;
-    margin: 1em;
+$darkColor:rgb(46, 41, 40);
+.ractive-datepicker.dark {
+    background: $darkColor;
+    color: lighten($darkColor,70%);
     text-align: center;
-    .ractive-datepicker {
-        border: 1px solid #555;
-        background: #3c3c3c;
-        .header {
-            background: #303030;
-        }
-        .active:after {
-            border-right-color: #3c3c3c;
-        }
-        .dates .active {
-            background: #6097EC;
-        }
-        .days {
-            color: fade-out(#fff, 0.6);
-        }
+    .header {
+        background: darken($darkColor,8%);
+        border-bottom: none;
+    }
+    .active:after {
+        border-right-color: $darkColor;
+    }
+    .dates .active {
+        background: #6097EC;
+    }
+    .days {
+        color: lighten($darkColor,70%);
+    }
+    .editor {
         .years:after {
-            background: linear-gradient(#3c3c3c, rgba(60, 60, 60, 0), #3c3c3c);
+            background: linear-gradient($darkColor, rgba(60, 60, 60, 0), $darkColor);
         }
         .clock:after {
-            background: linear-gradient(#3c3c3c 20%, rgba(60, 60, 60, 0), #3c3c3c 80%);
+            background: linear-gradient($darkColor, rgba(60, 60, 60, 0), $darkColor);
         }
     }
 }
 
-.light {
-    border: 1px solid fade-out(#000, 0.8);
-    padding: 3em;
-    margin: 1em;
+.ractive-datepicker.light {
     background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    color: #333;
     text-align: center;
-    .ractive-datepicker {
-        background: #fff;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        color: #333;
-        .header {
-            background: #f0f0f0;
-            text-align: right;
-            background: transparent;
-            color: grey;
-            .active {
-                color: #000;
-                font-weight: bold;
-                &:after {
-                    border: 5px solid transparent;
-                    border-left-color: #000;
-                    margin-top: -2.5px;
-                }
-            }
-            .dates .active {
-                background: #A70072;
-            }
-        }
-    }
-}
-
-.ractive-datepicker.compact {
-    flex-direction: column;
-    font-size: 0.8em;
     .header {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        padding: 1.5em;
-        .weekday {
-            font-size: 1em;
+        background: #f0f0f0;
+        border-bottom: none;
+        text-align: right;
+        background: transparent;
+        color: grey;
+        .active {
+            color: #000;
+            font-weight: bold;
+            &:after {
+                border: 5px solid transparent;
+                border-left-color: #000;
+                margin-top: -2.5px;
+            }
         }
-        div {
-            display: inline;
-        }
-        > div {
-            margin-top: 0 !important;
-            margin-right: 1em;
-        }
-        .active:after {
-            border-right-color: transparent;
-            border-bottom-color: #fff;
-            left: 50%;
-            right: auto;
-            bottom: -1.5em;
-            margin-top: 0;
-            margin-left: -10px;
+        .dates .active {
+            background: #A70072;
         }
     }
 }
