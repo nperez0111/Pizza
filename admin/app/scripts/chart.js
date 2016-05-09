@@ -7,7 +7,6 @@ var Chart = Base.extend( {
             }
         } )
         this.on( "rerender", () => {
-            console.log( "rendered" );
             this.set( "instance", new Chartist[ this.get( "chartType" ) ]( this.get( "selector" ), this.get( "data" ), this.get( "options" ), this.get( "responsiveOptions" ) ) );
         } );
     },
@@ -18,19 +17,18 @@ var Chart = Base.extend( {
 
         [ "point", "bar" ].forEach( ( cur ) => {
             //http://jsbin.com/yihubuyaco/edit?css,js,output
-            $( document ).on( 'mouseenter', '.ct-' + cur, function () {
-                var seriesName = $( this ).closest( '.ct-series' ).attr( 'ct:series-name' ),
-                    value = $( this ).attr( 'ct:value' );
+            $( this.get( "selector" ) ).on( 'mouseenter', '.ct-' + cur, function () {
+                var value = $( this ).attr( 'ct:value' );
 
-                $tooltip.text( seriesName + ': ' + value );
+                $tooltip.text( value );
                 $tooltip.removeClass( 'tooltip-hidden' );
             } );
 
-            $( document ).on( 'mouseleave', '.ct-' + cur, function () {
+            $( this.get( "selector" ) ).on( 'mouseleave', '.ct-' + cur, function () {
                 $tooltip.addClass( 'tooltip-hidden' );
             } );
 
-            $( document ).on( 'mousemove', '.ct-' + cur, function ( event ) {
+            $( this.get( "selector" ) ).on( 'mousemove', '.ct-' + cur, function ( event ) {
                 $tooltip.css( {
                     left: ( event.offsetX || event.originalEvent.layerX ) - $tooltip.width() / 2,
                     top: ( event.offsetY || event.originalEvent.layerY ) - $tooltip.height() - 20
@@ -40,11 +38,12 @@ var Chart = Base.extend( {
         this.fire( "rerender" );
     },
     teardown: function () {
-        $( document ).off();
+        $( this.get( "selector" ) ).off();
     },
     data: function () {
         return {
             instance: undefined,
+            identifier: "chart",
             chartType: "Line",
             chartTypes: [ "Bar", "Line" ],
             data: {
