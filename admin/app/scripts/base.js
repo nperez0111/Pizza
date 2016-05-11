@@ -180,7 +180,7 @@ var Base = Ractive.extend( {
                     resolve( o ? o[ 0 ] : null );
                 } );
             } );
-        }, false, true );
+        }, true, true );
     },
     onClose: function () {
         return this;
