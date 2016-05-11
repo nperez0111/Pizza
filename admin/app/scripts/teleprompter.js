@@ -6,7 +6,8 @@ var Tele = Base.extend( {
         this.on( 'rmvqueue', ( event ) => {
             this.get( "queue" ).splice( event.index.i, 1 );
         } );
-        this.on( 'build', ( event ) => {
+        this.on( 'build', ( event, a ) => {
+            console.log( event, a );
             //this.build( this.get( "type" )[ event.index.cur ].name );
             this.set( "cur", this.get( "type" )[ event.index.cur ].name.toLowerCase() );
             $( '#moduler' ).modal( 'show' );
@@ -156,10 +157,20 @@ var Tele = Base.extend( {
             cols: 2,
             queue: [],
             type: [],
+            titles: [],
             unavailableItems: [],
             cur: "pizza"
         };
         //TODO implement the default types with their settings
+    },
+    computed: {
+        lowerTitles: {
+            get: function () {
+                return this.get( "titles" ).map( cur => {
+                    return cur.slice( 0, 1 ).toLowerCase() + cur.slice( 1 );
+                } )
+            }
+        }
     },
     buildYourOwn: [ true, true, true, false ],
     order: function ( obj ) {

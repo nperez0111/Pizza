@@ -27,7 +27,11 @@
                         <h3>
                             <a on-click="build" class="text-center text-capitalize">Make Your Own:</a>
                         </h3>
-                        
+                        {{#if lowerTitles[cur] && lowerTitles[cur]!=='wings' && lowerTitles[cur]!=='salad'}}
+                        <Modal id="moduler" title="{{lowerTitles[cur]}} Builder">
+                            <Builder labels="{{lowerTitles[cur]}}Headings" />
+                        </Modal>
+                        {{/if}}
                     {{/if}}
                       
                        <div class="row">
@@ -65,9 +69,7 @@
     </div>
 
 
-<Modal id="moduler" title="{{cur}} Builder">
-    <Builder labels="{{cur}}Headings" />
-</Modal>
+
 
 <Modal id="orders" title="Current Orders:" footer='{{#if queue.length>0}}<button type="button" class="btn btn-default" on-click="checkout">Order</button>{{/if}}<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'>
     
