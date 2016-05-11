@@ -1,9 +1,14 @@
 var Stats = Base.extend( {
     oninit: function () {
         this.on( "openModal", ( event, target ) => {
-            $( "#" + target + "Date" ).modal( "show" );
+            var $modal = $( "#" + target + "Date" ).modal( "show" );
+            $modal.on( 'hidden.bs.modal', () => {
+                this.findComponent( "Modal" ).fire( "close" )
+            } )
         } );
-
+        this.on( "Modal.close", ( event, b ) => {
+            this.getStats();
+        } )
         this.getStats().then( res => {
             return this.set( "data", res );
         } ).then( res => {
