@@ -11,7 +11,6 @@ var Stats = Base.extend( {
         } );
     },
     data: function () {
-
         return {
             data: [],
             stats: {
