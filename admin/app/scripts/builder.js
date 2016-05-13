@@ -128,11 +128,11 @@ var Builder = Base.extend( {
             }
         };
     },
-    debugger: function ( direction = "up" ) {
+    debugger: function ( direction = "up", amount = 1 ) {
         if ( direction == "up" ) {
-            this.set( "svg.debugge", this.get( "svg.debugge" ) + 1 );
+            this.set( "svg.debugge", this.get( "svg.debugge" ) + amount );
         } else {
-            this.set( "svg.debugge", this.get( "svg.debugge" ) - 1 );
+            this.set( "svg.debugge", this.get( "svg.debugge" ) - amount );
         }
         console.log( "At:", this.get( "svg.debugge" ) );
     },
