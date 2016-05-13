@@ -15,58 +15,6 @@ var pages = {
 };
 Ractive.DEBUG = false;
 
-function viewBuilder( url, el = false, callback = ( a ) => {
-    return false;
-} ) {
-
-
-    if ( $( el ).parent().hasClass( "active" ) ) {
-        return Promise.reject( "'" + el + "' Element clicked twice" );
-    }
-
-    if ( pages.tableProps.interval ) {
-        clearInterval( pages.tableProps.interval );
-    }
-
-    $( '.nav li' ).each( function () {
-        $( this ).removeClass( "active" );
-    } );
-
-    if ( el ) {
-        $( el ).parent().addClass( "active" );
-    }
-
-    var resolveCallback = ( template ) => {
-        var newOrOld = callback( template );
-        if ( newOrOld !== false ) {
-            if ( pages.cur ) {
-                pages.cur.detach();
-            }
-            newOrOld.insert( newOrOld.el );
-            pages.cur = newOrOld;
-        }
-        return template;
-    };
-
-    if ( url in pages.templateCache ) {
-        return Promise.resolve( resolveCallback( pages.templateCache[ url ] ) );
-    }
-
-    return $.ajax( {
-        url: window.location.origin + "/views/" + url + ".html",
-        dataType: "html"
-    } ).then( resolveCallback, ( err ) => {
-        var base = new Base();
-        base.alerter( "Sorry, Issues loading template file..." );
-        throw Error( JSON.stringify( err ) );
-    } ).then( ( template ) => {
-        pages.templateCache[ url ] = template;
-        return template;
-    } );
-
-}
-
-
 $( document ).ready( ( a ) => {
 
     var components = {
@@ -97,8 +45,12 @@ $( document ).ready( ( a ) => {
         } );
 
     } );
+
+
     //https://github.com/JonDum/ractive-datepicker
     Ractive.components.datepicker = RactiveDatepicker;
+
+
 
     var links = {
         tele: "/teleprompter",
@@ -114,6 +66,7 @@ $( document ).ready( ( a ) => {
             e.preventDefault();
         } );
     } );
+    
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
@@ -286,3 +239,54 @@ $( document ).ready( ( a ) => {
     } : undefined );
 
 } );
+
+function viewBuilder( url, el = false, callback = ( a ) => {
+    return false;
+} ) {
+
+
+    if ( $( el ).parent().hasClass( "active" ) ) {
+        return Promise.reject( "'" + el + "' Element clicked twice" );
+    }
+
+    if ( pages.tableProps.interval ) {
+        clearInterval( pages.tableProps.interval );
+    }
+
+    $( '.nav li' ).each( function () {
+        $( this ).removeClass( "active" );
+    } );
+
+    if ( el ) {
+        $( el ).parent().addClass( "active" );
+    }
+
+    var resolveCallback = ( template ) => {
+        var newOrOld = callback( template );
+        if ( newOrOld !== false ) {
+            if ( pages.cur ) {
+                pages.cur.detach();
+            }
+            newOrOld.insert( newOrOld.el );
+            pages.cur = newOrOld;
+        }
+        return template;
+    };
+
+    if ( url in pages.templateCache ) {
+        return Promise.resolve( resolveCallback( pages.templateCache[ url ] ) );
+    }
+
+    return $.ajax( {
+        url: window.location.origin + "/views/" + url + ".html",
+        dataType: "html"
+    } ).then( resolveCallback, ( err ) => {
+        var base = new Base();
+        base.alerter( "Sorry, Issues loading template file..." );
+        throw Error( JSON.stringify( err ) );
+    } ).then( ( template ) => {
+        pages.templateCache[ url ] = template;
+        return template;
+    } );
+
+}
