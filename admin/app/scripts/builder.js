@@ -118,7 +118,7 @@ var Builder = Base.extend( {
                 t.forEach( ( cur ) => {
                     var key = cur + s;
                     if ( key in svgs ) {
-                        temp += "<g id='" + key + "'>" + svgs[ key ] + "</g>";
+                        temp += "<g id='" + key + "' class='" + cur + "'>" + svgs[ key ] + "</g>";
                     }
                 } );
                 //console.log( "Size" + s + "<br>" + t.join( ", " ) + temp );
