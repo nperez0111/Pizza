@@ -98,7 +98,8 @@ var Builder = Base.extend( {
             sizes: [ 45, 37.5, 30 ],
             svg: {
                 radius: 0,
-                anim: 0
+                anim: 0,
+                debugge: 1
             },
             toppingsSVG: {},
             dynamicSVG: function ( curSize, toppingsSelected ) {
@@ -126,6 +127,14 @@ var Builder = Base.extend( {
                 return part;
             }
         };
+    },
+    debugger: function ( direction = "up" ) {
+        if ( direction == "up" ) {
+            this.set( "svg.debugge", this.get( "svg.debugge" ) + 1 );
+        } else {
+            this.set( "svg.debugge", this.get( "svg.debugge" ) - 1 );
+        }
+        console.log( "At:", this.get( "svg.debugge" ) );
     },
     queue: [],
     computed: {
