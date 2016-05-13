@@ -76,9 +76,9 @@ var Builder = Base.extend( {
             } );
         } );
         this.on( "staged", ( event ) => {
-            this.queue = this.get( "toppingsSelected" ).slice( 0 );
-            this.queue.unshift( this.get( "curSize" ) );
-            this.fire( "checkout", this.queue );
+            this.set("queue", this.get( "toppingsSelected" ).slice( 0 ));
+            this.get("queue").unshift( this.get( "curSize" ) );
+            this.fire( "checkout", this.get("queue") );
         } );
         this.on( "debugg", ( event, passed ) => {
             this.debugger( ( passed.split( ":" )[ 0 ] ) == "add" ? "up" : "down", parseInt( passed.split( ":" )[ 1 ] ) );
@@ -102,6 +102,7 @@ var Builder = Base.extend( {
                 anim: 0,
                 debug: 1
             },
+            queue: [],
             ani: function ( item, multiplier = 1 ) {
                 return ( multiplier * ( ( this.get( "svg.Anim" + item ) || 100 ) / 100 ) );
             },
@@ -140,7 +141,6 @@ var Builder = Base.extend( {
         }
         console.log( "At:", this.get( "svg.debug" ) );
     },
-    queue: [],
     computed: {
         curSize: {
             get: function () {
