@@ -127,7 +127,7 @@ $( document ).ready( ( a ) => {
 
                 pages.charter = pages.charter || new Chart( {
                     el: '#container',
-                    template: template,
+                    template,
                     data: {
                         identifier: "woa"
                     }
@@ -143,7 +143,7 @@ $( document ).ready( ( a ) => {
 
                 pages.tele = pages.tele || new Tele( {
                     el: '#container',
-                    template: template
+                    template
                 } );
 
                 return pages.tele;
@@ -154,13 +154,8 @@ $( document ).ready( ( a ) => {
             viewBuilder( "builder", "#build", ( template ) => {
 
                 pages.build = pages.build || new Builder( {
-                    // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
-                    template,
-                    // Here, we're passing in some initial data
-                    data: {
-
-                    }
+                    template
                 } );
 
                 return pages.build;
@@ -172,8 +167,7 @@ $( document ).ready( ( a ) => {
 
                 pages.stats = pages.stats || new Stats( {
                     el: '#container',
-                    template,
-                    data: {}
+                    template
                 } );
                 return pages.stats;
             } );
@@ -183,7 +177,6 @@ $( document ).ready( ( a ) => {
             viewBuilder( "tablePage", false, ( template ) => {
 
                 pages.table = pages.table || new Table( {
-                    // The `el` option can be a node, an ID, or a CSS selector.
                     el: '#container',
                     template: template,
                     data: {
@@ -196,7 +189,6 @@ $( document ).ready( ( a ) => {
                     pages.table.on( "tableSwitch", function ( newRoute ) {
                         if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
                             page( "/table/" + newRoute[ 0 ] );
-                            //console.log( "tableSwitched fired with", newRoute[ 0 ], tableName );
                             pages.tableProps.switched = true;
                         }
 
@@ -280,7 +272,7 @@ $( document ).ready( ( a ) => {
 
         }
     }
-    var BaseRoute = "charter";
+    var BaseRoute = "stats";
     page.base( '/' );
     page( '/', routes[ BaseRoute ] );
     page( '', routes[ BaseRoute ] );
