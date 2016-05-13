@@ -26,7 +26,14 @@
                 {{>dynamicSVG(curSize,toppingsSelected)}}
             </svg>
             {{/with}}
+            
         </div>
+        <button class="btn btn-default" on-click="debugg:add:25">+25</button>
+            <button class="btn btn-default" on-click="debugg:add:5">+5</button>
+            <button class="btn btn-default" on-click="debugg:add:1">+1</button>
+            <button class="btn btn-default" on-click="debugg:sub:1">-1</button>
+            <button class="btn btn-default" on-click="debugg:sub:5">-5</button>
+            <button class="btn btn-default" on-click="debugg:sub:10">-10</button>
     </div>
     <div class="col-sm-12 col-md-7 col-lg-8">
         {{#each types:i}}

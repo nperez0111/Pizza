@@ -8,11 +8,9 @@ var Builder = Base.extend( {
                     }, "toppingsSVG" ).then( JSON.parse, reject ).then( resolve );
                 } );
             }, true, true ).then( ( resp ) => {
-                resp.forEach( ( cur ) => {
+                return resp.forEach( ( cur ) => {
                     this.set( "toppingsSVG", $.extend( this.get( "toppingsSVG" ), this.makeObj( cur.title + cur.size, cur.svg ) ) );
                 } );
-
-                return resp;
             }, this.logger ).then( resp => {
                 if ( oldVal && newVal && newVal.length > oldVal.length ) {
                     var x = newVal.filter( ( i ) => {
@@ -82,6 +80,9 @@ var Builder = Base.extend( {
             this.queue.unshift( this.get( "curSize" ) );
             this.fire( "checkout", this.queue );
         } );
+        this.on( "debugg", ( event, passed ) => {
+            this.debugger( ( passed.split( ":" )[ 0 ] ) == "add" ? "up" : "down", parseInt( passed.split( ":" )[ 1 ] ) );
+        } );
     },
     data: function () {
         return {
@@ -99,7 +100,10 @@ var Builder = Base.extend( {
             svg: {
                 radius: 0,
                 anim: 0,
-                debugge: 1
+                debug: 1
+            },
+            ani: function ( item, multiplier = 1 ) {
+                return ( multiplier * ( ( this.get( "svg.Anim" + item ) || 100 ) / 100 ) );
             },
             toppingsSVG: {},
             dynamicSVG: function ( curSize, toppingsSelected ) {
@@ -130,11 +134,11 @@ var Builder = Base.extend( {
     },
     debugger: function ( direction = "up", amount = 1 ) {
         if ( direction == "up" ) {
-            this.set( "svg.debugge", this.get( "svg.debugge" ) + amount );
+            this.set( "svg.debug", this.get( "svg.debug" ) + amount );
         } else {
-            this.set( "svg.debugge", this.get( "svg.debugge" ) - amount );
+            this.set( "svg.debug", this.get( "svg.debug" ) - amount );
         }
-        console.log( "At:", this.get( "svg.debugge" ) );
+        console.log( "At:", this.get( "svg.debug" ) );
     },
     queue: [],
     computed: {
