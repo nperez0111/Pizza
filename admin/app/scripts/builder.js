@@ -70,14 +70,12 @@ var Builder = Base.extend( {
                     return obj.slice( 0 ).fill( false );
                 } ) );
                 this.set( "types", types );
-
             }, ( err ) => {
                 this.notify( "Error occured", err, 5000, "error" );
             } );
         } );
         this.on( "staged", ( event ) => {
-            this.set("queue", this.get( "toppingsSelected" ).slice( 0 ));
-            this.get("queue").unshift( this.get( "curSize" ) );
+            this.set("queue", [this.get( "curSize" )].concat(this.get( "toppingsSelected" ).slice( 0 )));
             this.fire( "checkout", this.get("queue") );
         } );
         this.on( "debugg", ( event, passed ) => {
