@@ -66,7 +66,7 @@ $( document ).ready( ( a ) => {
             e.preventDefault();
         } );
     } );
-    
+
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
