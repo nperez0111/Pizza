@@ -1,5 +1,5 @@
-// Generated on 2015-11-09 using
-// generator-webapp 1.1.0
+// Generated on 2016-07-25 using
+// generator-ractive 0.2.0
 'use strict';
 
 // # Globbing
@@ -13,10 +13,8 @@ module.exports = function ( grunt ) {
     // Time how long tasks take. Can help when optimizing build times
     require( 'time-grunt' )( grunt );
 
-    // Automatically load required grunt tasks
-    require( 'jit-grunt' )( grunt, {
-        useminPrepare: 'grunt-usemin'
-    } );
+    // Load grunt tasks automatically
+    require( 'load-grunt-tasks' )( grunt );
 
     // Configurable paths
     var config = {
@@ -44,72 +42,72 @@ module.exports = function ( grunt ) {
                 files: [ 'bower.json' ],
                 tasks: [ 'wiredep' ]
             },
-            babel: {
-                files: [ '<%= config.app %>/scripts/{,*/}*.js' ],
-                tasks: [ 'babel:dist' ]
-            },
-            babelTest: {
-                files: [ 'test/spec/{,*/}*.js' ],
-                tasks: [ 'babel:test', 'test:watch' ]
+            jstest: {
+                files: [ 'test/{,*/}*.js' ],
+                tasks: [ 'test:watch' ]
             },
             gruntfile: {
                 files: [ 'Gruntfile.js' ]
             },
             sass: {
                 files: [ '<%= config.app %>/styles/{,*/}*.{scss,sass}' ],
-                tasks: [ 'sass', 'postcss' ]
+                tasks: [ 'sass:server', 'autoprefixer' ]
             },
             styles: {
                 files: [ '<%= config.app %>/styles/{,*/}*.css' ],
-                tasks: [ 'newer:copy:styles', 'postcss' ]
-            }
-        },
-
-        browserSync: {
-            options: {
-                notify: false,
-                background: true,
-                watchOptions: {
-                    ignored: ''
-                }
+                tasks: [ 'newer:copy:styles', 'autoprefixer' ]
             },
             livereload: {
                 options: {
-                    files: [
-                        '<%= config.app %>/{,*/}*.html',
-                        '<%= config.app %>/views/{,*/}*.html',
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= config.app %>/images/{,*/}*',
-                        '.tmp/scripts/{,*/}*.js'
-                    ],
-                    port: 9000,
-                    server: {
-                        baseDir: [ '.tmp', config.app ],
-                        routes: {
-                            '/bower_components': './bower_components'
-                        }
+                    livereload: '<%= connect.options.livereload %>'
+                },
+                files: [
+                    '<%= config.app %>/{,*/}*.html',
+                    '.tmp/styles/{,*/}*.css',
+                    '.tmp/scripts/{,*/}*.js',
+                    '<%= config.app %>/images/{,*/}*'
+                ]
+            }
+        },
+
+        // The actual grunt server settings
+        connect: {
+            options: {
+                port: 9000,
+                open: true,
+                livereload: 35729,
+                // Change this to '0.0.0.0' to access the server from outside
+                hostname: 'localhost'
+            },
+            livereload: {
+                options: {
+                    middleware: function ( connect ) {
+                        return [
+                            connect.static( '.tmp' ),
+                            connect().use( '/bower_components', connect.static( './bower_components' ) ),
+                            connect.static( config.app )
+                        ];
                     }
                 }
             },
             test: {
                 options: {
-                    port: 9001,
                     open: false,
-                    logLevel: 'silent',
-                    host: 'localhost',
-                    server: {
-                        baseDir: [ '.tmp', './test', config.app ],
-                        routes: {
-                            '/bower_components': './bower_components',
-                            '/app': './app'
-                        }
+                    port: 9001,
+                    middleware: function ( connect ) {
+                        return [
+                            connect.static( '.tmp' ),
+                            connect.static( 'test' ),
+                            connect().use( '/bower_components', connect.static( './bower_components' ) ),
+                            connect.static( config.app )
+                        ];
                     }
                 }
             },
             dist: {
                 options: {
-                    background: false,
-                    server: '<%= config.dist %>'
+                    base: '<%= config.dist %>',
+                    livereload: false
                 }
             }
         },
@@ -130,59 +128,44 @@ module.exports = function ( grunt ) {
         },
 
         // Make sure code styles are up to par and there are no obvious mistakes
-        eslint: {
-            target: [
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc',
+                reporter: require( 'jshint-stylish' )
+            },
+            all: [
                 'Gruntfile.js',
                 '<%= config.app %>/scripts/{,*/}*.js',
-                '!<%= config.app %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
+                'test/{,*/}*.js'
             ]
         },
 
         // Mocha testing framework configuration options
         mocha: {
-            all: {
+            test: {
                 options: {
                     run: true,
-                    urls: [ 'http://<%= browserSync.test.options.host %>:<%= browserSync.test.options.port %>/index.html' ]
+                    urls: [ 'http://<%= connect.options.hostname %>:<%= connect.test.options.port %>/spec_runner.html' ]
                 }
-            }
-        },
-
-        // Compiles ES6 with Babel
-        babel: {
-            options: {
-                sourceMap: true
-            },
-            dist: {
-                files: [ {
-                    expand: true,
-                    cwd: '<%= config.app %>/scripts',
-                    src: '{,*/}*.js',
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                } ]
-            },
-            test: {
-                files: [ {
-                    expand: true,
-                    cwd: 'test/spec',
-                    src: '{,*/}*.js',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                } ]
             }
         },
 
         // Compiles Sass to CSS and generates necessary files if requested
         sass: {
             options: {
-                sourceMap: true,
-                sourceMapEmbed: true,
-                sourceMapContents: true,
-                includePaths: [ '.' ]
+                sourcemap: true,
+                loadPath: 'bower_components'
             },
             dist: {
+                files: [ {
+                    expand: true,
+                    cwd: '<%= config.app %>/styles',
+                    src: [ '*.{scss,sass}' ],
+                    dest: '.tmp/styles',
+                    ext: '.css'
+                } ]
+            },
+            server: {
                 files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/styles',
@@ -193,15 +176,10 @@ module.exports = function ( grunt ) {
             }
         },
 
-        postcss: {
+        // Add vendor prefixed styles
+        autoprefixer: {
             options: {
-                map: true,
-                processors: [
-                    // Add vendor prefixed styles
-                    require( 'autoprefixer' )( {
-                        browsers: [ '> 1%', 'last 2 versions', 'Firefox ESR' ]
-                    } )
-                ]
+                browsers: [ '> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1' ]
             },
             dist: {
                 files: [ {
@@ -216,25 +194,50 @@ module.exports = function ( grunt ) {
         // Automatically inject Bower components into the HTML file
         wiredep: {
             app: {
-                src: [ '<%= config.app %>/index.html', 'test/index.html' ],
-                exclude: [ 'bootstrap.js' ],
-                ignorePath: /^(\.\.\/)*\.\./
+                ignorePath: /^\/|\.\.\//,
+                src: [ '<%= config.app %>/index.html' ]
             },
             sass: {
                 src: [ '<%= config.app %>/styles/{,*/}*.{scss,sass}' ],
-                ignorePath: /^(\.\.\/)+/
+                ignorePath: /(\.\.\/){1,2}bower_components\//
             }
         },
 
         // Renames files for browser caching purposes
-        filerev: {
+        rev: {
             dist: {
-                src: [
-                    '<%= config.dist %>/scripts/{,*/}*.js',
-                    '<%= config.dist %>/styles/{,*/}*.css',
-                    '<%= config.dist %>/styles/fonts/{,*/}*.*',
-                    '<%= config.dist %>/*.{ico,png}'
-                ]
+                files: {
+                    src: [
+                        '<%= config.dist %>/scripts/{,*/}*.js',
+                        '<%= config.dist %>/styles/{,*/}*.css',
+                        '<%= config.dist %>/images/{,*/}*.*',
+                        '<%= config.dist %>/styles/fonts/{,*/}*.*',
+                        '<%= config.dist %>/*.{ico,png}'
+                    ]
+                }
+            }
+        },
+
+        // Build the application using Browserify
+        browserify: {
+            options: {
+                transform: [ 'ractify', [ 'debowerify', {
+                    preferNPM: true
+                } ], 'babelify' ],
+                watch: true,
+                browserifyOptions: {
+                    debug: true
+                }
+            },
+            dist: {
+                files: {
+                    '.tmp/scripts/app.js': '<%= config.app %>/scripts/app.js'
+                }
+            },
+            test: {
+                files: {
+                    '.tmp/scripts/tests.js': 'test/{,*/}*.js'
+                }
             }
         },
 
@@ -251,12 +254,9 @@ module.exports = function ( grunt ) {
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
             options: {
-                assetsDirs: [
-                    '<%= config.dist %>',
-                    '<%= config.dist %>/styles'
-                ]
+                assetsDirs: [ '<%= config.dist %>', '<%= config.dist %>/images' ]
             },
-            html: [ '<%= config.dist %>/*.html' ],
+            html: [ '<%= config.dist %>/{,*/}*.html' ],
             css: [ '<%= config.dist %>/styles/{,*/}*.css' ]
         },
 
@@ -266,7 +266,7 @@ module.exports = function ( grunt ) {
                 files: [ {
                     expand: true,
                     cwd: '<%= config.app %>/images',
-                    src: '<%= config.app %>/{,*/}*.{gif,jpeg,jpg,png}',
+                    src: '{,*/}*.{gif,jpeg,jpg,png}',
                     dest: '<%= config.dist %>/images'
                 } ]
             }
@@ -288,19 +288,17 @@ module.exports = function ( grunt ) {
                 options: {
                     collapseBooleanAttributes: true,
                     collapseWhitespace: true,
-                    conservativeCollapse: true,
                     removeAttributeQuotes: true,
                     removeCommentsFromCDATA: true,
                     removeEmptyAttributes: true,
                     removeOptionalTags: true,
-                    // true would impact styles with attribute selectors
-                    removeRedundantAttributes: false,
+                    removeRedundantAttributes: true,
                     useShortDoctype: true
                 },
                 files: [ {
                     expand: true,
                     cwd: '<%= config.dist %>',
-                    src: '*.html',
+                    src: '{,*/}*.html',
                     dest: '<%= config.dist %>'
                 } ]
             }
@@ -342,18 +340,37 @@ module.exports = function ( grunt ) {
                     dest: '<%= config.dist %>',
                     src: [
                         '*.{ico,png,txt}',
+                        '.htaccess',
                         'images/{,*/}*.webp',
                         '{,*/}*.html',
                         'styles/fonts/{,*/}*.*'
                     ]
-                }, {
-                    expand: true,
-                    dot: true,
-                    cwd: '.',
-                    src: 'bower_components/bootstrap-sass/assets/fonts/bootstrap/*',
-                    dest: '<%= config.dist %>'
                 } ]
+            },
+            styles: {
+                expand: true,
+                dot: true,
+                cwd: '<%= config.app %>/styles',
+                dest: '.tmp/styles/',
+                src: '{,*/}*.css'
             }
+        },
+
+        // Run some tasks in parallel to speed up build process
+        concurrent: {
+            server: [
+                'sass:server',
+                'copy:styles'
+            ],
+            test: [
+                'copy:styles'
+            ],
+            dist: [
+                'sass',
+                'copy:styles',
+                'imagemin',
+                'svgmin'
+            ]
         },
         'ftp-deploy': {
             build: {
@@ -392,134 +409,35 @@ module.exports = function ( grunt ) {
                 dest: '/public_html/includes/',
                 exclusions: [ '*.md', 'database.php' ]
             }
-        },
-        uncss: {
-            dist: {
-                files: {
-                    'dist/css/tidy.css': [ 'dist/compressed.html' ]
-                }
-            }
-        },
-        // Run some tasks in parallel to speed up build process
-        concurrent: {
-            server: [
-                'babel:dist',
-                'sass'
-            ],
-            test: [
-                'babel'
-            ],
-            dist: [
-                'babel',
-                'sass',
-                'imagemin',
-                'svgmin'
-            ]
-        },
-        "file-creator": {
-            options: {
-                openFlags: 'w'
-            },
-            folder: {
-                "dist/compressed.html": function ( fs, fd, done ) {
-                    var glob = grunt.file.glob;
-                    var _ = grunt.util._;
-                    var Ractive = require( 'ractive/ractive.js' );
-                    Ractive.DEBUG = false;
-                    fs.writeSync( fd, '<!DOCTYPE html> <html lang=en> <head> <meta charset=utf-8> <title>Admin Page</title> <meta name=description content=""> <meta name=ROBOTS content="NOINDEX, NOFOLLOW"> <meta name=viewport content="width=device-width,initial-scale=1"> <link rel="shortcut icon" href=/favicon.b25e58c4.ico> <link rel=apple-touch-icon href=/apple-touch-icon.9727d3c2.png> <link rel=stylesheet href=styles/vendor.css> <link rel=stylesheet href=styles/main.css>  <body>  <div class=container> <div class=header> <ul class="nav nav-pills pull-right"> <li class=active><a href=#>Home</a></li> <li><a href=teleprompter.html>Tele-Prompter</a></li> <li><a href=#>Contact</a></li> </ul> <h3 class=text-muted>Admin Page</h3> </div> <div id=alert style=display:none class="alert alert-danger"></div> <div class=container-fluid id=container>' );
-                    glob( 'app/views/**/*.html', function ( err, files ) {
-                        var i = 0;
-                        _.each( files, function ( file ) {
-
-                            fs.readFile( file, "utf8", function ( err, data ) {
-                                if ( err ) {
-                                    throw ( err );
-                                }
-                                var r = new Ractive( {
-                                    template: data,
-                                    data: {
-                                        cols: 2,
-                                        queue: [],
-                                        headings: [],
-                                        types: [
-                                            []
-                                        ],
-                                        rows: [ 'Some', 'Error', 'Occurred' ],
-                                        add: [],
-                                        editing: {
-                                            cur: 1,
-                                            past: {},
-                                            notAllowed: [ false, false, false ]
-                                        },
-                                        data: [
-                                            [ "Check", "If", "Connected" ],
-                                            [ "To", "The", "Internet" ]
-                                        ],
-                                        table: "users",
-                                        tables: [ "users" ],
-                                        orders: [],
-                                        type: [ {
-                                            name: "Pizza",
-                                            quickOrders: [ "Large eperoni" ],
-                                            buildYourOwn: true
-                                        }, {
-                                            name: "Wings",
-                                            quickOrders: [ "Spicy buffalo" ],
-                                            buildYourOwn: true
-                                        }, {
-                                            name: "Salad",
-                                            quickOrders: [ "Regular", "Lechuga" ],
-                                            buildYourOwn: true
-                                        }, {
-                                            name: "Drink",
-                                            quickOrders: [ "Sprite", "Coke", "Diet Coke", "Materva", "Water" ],
-                                            buildYourOwn: false,
-                                            images: [ "sprite.png", "coke.jpg", "diet_coke.jpg", "materva.png", "water.jpg" ]
-                                        } ],
-                                        currentChoices: [
-                                            []
-                                        ],
-                                        sizes: [ 45, 37.5, 30 ],
-                                        svg: {
-                                            radius: 30
-                                        },
-                                    }
-                                } );
-                                fs.writeSync( fd, r.toHTML() );
-                                if ( i + 1 == files.length ) {
-                                    fs.writeSync( fd, '<div class=progress> <div class="progress-bar progress-bar-striped active" style="width: 100%"> Loading... </div> </div> </div> <div class=footer> </div> </div>' );
-                                    done();
-                                }
-                                i++;
-                            } );
-                        } );
-
-                    } );
-                }
-            }
         }
-
     } );
 
 
-    grunt.registerTask( 'serve', 'start the server and preview your app', function ( target ) {
+    grunt.registerTask( 'serve', 'start the server and preview your app, ' +
+        '--allow-remote for remote access',
+        function ( target ) {
+            if ( grunt.option( 'allow-remote' ) ) {
+                grunt.config.set( 'connect.options.hostname', '0.0.0.0' );
+            }
+            if ( target === 'dist' ) {
+                return grunt.task.run( [ 'build', 'connect:dist:keepalive' ] );
+            }
 
-        if ( target === 'dist' ) {
-            return grunt.task.run( [ 'build', 'browserSync:dist' ] );
-        }
-
-        grunt.task.run( [
-            'clean:server',
-            'wiredep',
-            'concurrent:server',
-            'postcss',
-            'browserSync:livereload',
-            'watch'
-        ] );
-    } );
+            grunt.task.run( [
+                'clean:server',
+                'wiredep',
+                'concurrent:server',
+                'autoprefixer',
+                'connect:livereload',
+                'browserify',
+                'watch'
+            ] );
+        } );
 
     grunt.registerTask( 'server', function ( target ) {
-        grunt.log.warn( 'The `server` task has been deprecated. Use `grunt serve` to start a server.' );
+        grunt.log.warn( 'The `server` task has been deprecated. ' +
+            'Use `grunt serve` to start a server.'
+        );
         grunt.task.run( [ target ? ( 'serve:' + target ) : 'serve' ] );
     } );
 
@@ -528,14 +446,13 @@ module.exports = function ( grunt ) {
             grunt.task.run( [
                 'clean:server',
                 'concurrent:test',
-                'postcss',
-                'babel:test',
-                'babel:dist'
+                'autoprefixer'
             ] );
         }
 
         grunt.task.run( [
-            'browserSync:test',
+            'browserify:test',
+            'connect:test',
             'mocha'
         ] );
     } );
@@ -543,36 +460,22 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build', [
         'clean:dist',
         'wiredep',
-        'babel',
         'useminPrepare',
         'concurrent:dist',
-        'postcss',
+        'autoprefixer',
+        'browserify',
         'concat',
         'cssmin',
         'uglify',
         'copy:dist',
+        'rev',
         'usemin',
         'htmlmin'
     ] );
 
     grunt.registerTask( 'default', [
-        'newer:eslint',
+        'newer:jshint',
         'test',
         'build'
     ] );
-
-    grunt.registerTask( 'deploy', function ( argue ) {
-        grunt.loadNpmTasks( 'grunt-ftp-deploy' );
-        grunt.option( 'force', true );
-        argue = argue || "";
-        grunt.task.run( [ 'build' ].concat( [ 'ftp-deploy:build', 'ftp-deploy:api', 'ftp-deploy:includes' ].map( function ( cur ) {
-            return cur + argue;
-        } ) ) );
-
-    } );
-    grunt.registerTask( 'tidy', function ( argue ) {
-        grunt.loadNpmTasks( "grunt-uncss" );
-        grunt.task.run( [ "file-creator", "uncss" ] );
-
-    } );
 };

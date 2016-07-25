@@ -1,3 +1,4 @@
+import * as Table from 'table';
 var pages = {
     cur: undefined,
     stats: undefined,

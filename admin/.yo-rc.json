@@ -1,3 +1,7 @@
 {
-  "generator-mocha": {}
+  "generator-mocha": {},
+  "generator-ractive": {
+    "loadMethod": "browserify",
+    "testFramework": "mocha"
+  }
 }

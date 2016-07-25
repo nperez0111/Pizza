@@ -1,4 +1,4 @@
-var Table = Base.extend( {
+module.exports = Base.extend( {
 
     oninit: function ( options ) {
         //add the on handlers
