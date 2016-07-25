@@ -140,6 +140,15 @@ footer p {
     &.alert-minimalist-error {
         @extend .alert-danger;
     }
+    &.alert-minimalist-info {
+        @extend .alert-info;
+    }
+    &.alert-minimalist-success {
+        @extend .alert-success;
+    }
+    &.alert-minimalist-warning {
+        @extend .alert-warning;
+    }
 }
 
 .alert-minimalist > [data-notify="icon"] {
