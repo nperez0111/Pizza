@@ -1,5 +1,6 @@
 let Base = require( './base' ),
     Stats = ( {
+        template: require( './../views/stats.ract' ).template,
         oninit: function () {
             this.on( "openModal", ( event, target ) => {
                 var $modal = $( "#" + target + "Date" ).modal( "show" );

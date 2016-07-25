@@ -1,0 +1,19 @@
+<Chart data="{{gData}}" identifier="chart" />
+<fieldset class="form-group">
+    <label>To: {{stats.from.toString().slice(0,25)}}</label>
+    <button class="btn btn-default" on-click="openModal:from">Set From Date</button>
+</fieldset>
+<fieldset class="form-group">
+    <label>From: {{stats.to.toString().slice(0,25)}}</label>
+    <button class="btn btn-default" on-click="openModal:to">Set To Date</button>
+</fieldset>
+<Modal id="fromDate" title="Start Statistics From:" size="md">
+    <div class="center">
+        <datepicker date="{{stats.from}}" class="dark" />
+    </div>
+</Modal>
+<Modal id="toDate" title="End Statistics at:" size="md">
+    <div class="center">
+        <datepicker date="{{stats.to}}" class="light" />
+    </div>
+</Modal>

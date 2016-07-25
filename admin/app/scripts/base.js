@@ -1,3 +1,4 @@
+window.Ractive = require( 'ractive/ractive.runtime.min' );
 let Base = Ractive.extend( {
     url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
     //url: "http://api.joeshonestpizza.com/",

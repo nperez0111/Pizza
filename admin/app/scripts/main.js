@@ -4,7 +4,7 @@ let Base = require( './base' ),
     Chart = require( './chart' ),
     Stats = require( './stats' ),
     Tele = require( './teleprompter' );
-
+require( 'ractive-datepicker' );
 
 var pages = {
     cur: undefined,
@@ -127,8 +127,7 @@ $( document ).ready( ( a ) => {
             viewBuilder( 'stats', '#stats', ( template ) => {
 
                 pages.stats = pages.stats || new Stats( {
-                    el: '#container',
-                    template
+                    el: '#container'
                 } );
                 return pages.stats;
             } );
