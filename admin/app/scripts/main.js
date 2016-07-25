@@ -1,4 +1,11 @@
-import * as Table from 'table';
+let Base = require( './base' ),
+    Table = require( './table' ),
+    Builder = require( './builder' ),
+    Chart = require( './chart' ),
+    Stats = require( './stats' ),
+    Tele = require( './teleprompter' );
+
+
 var pages = {
     cur: undefined,
     stats: undefined,
@@ -132,7 +139,7 @@ $( document ).ready( ( a ) => {
 
                 pages.table = pages.table || new Table( {
                     el: '#container',
-                    template: template,
+                    template,
                     data: {
                         table: tableName,
                         tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]

@@ -1,4 +1,4 @@
-var Base = Ractive.extend( {
+let Base = Ractive.extend( {
     url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
     //url: "http://api.joeshonestpizza.com/",
     alerter: function ( str, moreInfo ) {
@@ -275,3 +275,7 @@ var Base = Ractive.extend( {
         }
     }
 } );
+module.exports = Base;
+export {
+    Base
+};

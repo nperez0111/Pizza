@@ -1,4 +1,4 @@
-// Generated on 2016-07-25 using
+// Generated on 2016-05-30 using
 // generator-ractive 0.2.0
 'use strict';
 
@@ -45,6 +45,10 @@ module.exports = function ( grunt ) {
             jstest: {
                 files: [ 'test/{,*/}*.js' ],
                 tasks: [ 'test:watch' ]
+            },
+            scripts: {
+                files: [ '<%= config.app %>/scripts/**/*.js', '<%= config.app %>/scripts/**/*.ract' ],
+                tasks: [ 'browserify:dist' ]
             },
             gruntfile: {
                 files: [ 'Gruntfile.js' ]
@@ -221,17 +225,22 @@ module.exports = function ( grunt ) {
         // Build the application using Browserify
         browserify: {
             options: {
-                transform: [ 'ractify', [ 'debowerify', {
-                    preferNPM: true
-                } ], 'babelify' ],
-                watch: true,
+                transform: [
+                    [ 'babelify', {
+                        presets: [ "es2015" ]
+                    } ], 'ractify', [ 'debowerify', {
+                        preferNPM: true
+                    } ],
+
+                ],
+                watch: false,
                 browserifyOptions: {
                     debug: true
                 }
             },
             dist: {
                 files: {
-                    '.tmp/scripts/app.js': '<%= config.app %>/scripts/app.js'
+                    '.tmp/scripts/main.js': '<%= config.app %>/scripts/main.js'
                 }
             },
             test: {
@@ -429,7 +438,7 @@ module.exports = function ( grunt ) {
                 'concurrent:server',
                 'autoprefixer',
                 'connect:livereload',
-                'browserify',
+                'browserify:dist',
                 'watch'
             ] );
         } );
