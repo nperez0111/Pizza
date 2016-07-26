@@ -1,6 +1,8 @@
 window.page = require( 'page' );
 let events = {
-    willDetach: () => {},
+    willDetach: ( a ) => {
+        console.log( a )
+    },
     willAttach: () => {},
     hasDetached: () => {},
     hasAttached: () => {}
@@ -15,34 +17,40 @@ module.exports = {
 
             page( cur, function () {
                 let handleattachements = () => {
-                    if ( Router.routes[ cur ] === null ) {
-                        return Promise.resolve( events.willAttach.call( this, cur + " has not been instantiated yet." ) ).then( ( a => {
-                            Router.routes[ cur ] = newRoutes[ cur ].apply( this, arguments );
-                            return true;
-                        } )() ).then( events.hasAttached.apply( this, Router.routes[ cur ] ) );
+                        if ( Router.routes[ cur ] === null ) {
+                            return Promise.resolve( events.willAttach.call( this, cur + " has not been instantiated yet." ) ).then( ( a => {
+                                Router.routes[ cur ] = newRoutes[ cur ].apply( this, arguments );
+                                return true;
+                            } )() ).then( events.hasAttached.apply( this, Router.routes[ cur ] ) );
 
-                    } else {
-                        return Promise.resolve( events.willAttach.call( this, Router.routes[ cur ] ) ).then( ( a => {
-                            Router.routes[ cur ].insert( Router.routes[ cur ].el );
-                            return true;
-                        } )() ).then( events.hasAttached.call( this, Router.routes[ cur ] ) );
+                        } else {
+                            return Promise.resolve( events.willAttach.call( this, Router.routes[ cur ] ) ).then( ( a => {
+                                Router.routes[ cur ].insert( Router.routes[ cur ].el );
+                                return true;
+                            } )() ).then( events.hasAttached.call( this, Router.routes[ cur ] ) );
 
-                    }
-                }
+                        }
+                    },
+                    allAtOnce = () => {
+                        return handleattachements.apply( this, arguments ).then( () => {
+                            Router.cur = Router.routes[ cur ];
+                            return Router.cur;
+                        } );
+                    };
+                console.log( Router.cur );
                 if ( Router.cur !== null ) {
-                    Promise.resolve( events.willDetach.call( this, Router.cur ) ).then( ( a => {
+                    return Promise.resolve( events.willDetach.call( this, Router.cur ) ).then( ( a => {
+                        console.log( Router.cur )
                         Router.cur.detach();
                         return true;
-                    } )() ).then( events.hasDetached.call( this, Router.cur ) ).then( () => {
-                        return handleattachements.apply( this, arguments );
-                    } );
+                    } ) ).then( events.hasDetached.call( this, Router.cur ) ).then( allAtOnce );
                 } else {
-                    handleattachements.apply( this, arguments );
+                    return allAtOnce();
                 }
 
 
 
-                Router.cur = Router.routes[ cur ];
+
 
             } );
         } );
