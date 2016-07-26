@@ -16,11 +16,7 @@ module.exports = ( components, singletons ) => {
 
 
     Object.keys( singletons ).forEach( cur => {
-        Ractive.components[ cur ] = function () {
-
-            return singletons[ cur ];
-
-        };
+        Ractive.components[ cur ] = singletons[ cur ];
 
     } );
 

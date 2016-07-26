@@ -155,6 +155,10 @@ Router.route( {
     }
 } );
 
+function lo( a ) {
+    console.log( a );
+    return a;
+}
 
 Ractive.DEBUG = true;
 
@@ -162,10 +166,13 @@ $( document ).ready( ( a ) => {
     require( './loadComponents' )( {
         builder: Builder,
         table: Table,
-        modal: Base,
+        modal: Base.extend( {
+            template: require( './../views/modal.ract' ).template
+        } ),
         chart: Chart
     }, {
-        RactiveDatepicker: require( 'ractive-datepicker/ractive-datepicker.min' )
+        datepicker: require( 'ractive-datepicker' )
+
     } );
 
 
