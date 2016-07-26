@@ -1,5 +1,18 @@
 window.page = require( 'page' );
-
+let events = {
+    willDetach: () => {
+        console.log( 'willdetach' );
+    },
+    willAttach: () => {
+        console.log( 'willattach' );
+    },
+    hasDetached: () => {
+        console.log( 'hasdetached' );
+    },
+    hasAttached: () => {
+        console.log( 'hasattached' );
+    }
+};
 module.exports = {
     cur: null,
     routes: {},
@@ -9,15 +22,30 @@ module.exports = {
             Router.routes[ cur ] = null;
 
             page( cur, function () {
+                let handleattachements = () => {
+                    if ( Router.routes[ cur ] === null ) {
+                        return Promise.resolve( events.willAttach.apply( this, Router.cur ) ).then( ( a => {
+                            Router.routes[ cur ] = newRoutes[ cur ].apply( this, arguments );
+                            return true;
+                        } )() ).then( events.hasAttached.apply( this, Router.cur ) );
+
+                    } else {
+                        return Promise.resolve( events.willAttach.apply( this, Router.cur ) ).then( ( a => {
+                            Router.routes[ cur ].insert( Router.routes[ cur ].el );
+                            return true;
+                        } )() ).then( events.hasAttached.apply( this, Router.cur ) );
+
+                    }
+                }
                 if ( Router.cur !== null ) {
-                    Router.cur.detach()
+                    Promise.resolve( events.willDetach.apply( this, Router.cur ) ).then( ( a => {
+                        Router.cur.detach();
+                        return true;
+                    } )() ).then( events.hasDetached.apply( this, Router.cur ) ).then( handleattachements );
+                } else {
+                    handleattachements();
                 }
 
-                if ( Router.routes[ cur ] === null ) {
-                    Router.routes[ cur ] = newRoutes[ cur ].apply( this, arguments );
-                } else {
-                    Router.routes[ cur ].insert( Router.routes[ cur ].el )
-                }
 
 
                 Router.cur = Router.routes[ cur ];
@@ -35,5 +63,9 @@ module.exports = {
     },
     to: function ( route ) {
         page( route );
+    },
+    on: function ( event, callback ) {
+        events[ event ] = callback;
+        return this;
     }
 };
