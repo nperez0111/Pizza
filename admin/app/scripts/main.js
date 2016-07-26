@@ -188,6 +188,10 @@ $( document ).ready( ( a ) => {
         $( '#' + cur ).click( ( e ) => {
             Router.to( links[ cur ] );
             e.preventDefault();
+            $( '.nav li' ).each( function () {
+                $( this ).removeClass( "active" );
+            } );
+            $( $( '#' + cur ).parent() ).addClass( 'active' );
         } );
     } );
 
