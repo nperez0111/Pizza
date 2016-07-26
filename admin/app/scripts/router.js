@@ -1,17 +1,9 @@
 window.page = require( 'page' );
 let events = {
-    willDetach: () => {
-        console.log( 'willdetach' );
-    },
-    willAttach: () => {
-        console.log( 'willattach' );
-    },
-    hasDetached: () => {
-        console.log( 'hasdetached' );
-    },
-    hasAttached: () => {
-        console.log( 'hasattached' );
-    }
+    willDetach: () => {},
+    willAttach: () => {},
+    hasDetached: () => {},
+    hasAttached: () => {}
 };
 module.exports = {
     cur: null,
@@ -24,26 +16,28 @@ module.exports = {
             page( cur, function () {
                 let handleattachements = () => {
                     if ( Router.routes[ cur ] === null ) {
-                        return Promise.resolve( events.willAttach.apply( this, Router.cur ) ).then( ( a => {
+                        return Promise.resolve( events.willAttach.call( this, cur + " has not been instantiated yet." ) ).then( ( a => {
                             Router.routes[ cur ] = newRoutes[ cur ].apply( this, arguments );
                             return true;
-                        } )() ).then( events.hasAttached.apply( this, Router.cur ) );
+                        } )() ).then( events.hasAttached.apply( this, Router.routes[ cur ] ) );
 
                     } else {
-                        return Promise.resolve( events.willAttach.apply( this, Router.cur ) ).then( ( a => {
+                        return Promise.resolve( events.willAttach.call( this, Router.routes[ cur ] ) ).then( ( a => {
                             Router.routes[ cur ].insert( Router.routes[ cur ].el );
                             return true;
-                        } )() ).then( events.hasAttached.apply( this, Router.cur ) );
+                        } )() ).then( events.hasAttached.call( this, Router.routes[ cur ] ) );
 
                     }
                 }
                 if ( Router.cur !== null ) {
-                    Promise.resolve( events.willDetach.apply( this, Router.cur ) ).then( ( a => {
+                    Promise.resolve( events.willDetach.call( this, Router.cur ) ).then( ( a => {
                         Router.cur.detach();
                         return true;
-                    } )() ).then( events.hasDetached.apply( this, Router.cur ) ).then( handleattachements );
+                    } )() ).then( events.hasDetached.call( this, Router.cur ) ).then( () => {
+                        return handleattachements.apply( this, arguments );
+                    } );
                 } else {
-                    handleattachements();
+                    handleattachements.apply( this, arguments );
                 }
 
 
