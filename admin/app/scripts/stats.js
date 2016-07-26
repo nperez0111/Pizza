@@ -3,6 +3,7 @@ let Base = require( './base' ),
         template: require( './../views/stats.ract' ).template,
         oninit: function () {
             this.on( "openModal", ( event, target ) => {
+                console.log( 'tes' )
                 var $modal = $( "#" + target + "Date" ).modal( "show" );
                 $modal.on( 'hidden.bs.modal', () => {
                     this.findComponent( "Modal" ).fire( "close" )

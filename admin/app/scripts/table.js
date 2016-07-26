@@ -1,6 +1,6 @@
 let Base = require( './base' ),
     Table = ( {
-
+        template: require( './../views/table.ract' ).template,
         oninit: function ( options ) {
             //add the on handlers
             this.on( 'add', ( event ) => {

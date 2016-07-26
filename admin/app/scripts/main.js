@@ -4,8 +4,6 @@ let Base = require( './base' ),
     Chart = require( './chart' ),
     Stats = require( './stats' ),
     Tele = require( './teleprompter' );
-require( 'ractive-datepicker' );
-
 var pages = {
     cur: undefined,
     stats: undefined,
@@ -21,43 +19,154 @@ var pages = {
     quickOrder: {},
     templateCache: {}
 };
-Ractive.DEBUG = false;
+window.Router = require( './router' );
+Router.route( {
+    charter: function () {
+
+        pages.charter = pages.charter || new Chart( {
+            el: '#container',
+            data: {
+                identifier: "woa"
+            }
+        } );
+
+        return pages.charter;
+
+    },
+    telePrompter: function () {
+
+
+        pages.tele = pages.tele || new Tele( {
+            el: '#container'
+        } );
+
+        return pages.tele;
+
+    },
+    builder: function () {
+
+        pages.build = pages.build || new Builder( {
+            el: '#container'
+        } );
+
+        return pages.build;
+
+    },
+    stats: function () {
+
+        pages.stats = pages.stats || new Stats( {
+            el: '#container'
+        } );
+        return pages.stats;
+
+    },
+    "table/:tableName": function ( ctx ) {
+        var tableName = ctx.params.tableName;
+
+        pages.table = pages.table || new Table( {
+            el: '#container',
+            template: require( './../views/tablePage.ract' ).template,
+            data: {
+                table: tableName,
+                tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
+            }
+        } );
+
+        if ( !pages.tableProps.past[ tableName ] ) {
+            pages.table.on( "tableSwitch", function ( newRoute ) {
+                if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
+                    page( "/table/" + newRoute[ 0 ] );
+                    pages.tableProps.switched = true;
+                }
+
+            } );
+            pages.tableProps.past[ tableName ] = true;
+        }
+
+        if ( !pages.tableProps.switched ) {
+            pages.table.set( "table", tableName );
+            //console.log( "table set " );
+        }
+        pages.tableProps.switched = false;
+        //console.trace( "switched off" );
+
+
+        pages.tableProps.interval = setInterval( function () {
+            pages.table.switchTable( {
+                type: 'GET'
+            }, [ pages.table.get( "table" ), pages.table.get( "table" ) ] ).catch( ( err ) => {
+                clearInterval( pages.tableProps.interval );
+
+                pages.table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
+
+                $( '#click' ).click( function () {
+
+                    $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
+                    $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
+                        $( this ).remove();
+                    } );
+                    pages.tableProps.interval = setInterval( func, 12000 );
+
+                } );
+
+                pages.table.logger( err );
+
+            } );
+
+        }, 12000 );
+        return pages.table;
+    },
+    "quickOrders/:current": function ( ctx ) {
+        var current = ctx.params.current;
+
+        pages.quickOrder[ current ] = pages.quickOrder[ current ] || new Base( {
+            el: '#container',
+            template: require( './../views/quickOrderEditor.ract' ).template,
+            data: {
+                itemType: current
+            },
+            computed: {
+                buildItem: {
+                    get: function () {
+                        var t = this.get( "itemType" );
+                        return t.charAt( 0 ).toLowerCase() + t.slice( 1 ) + "Headings";
+                    }
+                }
+            },
+            oninit: function () {
+                var that = this;
+                this.on( 'buildMe', event => {
+                    $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
+                } );
+                this.loadDeps();
+                this.on( 'Builder.checkout', queue => {
+                    $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
+                    this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
+                    var b = this.findComponent( "Builder" );
+                    b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
+                        return cur.fill( false );
+                    } ) );
+                } );
+            }
+        } );
+
+        return pages.quickOrder[ current ];
+
+    }
+} );
+
+
+Ractive.DEBUG = true;
 
 $( document ).ready( ( a ) => {
-
-    var components = {
+    require( './loadComponents' )( {
         builder: Builder,
         table: Table,
         modal: Base,
         chart: Chart
-    };
-
-    Promise.all( Object.keys( components ).map( ( c ) => {
-
-        return viewBuilder( c );
-
-    } ) ).then( ( all ) => {
-
-        Object.keys( components ).forEach( ( cur, i, arr ) => {
-
-            Ractive.components[ cur.charAt( 0 ).toUpperCase() + cur.slice( 1 ) ] = function () {
-                var that = this;
-
-                return components[ cur ].extend( {
-                    template: all[ i ],
-                    cache: that.cache
-                } );
-
-            };
-
-        } );
-
+    }, {
+        RactiveDatepicker: require( 'ractive-datepicker/ractive-datepicker.min' )
     } );
-
-
-    //https://github.com/JonDum/ractive-datepicker
-    Ractive.components.datepicker = RactiveDatepicker;
-
 
 
     var links = {
@@ -70,7 +179,7 @@ $( document ).ready( ( a ) => {
 
     Object.keys( links ).forEach( ( cur ) => {
         $( '#' + cur ).click( ( e ) => {
-            page( links[ cur ] );
+            Router.to( links[ cur ] );
             e.preventDefault();
         } );
     } );
@@ -78,222 +187,11 @@ $( document ).ready( ( a ) => {
 
     $( '#quickOrder a' ).click( function ( e ) {
         var current = $( this ).text();
-        page( "/quickOrders/" + current );
+        Router.to( "/quickOrders/" + current );
         e.preventDefault();
     } );
 
-    var routes = {
-        charter: function () {
-            viewBuilder( "chart", "#charty", ( template ) => {
+    Router.base( 'stats' );
 
-                pages.charter = pages.charter || new Chart( {
-                    el: '#container',
-                    template,
-                    data: {
-                        identifier: "woa"
-                    }
-                } );
-
-                return pages.charter;
-
-            } );
-        },
-        telePrompter: function () {
-
-            viewBuilder( "teleprompter", "#tele", ( template ) => {
-
-                pages.tele = pages.tele || new Tele( {
-                    el: '#container',
-                    template
-                } );
-
-                return pages.tele;
-
-            } );
-        },
-        builder: function () {
-            viewBuilder( "builder", "#build", ( template ) => {
-
-                pages.build = pages.build || new Builder( {
-                    el: '#container',
-                    template
-                } );
-
-                return pages.build;
-
-            } );
-        },
-        stats: function () {
-            viewBuilder( 'stats', '#stats', ( template ) => {
-
-                pages.stats = pages.stats || new Stats( {
-                    el: '#container'
-                } );
-                return pages.stats;
-            } );
-        },
-        "table/:tableName": function ( ctx ) {
-            var tableName = ctx.params.tableName;
-            viewBuilder( "tablePage", false, ( template ) => {
-
-                pages.table = pages.table || new Table( {
-                    el: '#container',
-                    template,
-                    data: {
-                        table: tableName,
-                        tables: [ "users", "other", "orders", "transactions", "toppingsSVG", "MeantToCauseAlert", "settings", "tablesInfo", "symbols", "quickOrdersPizza", "quickOrdersSalad", "quickOrdersWings", "quickOrdersDrink", "pizzaHeadings", "ingredients", "unavailableItems" ]
-                    }
-                } );
-
-                if ( !pages.tableProps.past[ tableName ] ) {
-                    pages.table.on( "tableSwitch", function ( newRoute ) {
-                        if ( newRoute[ 0 ] !== newRoute[ 1 ] && newRoute[ 0 ] !== tableName ) {
-                            page( "/table/" + newRoute[ 0 ] );
-                            pages.tableProps.switched = true;
-                        }
-
-                    } );
-                    pages.tableProps.past[ tableName ] = true;
-                }
-
-                if ( !pages.tableProps.switched ) {
-                    pages.table.set( "table", tableName );
-                    //console.log( "table set " );
-                }
-                pages.tableProps.switched = false;
-                //console.trace( "switched off" );
-                return pages.table;
-
-            } ).then( ( resp ) => {
-                pages.tableProps.interval = setInterval( function () {
-                    pages.table.switchTable( {
-                        type: 'GET'
-                    }, [ pages.table.get( "table" ), pages.table.get( "table" ) ] ).catch( ( err ) => {
-                        clearInterval( pages.tableProps.interval );
-
-                        pages.table.alerter( 'Sorry, Issues loading Table Data from API..', "<button id='click' class=' btn btn-default'><span class='glyphicon glyphicon-refresh'></span>Click to retry</button>" );
-
-                        $( '#click' ).click( function () {
-
-                            $( this ).find( 'span' ).addClass( "glyphicon-refresh-animate" );
-                            $( "#alert" ).fadeTo( 500, 0 ).slideUp( 500, function () {
-                                $( this ).remove();
-                            } );
-                            pages.tableProps.interval = setInterval( func, 12000 );
-
-                        } );
-
-                        pages.table.logger( err );
-
-                    } );
-
-                }, 12000 );
-            }, function ( err ) {
-                console.log( err );
-            } );
-        },
-        "quickOrders/:current": function ( ctx ) {
-            var current = ctx.params.current;
-            viewBuilder( 'quickOrderEditor', false, ( template ) => {
-
-                pages.quickOrder[ current ] = pages.quickOrder[ current ] || new Base( {
-                    el: '#container',
-                    template,
-                    data: {
-                        itemType: current
-                    },
-                    computed: {
-                        buildItem: {
-                            get: function () {
-                                var t = this.get( "itemType" );
-                                return t.charAt( 0 ).toLowerCase() + t.slice( 1 ) + "Headings";
-                            }
-                        }
-                    },
-                    oninit: function () {
-                        var that = this;
-                        this.on( 'buildMe', event => {
-                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'show' );
-                        } );
-                        this.loadDeps();
-                        this.on( 'Builder.checkout', queue => {
-                            $( '#quickOrder' + this.get( 'itemType' ) ).modal( 'hide' );
-                            this.findComponent( "Table" ).set( "add.1", this.mapNameToSymbols( queue ) );
-                            var b = this.findComponent( "Builder" );
-                            b.set( "currentChoices", b.get( "currentChoices" ).map( cur => {
-                                return cur.fill( false );
-                            } ) );
-                        } );
-                    }
-                } );
-
-                return pages.quickOrder[ current ];
-            } );
-
-        }
-    }
-    var BaseRoute = "stats";
-    page.base( '/' );
-    page( '/', routes[ BaseRoute ] );
-    page( '', routes[ BaseRoute ] );
-
-    Object.keys( routes ).forEach( ( cur ) => {
-        page( cur, routes[ cur ] );
-    } );
-
-    page( /unminified/.test( function () { /*unminified*/ } ) ? {
-        hashbang: true
-    } : undefined );
 
 } );
-
-function viewBuilder( url, el = false, callback = ( a ) => {
-    return false;
-} ) {
-
-
-    if ( $( el ).parent().hasClass( "active" ) ) {
-        return Promise.reject( "'" + el + "' Element clicked twice" );
-    }
-
-    if ( pages.tableProps.interval ) {
-        clearInterval( pages.tableProps.interval );
-    }
-
-    $( '.nav li' ).each( function () {
-        $( this ).removeClass( "active" );
-    } );
-
-    if ( el ) {
-        $( el ).parent().addClass( "active" );
-    }
-
-    var resolveCallback = ( template ) => {
-        var newOrOld = callback( template );
-        if ( newOrOld !== false ) {
-            if ( pages.cur ) {
-                pages.cur.detach();
-            }
-            newOrOld.insert( newOrOld.el );
-            pages.cur = newOrOld;
-        }
-        return template;
-    };
-
-    if ( url in pages.templateCache ) {
-        return Promise.resolve( resolveCallback( pages.templateCache[ url ] ) );
-    }
-
-    return $.ajax( {
-        url: window.location.origin + "/views/" + url + ".html",
-        dataType: "html"
-    } ).then( resolveCallback, ( err ) => {
-        var base = new Base();
-        base.alerter( "Sorry, Issues loading template file..." );
-        throw Error( JSON.stringify( err ) );
-    } ).then( ( template ) => {
-        pages.templateCache[ url ] = template;
-        return template;
-    } );
-
-}

@@ -1,5 +1,6 @@
 let Base = require( './base' ),
     Tele = ( {
+        template: require( './../views/tele.ract' ).template,
         oninit: function () {
             this.on( 'order', ( event ) => {
                 this.order( event );

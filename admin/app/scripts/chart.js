@@ -1,5 +1,6 @@
 let Base = require( './base' ),
     Chart = ( {
+        template: require( './../views/chart.ract' ).template,
         oninit: function () {
 
             this.observe( "chartType", ( newVal, oldVal ) => {

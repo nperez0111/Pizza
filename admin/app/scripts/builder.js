@@ -1,5 +1,6 @@
 let Base = require( './base' ),
     Builder = ( {
+        template: require( './../views/builder.ract' ).template,
         oninit: function () {
             this.observe( "toppingsSelected", ( newVal, oldVal ) => {
                 this.getCache( "toppingsSVG", ( a ) => {
