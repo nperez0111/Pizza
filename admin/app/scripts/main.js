@@ -171,7 +171,7 @@ $( document ).ready( ( a ) => {
         } ),
         chart: Chart
     }, {
-        datepicker: require( 'ractive-datepicker' )
+        datepicker: Base
 
     } );
 

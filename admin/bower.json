@@ -1,37 +1,36 @@
 {
-    "name": "pizza",
-    "private": true,
-    "dependencies": {
-        "bootstrap-sass": "~3.3.5",
-        "jquery-mockjax": "~2.0.1",
-        "normalize-css": "normalize.css#~3.0.3",
-        "remarkable-bootstrap-notify": "~3.1.3",
-        "mousetrap": "~1.5.3",
-        "chartist": "~0.9.7",
-        "page": "visionmedia/page.js#~1.7.1",
-        "ractive-datepicker": "https://github.com/nperez0111/ractive-datepicker.git#master"
+  "name": "pizza",
+  "private": true,
+  "dependencies": {
+    "bootstrap-sass": "~3.3.5",
+    "jquery-mockjax": "~2.0.1",
+    "normalize-css": "normalize.css#~3.0.3",
+    "remarkable-bootstrap-notify": "~3.1.3",
+    "mousetrap": "~1.5.3",
+    "chartist": "~0.9.7",
+    "page": "visionmedia/page.js#~1.7.1"
+  },
+  "overrides": {
+    "bootstrap-sass": {
+      "main": [
+        "assets/stylesheets/_bootstrap.scss",
+        "assets/fonts/bootstrap/*",
+        "assets/javascripts/bootstrap.js",
+        "assets/javascripts/bootstrap/alert.js",
+        "assets/javascripts/bootstrap/modal.js",
+        "assets/javascripts/bootstrap/dropdown.js"
+      ]
     },
-    "overrides": {
-        "bootstrap-sass": {
-            "main": [
-                "assets/stylesheets/_bootstrap.scss",
-                "assets/fonts/bootstrap/*",
-                "assets/javascripts/bootstrap.js",
-                "assets/javascripts/bootstrap/alert.js",
-                "assets/javascripts/bootstrap/modal.js",
-                "assets/javascripts/bootstrap/dropdown.js"
-            ]
-        },
-        "chartist": {
-            "main": [
-                "dist/chartist.min.js",
-                "dist/scss/chartist.scss"
-            ]
-        }
-    },
-    "devDependencies": {
-        "chai": "~3.4.1",
-        "mocha": "~2.3.3",
-        "remarkable-bootstrap-notify": "~3.1.3"
+    "chartist": {
+      "main": [
+        "dist/chartist.min.js",
+        "dist/scss/chartist.scss"
+      ]
     }
+  },
+  "devDependencies": {
+    "chai": "~3.4.1",
+    "mocha": "~2.3.3",
+    "remarkable-bootstrap-notify": "~3.1.3"
+  }
 }
