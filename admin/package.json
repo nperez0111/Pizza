@@ -1,12 +1,12 @@
 {
-    "name": "image-inspiration",
+    "name": "pizza",
     "version": "0.0.0",
     "dependencies": {
         "debowerify": "^1.4.1",
         "object-manip": "^1.2.0",
         "path-to-regexp": "^1.5.0",
         "ractive": "^0.7.2",
-        "ractive-datepicker": "https://github.com/nperez0111/ractive-datepicker.git#master"
+        "ractive-datepicker": "0.1.4"
     },
     "devDependencies": {
         "babel-preset-es2015": "^6.9.0",
