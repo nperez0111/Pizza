@@ -1,21 +1,21 @@
 window.Ractive = require( 'ractive/ractive.min' );
 let Base = Ractive.extend( {
-    url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
-    //url: "http://api.joeshonestpizza.com/",
-    alerter: function ( str, moreInfo ) {
-        var other = ( str.str || str ) + "";
-        moreInfo = ( ( moreInfo ) ? ( moreInfo.join ? moreInfo.join( "</p><p>" ) : moreInfo ) : "undefined" ) + "";
-        if ( !str.el && ( $( '#alert' ).length === 0 ) ) {
-            $( '#container' ).prepend( '<div id="alert" style="display:none" class="alert alert-danger"></div>' );
-        }
-        $( str.el || '#alert' ).html( "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>" + ( other ? other : "" ) + "</h3>" + ( moreInfo === 'undefined' ? "" : "<p>" + moreInfo + "</p>" ) + "<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>" ).fadeIn().slideDown();
+            url: 'http://' + ( ( window.location.hostname.split( "." ).length ) === 2 ? "api." + ( window.location.hostname ) + "/" : ( window.location.hostname.split( "." ).length ) === 3 ? ( "api." + window.location.hostname.split( "." ).splice( 1, 2 ).join( "." ) + "/" ) : ( window.location.hostname + ':80' + '/pizza/api/v1/' ) ),
+            //url: "http://api.joeshonestpizza.com/",
+            alerter: function ( str, moreInfo ) {
+                    var other = ( str.str || str ) + "";
+                    moreInfo = ( ( moreInfo ) ? ( moreInfo.join ? moreInfo.join( "</p><p>" ) : moreInfo ) : "undefined" ) + "";
+                    if ( !str.el && ( $( '#alert' ).length === 0 ) ) {
+                        $( '#container' ).prepend( '<div id="alert" style="display:none" class="alert alert-danger"></div>' );
+                    }
+                    $( str.el || '#alert' ).html( `<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><h3>${( other ? other : "" )}</h3>${( moreInfo === 'undefined' ? "" : `<p> ${moreInfo}</p>` ) }<p>Check internet connection Or <a href='mailto:nperez0111@gmail.com'>Contact Support.</a></p>` ).fadeIn().slideDown();
         $( "a[data-dismiss='alert']" ).click( function () {
             $( "#alert" ).alert( "close" );
         } );
         return true;
     },
     notifications: [],
-    notify: function ( title, message, time, typely ) {
+    notify( title, message, time, typely ) {
         var that = this,
             not = $.notify( {
                 title: ( typely && typely === "error" ? '<span class="glyphicon glyphicon-warning-sign"></span> ' + title : title ),
@@ -27,16 +27,17 @@ let Base = Ractive.extend( {
                     from: "bottom",
                     align: "right"
                 },
-                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-minimalist alert-minimalist-{0}" role="alert">' +
-                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button><img data-notify="icon" class="img-circle pull-left">' +
-                    '<span data-notify="title">{1}</span>' +
-                    '<span data-notify="message">{2}</span>' +
-                    '</div>'
+                template: `
+                <div data-notify="container" class="col-xs-11 col-sm-3 alert alert-minimalist alert-minimalist-{0}" role="alert">
+                    <button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button><img data-notify="icon" class="img-circle pull-left">
+                    <span data-notify="title">{1}</span>
+                    <span data-notify="message">{2}</span>
+                </div>`
             } );
         this.notifications.push( not );
         return not;
     },
-    sendToDataBase: function ( obj, urlEx ) {
+    sendToDataBase ( obj, urlEx ) {
         obj = $.extend( {
             type: "GET",
             dataType: "json",
@@ -67,7 +68,7 @@ let Base = Ractive.extend( {
             } );
         } );
     },
-    parseTime: function ( a ) {
+    parseTime( a ) {
         return a.split( " " )[ 0 ].split( "-" ).map(
             function ( q ) {
                 return ( parseInt( q, 10 ) );
@@ -77,7 +78,7 @@ let Base = Ractive.extend( {
             } ) );
     },
     cache: {},
-    loadDeps: function () {
+    loadDeps() {
         var that = this;
         return Promise.all( [ this.getCache( "symbols", function () {
                 return new Promise( ( resolve, reject ) => {
@@ -108,7 +109,7 @@ let Base = Ractive.extend( {
         } ) ) );
     },
     deps: [],
-    getCache: function ( prop, func, isPromise, isNotJSON ) {
+    getCache( prop, func, isPromise, isNotJSON ) {
         if ( prop in this.cache || ( localStorage && localStorage.getItem( prop ) ) ) {
             if ( localStorage && localStorage.getItem( prop ) ) {
                 this.cache[ prop ] = isNotJSON ? localStorage.getItem( prop ) : JSON.parse( localStorage.getItem( prop ) );
@@ -131,7 +132,7 @@ let Base = Ractive.extend( {
         } );
 
     },
-    sortOrder: function ( order ) {
+    sortOrder( order ) {
         //return order;
         var arr = order.split( this.cache.settings.dbdelimiter ).sort( ( a, b ) => {
 
@@ -145,12 +146,12 @@ let Base = Ractive.extend( {
         //this should access wherever that is stored and properly sort it correctly
 
     },
-    toArray: function ( possibleStr ) {
+    toArray ( possibleStr ) {
         //http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
         return ( typeof possibleStr === 'string' || possibleStr instanceof String ) ? possibleStr.split( this.cache.settings.dbdelimiter ) : possibleStr;
 
     },
-    mapNameToSymbols: function ( name, reverse ) {
+    mapNameToSymbols( name, reverse ) {
         name = this.toArray( name );
         return name.map( ( cur ) => {
             var ingredients = this.cache.symbols[ cur ];
@@ -168,7 +169,7 @@ let Base = Ractive.extend( {
             return false;
         } ).join( this.cache.settings.dbdelimiter );
     },
-    getPrice: function ( order, isSymbol ) {
+    getPrice( order, isSymbol ) {
         var symboled = isSymbol ? order : this.mapNameToSymbols( order );
         this.logger( symboled );
         return this.getCache( isSymbol ? symboled : symboled.join( " " ), () => {
@@ -183,11 +184,11 @@ let Base = Ractive.extend( {
             } );
         }, true, true );
     },
-    onClose: function () {
+    onClose() {
         return this;
     },
     keyBindings: [],
-    unrender: function ( apply ) {
+    unrender( apply ) {
         $( "#alert" ).alert( 'close' );
         var that = this.onClose();
         that.notifications.forEach( ( a ) => {
@@ -196,7 +197,7 @@ let Base = Ractive.extend( {
         that.notifications = [];
         Mousetrap.unbind( that.keyBindings );
     },
-    logger: function ( a, warning ) {
+    logger( a, warning ) {
         if ( /unminified/.test( function () { /*unminified*/ } ) ) {
             if ( warning ) {
                 console.warn( a );
@@ -206,7 +207,7 @@ let Base = Ractive.extend( {
         }
         return a;
     },
-    pick: function ( obj, prop ) {
+    pick( obj, prop ) {
         if ( Array.isArray( prop ) ) {
             var ret = {};
             prop.forEach( ( cur, i, arr ) => {
@@ -216,7 +217,7 @@ let Base = Ractive.extend( {
         }
         return obj[ prop ];
     },
-    makeObj: function ( keys, values ) {
+    makeObj( keys, values ) {
         var ret = {};
         if ( Array.isArray( keys ) && Array.isArray( values ) ) {
             keys.forEach( ( cur, i ) => {
@@ -228,26 +229,26 @@ let Base = Ractive.extend( {
         }
         return ret;
     },
-    toggle: function ( keypath ) {
+    toggle( keypath ) {
         this.set( keypath, !this.get( keypath ) );
     },
-    ifPassesDo: function ( arr, condition, doer ) {
+    ifPassesDo( arr, condition, doer ) {
 
         return arr.map( function ( cur, i ) {
             return condition( cur, i ) ? doer( cur, i ) : cur;
         } );
 
     },
-    iterateOver: function ( obj, doThat ) {
+    iterateOver( obj, doThat ) {
         Object.keys( obj ).forEach( function ( cur, i ) {
             doThat( obj[ cur ], cur, obj );
         } );
         return Object.keys( obj );
     },
-    sequence: function () {
+    sequence() {
         return this.compose.apply( this, Array.from( arguments ).reverse() );
     },
-    compose: function () {
+    compose() {
         var fns = arguments;
 
         return function ( result ) {
@@ -258,14 +259,14 @@ let Base = Ractive.extend( {
             return result;
         };
     },
-    errorMessage: function ( err ) {
+    errorMessage( err ) {
         console.log( err );
         console.log( this );
         this.notify( "Error occured", err, 5000, "error" );
         throw err;
         return err;
     },
-    debounce: ( t, r ) => {
+    debounce( t, r ){
         var e = null;
         return function () {
             var n = this,
