@@ -3,6 +3,15 @@
 Pizza Web App, Point of Sale and API
 <a href="https://github.com/nperez0111/Pizza"> <img src="images/main.png" width="846"> </a>
 
+## Why all of this?
+I was tasked with making a full on POS system and I decided I'd take a crack at it not knowing how much time it was going to take and believe me it was a lot of time to even get this far. This is not one of my best projects but it definitely taught me a lot. 
+ * Maybe really look into how hard it is to make the thing you are trying to make
+ * Don't focus on bells and whistles when your core functionality doesn't work
+ * It's cool to try and think ahead but the more time you think ahead the more time you are not building (I overthink a lot so this is just to myself really)
+ * Don't try to build everything yourself - or more succintly, don't reinvent the wheel, building a PHP API RESTful endpoint  was cool and all but definitely was not worth the time it took.I also didn't even build it to half the standard of something else and authentication is just horrid and insecure.
+ 
+ But I made part of the project and maybe one day will be able to remake it properly. Yea this is all unmmaintained code now just way too insecure of stuff.
+
 ## Pizza Admin Page
 
 <a href="https://github.com/nperez0111/Pizza/tree/master/admin"> <img src="images/tables.png" width="846"> </a>
@@ -56,13 +65,4 @@ Currently the API is built out using a REST API made by yours truly,
 1. Run the API on a domain
 2. Link to the directory of where the api is stored in the ``Base.js`` file
 3. Enjoy
-
-## Why all of this?
-I was tasked with making a full on POS system and I decided I'd take a crack at it not knowing how much time it was going to take and believe me it was a lot of time to even get this far. This is not one of my best projects but it definitely taught me a lot. 
- * Maybe really look into how hard it is to make the thing you are trying to make
- * Don't focus on bells and whistles when your core functionality doesn't work
- * It's cool to try and think ahead but the more time you think ahead the more time you are not building (I overthink a lot so this is just to myself really)
- * Don't try to build everything yourself - or more succintly, don't reinvent the wheel, building a PHP API RESTful endpoint  was cool and all but definitely was not worth the time it took.I also didn't even build it to half the standard of something else and authentication is just horrid and insecure.
- 
- But I made part of the project and maybe one day will be able to remake it properly.
  
