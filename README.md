@@ -1,9 +1,21 @@
-# Pizza [![Build Status](https://travis-ci.org/nperez0111/Pizza.svg?branch=master)](https://magnum.travis-ci.org/nperez0111/Pizza) [![Stories in Ready](https://badge.waffle.io/nperez0111/Pizza.svg?label=ready&title=Ready)](http://waffle.io/nperez0111/Pizza)
+# Pizza POS System [![Build Status](https://travis-ci.org/nperez0111/Pizza.svg?branch=master)](https://magnum.travis-ci.org/nperez0111/Pizza) [![Stories in Ready](https://badge.waffle.io/nperez0111/Pizza.svg?label=ready&title=Ready)](http://waffle.io/nperez0111/Pizza)
 
 Pizza Web App, Point of Sale and API
+<a href="https://github.com/nperez0111/Pizza"> <img src="images/main.png" width="846"> </a>
+
 ## Pizza Admin Page
 
+<a href="https://github.com/nperez0111/Pizza/tree/master/admin"> <img src="images/tables.png" width="846"> </a>
+
 This is the admin dashboard of the pizza Api in order to control every aspect to the site. Of course able to change all settings and able to edit databases in a user friendly manner.
+
+<a href="https://github.com/nperez0111/Pizza/tree/master/admin"> <img src="images/builder.png" width="846"> </a>
+
+It also has a Pizza builder made via manipulating an SVG.
+
+<a href="https://github.com/nperez0111/Pizza/tree/master/admin"> <img src="images/selecter.png" width="846"> </a>
+
+It also has a GUI to select and add orders into the API database system in order to place orders.
 
 ## Pizza API
 
